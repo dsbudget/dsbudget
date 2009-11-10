@@ -1,0 +1,208 @@
+* {
+padding: 0px;
+margin: 0px;
+}
+body {
+font-family: Helvetica,"Lucida Sans Unicode",Arial,sans-serif;
+font-size: 10pt;
+background-color: #369;
+}
+
+h1, h2, h3 {
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;	
+}
+
+input[type='text'], textarea {
+border: 1px solid #ccc;
+padding: 5px;
+margin-top: 3px;
+margin-bottom: 5px;
+}
+
+select {
+border: 1px solid #ccc;
+}
+
+#header {
+background-color: #000;
+height: 60px;
+color: white;
+}
+
+#header h1 {
+font-size: 19pt;
+font-weight: bold;
+padding-left: 20px;
+}
+
+#header h2 {
+font-size: 11pt;
+font-weight: normal;
+padding-left: 20px;
+}
+
+#content {
+margin: 10px;
+}
+
+#main h2 {
+font-size: 20px;
+padding: 5px;
+padding-left: 10px;
+margin-bottom: 3px;
+}
+
+.pageselector {
+position: absolute;
+top: 10px;
+right: -10px;
+padding:10px;
+background-color: #369;
+margin-right:10px;	
+-moz-border-radius-topleft: 8px;
+-webkit-border-top-left-radius: 8px;
+}
+
+
+.ui-widget {
+font-size: 0.9em;
+}
+
+.budgetting, 
+.incomeview, 
+.expenseview {
+background-color: white;
+margin-bottom: 5px;
+padding-bottom: 10px;
+}
+
+.budgetting table, 
+.incomeview table, 
+.expenseview table {
+border-collapse: collapse;
+}
+
+.budgetting tr.header, 
+.incomeview tr.header, 
+.expenseview tr.header {
+font-size: 10pt;
+}
+
+.budgetting tr.category, 
+.incomeview tr.income, 
+.expenseview tr.expense_category {
+background-color: #ddd;
+border-bottom: 1px solid white;
+}
+
+.incomeview tr:hover.income,
+.incomeview tr:hover.deduction,
+.budgetting tr:hover.category, 
+.expenseview tr:hover.expense {
+background-color: #ccc;
+cursor: pointer;
+}
+
+.incomeview tr:hover.income img.remove_button, 
+.incomeview tr:hover.deduction img.remove_button, 
+.budgetting tr:hover.category img.remove_button, 
+.expenseview tr:hover.expense img.remove_button {
+visibility: visible;
+}
+
+.incomeview tr.income img.remove_button,
+.incomeview tr.deduction img.remove_button,
+.budgetting tr.category img.remove_button,
+.expenseview tr.expense img.remove_button {
+visibility: hidden;
+}
+
+.budgetting th, .incomeview th, .expenseview th {
+padding-top: 5px;
+padding-bottom: 5px;
+padding-right: 10px;
+text-align: left;
+}
+
+.budgetting td, .incomeview td, .expenseview td {
+padding-right: 10px;
+}
+
+.budgetting td.newitem, 
+.incomeview td.newitem, 
+.expenseview td.newitem {
+padding-top: 0px;
+padding-bottom: 2px;
+color: #aaa;
+font-weight: normal;
+text-align: left;
+}
+
+.incomeview tr.balance
+{
+color: gray;
+}
+.expense_category .graph {
+padding-right: 40px;
+text-align: right;
+}
+
+tr.expense,
+tr.deduction {
+background-color: #fff;
+border-bottom: 1px solid #eee;
+}
+
+tr.expense th
+{
+padding: 2px;
+}
+
+tr.expense_footer th,
+tr.deduction th,
+tr.info th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+
+.note {
+color: #555;
+}
+
+.round4 {
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;	
+}
+
+.round8 {
+-moz-border-radius-topleft: 8px;
+-moz-border-radius-topright: 8px;
+-moz-border-radius-bottomright: 8px;
+-moz-border-radius-bottomleft: 8px;
+-webkit-border-top-left-radius: 8px;
+-webkit-border-top-right-radius: 8px;
+-webkit-border-bottom-left-radius: 8px;
+-webkit-border-bottom-right-radius: 8px;	
+}
+
+a.divrep_button {
+color: black;
+font-size: 9pt;
+}
+
+a:hover.divrep_button {
+color: #36c;
+}
+.pageselector a.divrep_button
+{
+position: relative;
+color: white;
+top: 2px;
+padding-left: 3px;
+}

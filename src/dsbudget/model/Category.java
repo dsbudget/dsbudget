@@ -1,0 +1,106 @@
+package dsbudget.model;
+
+import java.awt.Color;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+public class Category extends ObjectID implements XMLSerializer {
+
+	private Page parent;
+	
+	public BigDecimal amount;
+	public Color color;
+	public String description;
+	
+	public Boolean fixed;
+	public Boolean hide_graph;
+	public String name;
+	//Integer sort_by;
+	//String sort_order;
+	
+	private ArrayList<Expense> expenses = new ArrayList<Expense>();
+	
+	public ArrayList<Expense> getExpensesSortByDate()
+	{
+		  Collections.sort(expenses, new Comparator(){
+	            public int compare(Object o1, Object o2) {
+	            	Expense p1 = (Expense) o1;
+	            	Expense p2 = (Expense) o2;
+	               return p1.date.compareTo(p2.date);
+	            }
+	      });
+		  return expenses;
+	}
+	
+	public void removeExpense(Expense e)
+	{
+		expenses.remove(e);
+	}
+	
+	public void addExpense(Expense e)
+	{
+		expenses.add(e);
+	}
+	
+	public Category(Page _parent)
+	{
+		parent = _parent;
+	}
+	
+	public BigDecimal getTotalExpense()
+	{
+		BigDecimal total = new BigDecimal(0);
+		for(Expense expense : expenses) {
+			total = total.add(expense.amount);
+		}
+		return total;
+	}
+	
+	public void fromXML(Element element) {
+		amount = Loader.loadAmount(element.getAttribute("budget"));
+		String color_str = element.getAttribute("color");
+		long color_comp = Long.parseLong(color_str);
+		int r = (int)((color_comp>>0)&0xff);
+		int g = (int)((color_comp>>8)&0xff);
+		int b = (int)((color_comp>>16)&0xff);
+		color = new Color(r,g,b);
+		description = element.getAttribute("desc");
+		if(element.getAttribute("fixed").equals("yes")) {
+			fixed = true;
+		} else {
+			fixed = false;
+		}
+		if(element.getAttribute("hide_graph").equals("yes")) {
+			hide_graph = true;
+		} else {
+			hide_graph = false;
+		}
+		name = element.getAttribute("name");
+		
+		//expense
+		NodeList nl = element.getChildNodes();
+		if(nl != null && nl.getLength() > 0) {
+			for(int i = 0 ; i < nl.getLength();i++) {
+				Element el = (Element)nl.item(i);
+				if(el.getTagName().equals("Spent")) {
+					Expense expense = new Expense();
+					expense.fromXML(el);
+					expenses.add(expense);
+				}
+			}
+		}
+	}
+
+	@Override
+	public Element toXML() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

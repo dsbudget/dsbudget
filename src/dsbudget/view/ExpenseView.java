@@ -1,0 +1,196 @@
+package dsbudget.view;
+
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
+import com.divrep.DivRep;
+import com.divrep.DivRepEvent;
+import com.divrep.DivRepEventListener;
+import com.divrep.common.DivRepButton;
+import com.divrep.common.DivRepDate;
+import com.divrep.common.DivRepTextBox;
+import com.divrep.common.DivRepToggler;
+
+import dsbudget.model.Category;
+import dsbudget.model.Expense;
+import dsbudget.model.Page;
+
+public class ExpenseView extends DivRep {
+	MainView mainview;
+
+	ArrayList<CategoryView> category_views = new ArrayList<CategoryView>();
+	
+	NumberFormat nf = NumberFormat.getCurrencyInstance();
+	DateFormat df = DateFormat.getDateInstance();
+	
+	class GraphView extends DivRep
+	{
+		Category category;
+		public GraphView(DivRep parent, Category _category) {
+			super(parent);
+			category = _category;
+		}
+
+		@Override
+		protected void onEvent(DivRepEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void render(PrintWriter out) {
+			out.write("<div id=\""+getNodeID()+"\">");
+			Date current = new Date();
+			//time is to force reload when this divrep is refreshed
+			out.write("<img src=\"chart?type=balance&pageid="+mainview.getPageID()+"&catid="+category.getID()+"&time="+current.getTime()+"\"/>");
+			out.write("</div>");
+		}	
+	}
+
+	class CategoryView extends DivRep 
+	{
+		Category category;
+		DivRepToggler graph_toggler;
+		DivRepButton addnewexpense;
+		
+		public CategoryView(DivRep parent, Category _category) {
+			super(parent);
+			category = _category;
+			graph_toggler = new DivRepToggler(this){
+				public DivRep createContent() {
+					return new GraphView(this, category);
+				}};
+			graph_toggler.setShowHtml("<span class=\"divrep_link\">Show Balance Graph</span>");
+			graph_toggler.setHideHtml("<span class=\"divrep_link\">Hide Balance Graph</span>");
+			graph_toggler.setShow(!category.hide_graph);
+			graph_toggler.addEventListener(new DivRepEventListener() {
+				public void handleEvent(DivRepEvent e) {
+					if(e.value.equals("show")) {
+						category.hide_graph = false;
+					} else {
+						category.hide_graph = true;
+					}
+				}
+			});
+			
+			addnewexpense = new DivRepButton(this, "Add New Expense");
+			addnewexpense.setStyle(DivRepButton.Style.ALINK);
+			addnewexpense.addEventListener(new DivRepEventListener() {
+				public void handleEvent(DivRepEvent e) {
+					mainview.expense_dialog.open(category, null);
+				}
+			});
+		}
+
+		protected void onEvent(DivRepEvent e) {
+			if(e.action.equals("remove")) {
+				//remove
+	 			for(Expense expense : category.getExpensesSortByDate()) {
+					if(expense.toString().equals(e.value)) {
+						mainview.removeExpense(category, expense);
+						break;
+					}
+	 			}
+			} else {
+				//edit
+	 			for(Expense expense : category.getExpensesSortByDate()) {
+					if(expense.toString().equals(e.value)) {
+						mainview.expense_dialog.open(category, expense);
+						break;
+					}
+	 			}
+			}
+		}
+
+		public void render(PrintWriter out) {
+			out.write("<div id=\""+getNodeID()+"\" class=\"expense_category\">");
+			out.write("<table width=\"100%\">");
+			out.write("<tr class=\"expense_category\">");
+			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
+			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
+			out.write("<th class=\"note\" style=\"text-align: right;\">Budget</th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+nf.format(category.amount)+"</th><td width=\"20px\"></td>");
+			out.write("</tr>");
+
+			for(Expense expense : category.getExpensesSortByDate()) {
+				out.write("<tr class=\"expense\" onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"')\">");
+				out.write("<td></td>"); //side
+				out.write("<th>"+expense.where+"&nbsp;</th>");
+				out.write("<td>"+expense.description+"</td>");
+				out.write("<td style=\"text-align: right;\">"+df.format(expense.date)+"</td>");
+				out.write("<td style=\"text-align: right;\">"+nf.format(expense.amount)+"</td>");
+				
+				out.write("<td>");
+				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
+				out.write("</td>");
+				out.write("</tr>");
+			}
+			
+			//balance
+			BigDecimal remain = category.amount;
+			remain = remain.subtract(category.getTotalExpense());
+			out.write("<tr class=\"expense_footer\">");
+			
+			out.write("<td></td>");
+			
+			out.write("<td class=\"newitem\">");
+			addnewexpense.render(out);
+			out.write("</td>");
+			
+			out.write("<td></td>"); //desc
+			
+			out.write("<th style=\"text-align: right;\">Remaining</th>");
+			out.write("<th style=\"text-align: right;\">"+nf.format(remain)+"</th>");
+			
+			out.write("<td></td>"); //remove button
+			
+			out.write("</tr>");
+			
+			out.write("</table>");
+			
+			out.write("<div class=\"graph\">");
+			graph_toggler.render(out);
+			out.write("</div>");
+		
+			out.write("</div>");
+		}
+	}
+	
+	public ExpenseView(final MainView parent) {
+		super(parent);
+		mainview = parent;
+		
+		for(Category category : mainview.getCategories()) {	
+			category_views.add(new CategoryView(this, category));
+		}		
+	}
+
+	@Override
+	protected void onEvent(DivRepEvent e) {
+		// TODO Auto-generated method stub
+	}
+	
+	public void updateExpenseCategory(Category category) {
+		for(CategoryView view : category_views) {
+			if(view.category == category) {
+				view.redraw();
+			}
+		}
+	}
+
+	public void render(PrintWriter out) {
+		out.write("<div class=\"expenseview round8\" id=\""+getNodeID()+"\">");
+		out.write("<h2>Expense</h2>");
+		for(CategoryView view : category_views) {
+			view.render(out);
+		}
+		out.write("</div>");
+	}
+
+}
