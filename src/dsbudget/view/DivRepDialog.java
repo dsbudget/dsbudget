@@ -11,6 +11,11 @@ abstract public class DivRepDialog extends DivRep {
 
 	Boolean has_cancelbutton = false;
 	Boolean rendered = false;
+	Integer height = null;
+	Integer width = null;
+	
+	public void setHeight(Integer h) { height = h; }
+	public void setWidth(Integer w) { width = w; }
 	
 	public void setTitle(String title)
 	{
@@ -62,7 +67,9 @@ abstract public class DivRepDialog extends DivRep {
 			out.write("</div>");
 	
 			out.write("<script type=\"text/javascript\">");
-			out.write("$(\"#"+getNodeID()+"_dialog\").dialog({autoOpen: false, closeOnEscape: true, bgiframe: true, width: 'auto', height: 'auto', modal: true");
+			String width_str = (width==null?"'auto'":width.toString());
+			String height_str = (height==null?"'auto'":height.toString());
+			out.write("$(\"#"+getNodeID()+"_dialog\").dialog({autoOpen: false, closeOnEscape: true, bgiframe: true, resizable: false, width: "+width_str+", height: "+height_str+", modal: true");
 		
 			out.write(",buttons: {");
 			if(has_cancelbutton) {

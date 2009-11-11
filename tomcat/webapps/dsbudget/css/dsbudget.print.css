@@ -1,0 +1,7 @@
+#header, #footer, .divrep_button {
+display: none;
+}
+
+.controls {
+top: 10px;
+}

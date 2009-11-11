@@ -2,87 +2,45 @@ package dsbudget.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
-import com.divrep.DivRepPage;
 import com.divrep.DivRepRoot;
 import com.divrep.common.DivRepButton;
-import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
-import com.divrep.common.DivRepButton.Style;
+import com.divrep.validator.DivRepIValidator;
 
+import dsbudget.model.Budget;
+import dsbudget.model.Category;
+import dsbudget.model.Expense;
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
-import dsbudget.view.BudgetingView;
 import dsbudget.view.DivRepDialog;
-import dsbudget.view.ExpenseView;
-import dsbudget.view.IncomeView;
 import dsbudget.view.MainView;
+import dsbudget.view.NewPageDialog;
 
 public class MainServlet extends ServletBase  {
 	
 	DivRepSelectBox pageselector;
 	DivRepButton newpagebutton;
+	DivRepButton savebutton;
 	NewPageDialog newpage_dialog;
 	MainView pageview;
-	
-	class NewPageDialog extends DivRepDialog
-	{
-		DivRepTextBox title;
-		DivRepSelectBox copy_from;
-		
-		public NewPageDialog(DivRep parent) {
-			super(parent, true);
-			setTitle("Create New Page");
-			
-			Date d = new Date();
-			SimpleDateFormat df = (SimpleDateFormat) SimpleDateFormat.getInstance();
-			df.applyPattern("M y");
-			String newname = df.format(new Date());
-			
-			title = new DivRepTextBox(this);
-			title.setLabel("Title");
-			title.setWidth(200);
-			title.setValue(newname);
-			
-			LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
-			for(Page page : budget.pages) {
-				pages_kv.put(page.getID(), page.name);
-			}
-			copy_from = new DivRepSelectBox(this, pages_kv);
-			copy_from.setNullLabel("(Empty Page)");
-			copy_from.setLabel("Copy from");
-			copy_from.setValue(pageview.getPageID());
-		}
-
-		public void onCancel() {
-			close();
-		}
-
-		@Override
-		public void onSubmit() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void renderDialog(PrintWriter out) {
-			title.render(out);
-			copy_from.render(out);
-		}
-		
-	}
 	
     public MainServlet() {
         super();
@@ -105,24 +63,34 @@ public class MainServlet extends ServletBase  {
 	{
 		decidePageToOpen(request);
 		
-		DivRepPage pageroot = DivRepRoot.initPageRoot(request);
-		initControls(pageroot);
+		pageroot = DivRepRoot.initPageRoot(request);
+		/*
+		pageroot.addEventListener(new DivRepEventListener() {
+			public void handleEvent(DivRepEvent e) {
+				if(e.action.equals("close")) {
+					System.out.println("homework");
+				}
+			}
+		});
+		*/
+		initControls();
 		
 		PrintWriter out = response.getWriter();
-		renderHeader(pageroot, out, request);
-		renderContent(pageroot, out, request);
-		renderFooter(pageroot, out, request);
+		renderHeader(out, request);
+		renderContent(out, request);
+		renderFooter(out, request);
 	}
 	
 	//setup all DivRep controls
-	protected void initControls(DivRepPage pageroot)
+	protected void initControls()
 	{
-		initPageControl(pageroot);
+		initPageControl();
+        newpage_dialog = new NewPageDialog(pageroot, budget, page);
 		pageview = new MainView(pageroot, budget, page);
 	}
 	
 	
-	protected void initPageControl(DivRepPage pageroot)
+	protected void initPageControl()
 	{
 		LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
 		
@@ -143,23 +111,41 @@ public class MainServlet extends ServletBase  {
 		if(page != null) {
 			pageselector.setValue(page.getID());
 		}
-        newpagebutton = new DivRepButton(pageroot, "Create New Page");
-        newpagebutton.setStyle(Style.ALINK);
+        newpagebutton = new DivRepButton(pageroot, "Create New Page ...");
+        //newpagebutton.setStyle(Style.ALINK);
         newpagebutton.addEventListener(new DivRepEventListener(){
 			public void handleEvent(DivRepEvent e) {
 				newpage_dialog.open();
 			}
 		});
-        newpage_dialog = new NewPageDialog(pageroot);
+        
+        savebutton = new DivRepButton(pageroot, "Save");
+        //saveclosebutton.setStyle(Style.ALINK);
+        savebutton.addEventListener(new DivRepEventListener() {
+			public void handleEvent(DivRepEvent e) {
+				save();
+				savebutton.alert("Saved!");
+			}
+		});
 	}
 	
-	void renderContent(DivRepPage pageroot, PrintWriter out, HttpServletRequest request)
+	void renderContent(PrintWriter out, HttpServletRequest request)
 	{	
+		out.write("<table class=\"controls\"><tr>");
 		
-		out.write("<div class=\"pageselector\">");
-		pageselector.render(out);
+		out.write("<td>");
+		savebutton.render(out);
+		out.write("</td>");
+		
+		out.write("<td>");
 		newpagebutton.render(out);
-		out.write("</div>");
+		out.write("</td>");
+		
+		out.write("<td class=\"pageselector\">");
+		pageselector.render(out);
+		out.write("</td>");
+		
+		out.write("</tr></table>");
 		
 		out.write("<div id=\"main\">");
 		pageview.render(out);

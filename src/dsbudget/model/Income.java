@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -21,6 +22,21 @@ public class Income implements XMLSerializer {
 		parent = _parent;
 	}
 	public Page getParent() { return parent; }
+	
+	public Income clone(Page newparent)
+	{
+		Income income = new Income(newparent);
+		income.balance_from_name = balance_from_name;
+		income.balance_from = balance_from;
+		income.amount = amount;
+		income.description = description;
+		income.deductions = new ArrayList<Deduction>();
+		for(Deduction deduction : deductions) {
+			income.deductions.add(deduction.clone());
+		}
+		
+		return income;
+	}
 	
 	public BigDecimal getAmount()
 	{
@@ -55,6 +71,7 @@ public class Income implements XMLSerializer {
 	{
 		if(element.getAttribute("balance").equals("yes")) {
 			balance_from_name = element.getAttribute("balance_from");
+			//balance_from will be set later (when requested)
 		} else {
 			balance_from_name = null;
 		}
@@ -75,9 +92,20 @@ public class Income implements XMLSerializer {
 		}
 	}
 
-	public Element toXML() {
-		// TODO Auto-generated method stub
-		return null;
+	public Element toXML(Document doc) {
+		Element elem = doc.createElement("Income");
+		if(balance_from_name == null) {
+			elem.setAttribute("balance", "no");
+		} else {
+			elem.setAttribute("balance", "yes");
+			elem.setAttribute("balance_from", balance_from_name);
+		}
+		elem.setAttribute("amount", Loader.saveAmount(amount).toString());
+		elem.setAttribute("desc", description);
+		for(Deduction deduction : deductions) {
+			elem.appendChild(deduction.toXML(doc));
+		}
+		return elem;
 	}
 
 }

@@ -14,4 +14,12 @@ public class Loader {
 		amount = amount.divide(divider);
 		return amount;
 	}
+	static Long saveAmount(BigDecimal amount)
+	{
+		Currency currency = NumberFormat.getCurrencyInstance().getCurrency();
+		BigDecimal multiplier = new BigDecimal(10);
+		multiplier = multiplier.pow(currency.getDefaultFractionDigits());
+		amount = amount.multiply(multiplier);
+		return amount.longValue();
+	}
 }

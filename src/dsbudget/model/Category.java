@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -21,10 +22,25 @@ public class Category extends ObjectID implements XMLSerializer {
 	public Boolean fixed;
 	public Boolean hide_graph;
 	public String name;
-	//Integer sort_by;
-	//String sort_order;
 	
-	private ArrayList<Expense> expenses = new ArrayList<Expense>();
+	public ArrayList<Expense> expenses = new ArrayList<Expense>();
+	
+	public Category clone(Page newparent)
+	{
+		Category category = new Category(newparent);
+		category.amount = amount;
+		category.color = color;
+		category.description = description;
+		category.fixed = fixed;
+		category.hide_graph = hide_graph;
+		category.name = name;
+		
+		category.expenses = new ArrayList<Expense>();
+		for(Expense expense : expenses) {
+			category.expenses.add(expense.clone());
+		}
+		return category;
+	}
 	
 	public ArrayList<Expense> getExpensesSortByDate()
 	{
@@ -96,11 +112,34 @@ public class Category extends ObjectID implements XMLSerializer {
 			}
 		}
 	}
-
-	@Override
-	public Element toXML() {
-		// TODO Auto-generated method stub
-		return null;
+/*
+	public BigDecimal amount;
+	public Color color;
+	public String description;
+	
+	public Boolean fixed;
+	public Boolean hide_graph;
+	public String name;
+	
+	public ArrayList<Expense> expenses = new ArrayList<Expense>();
+ */
+	public Element toXML(Document doc) {
+		Element elem = doc.createElement("Category");
+		elem.setAttribute("budget", Loader.saveAmount(amount).toString());
+		
+		long c = color.getRed();
+		c |= ((long)color.getGreen() << 8);
+		c |= ((long)color.getBlue() << 16);
+		
+		elem.setAttribute("color", String.valueOf(c));
+		elem.setAttribute("desc", description);
+		elem.setAttribute("fixed", (fixed==true?"yes":"no"));
+		elem.setAttribute("hide_graph", (hide_graph==true?"yes":"no"));
+		elem.setAttribute("name", name);
+		for(Expense expense : expenses) {
+			elem.appendChild(expense.toXML(doc));
+		}
+		return elem;
 	}
 
 }

@@ -16,7 +16,12 @@ input[type='text'], textarea {
 border: 1px solid #ccc;
 padding: 5px;
 margin-top: 3px;
-margin-bottom: 5px;
+margin-bottom: 3px;
+}
+select {
+padding: 2px;
+margin-top: 3px;
+margin-bottom: 3px;
 }
 
 select {
@@ -52,17 +57,36 @@ padding-left: 10px;
 margin-bottom: 3px;
 }
 
-.pageselector {
+.controls {
 position: absolute;
-top: 10px;
-right: -10px;
-padding:10px;
+top: 20px;
+right: 0px;
+border-collapse: collapse;
+}
+.controls td
+{
+padding:5px;
+padding-right: 10px;
+color: white;
+align: bottom;
+vertical-align: bottom;
+}
+.controls input
+{
+margin-bottom: 3px;
+}
+.controls .pageselector {
+padding-right: 10px;
+padding-left: 10px;
 background-color: #369;
-margin-right:10px;	
 -moz-border-radius-topleft: 8px;
 -webkit-border-top-left-radius: 8px;
 }
-
+.controls a.divrep_button {
+position: relative;
+color: white;
+padding-left: 3px;
+}
 
 .ui-widget {
 font-size: 0.9em;
@@ -138,12 +162,11 @@ font-weight: normal;
 text-align: left;
 }
 
-.incomeview tr.balance
-{
+.incomeview tr.balance {
 color: gray;
 }
-.expense_category .graph {
-padding-right: 40px;
+
+.graph {
 text-align: right;
 }
 
@@ -153,8 +176,7 @@ background-color: #fff;
 border-bottom: 1px solid #eee;
 }
 
-tr.expense th
-{
+tr.expense th {
 padding: 2px;
 }
 
@@ -192,17 +214,22 @@ color: #555;
 }
 
 a.divrep_button {
-color: black;
+color: #666;
 font-size: 9pt;
 }
 
 a:hover.divrep_button {
-color: #36c;
+color: #69f;
 }
-.pageselector a.divrep_button
-{
-position: relative;
+
+#footer {
 color: white;
-top: 2px;
-padding-left: 3px;
+text-align: center;
+line-height: 150%;
+}
+#footer a {
+color: white;
+}
+#footer .version {
+font-weight: bold;
 }

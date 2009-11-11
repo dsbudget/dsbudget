@@ -3,6 +3,8 @@ package dsbudget.model;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.ArrayList;
+
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -11,14 +13,33 @@ public class Page extends ObjectID implements XMLSerializer {
 	
 	public String name;
 	public Date created;
-	public Boolean b100dist;
+	//public Boolean b100dist;
 	
 	public ArrayList<Income> incomes = new ArrayList<Income>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
 	
-	Page(Budget _parent) {
+	public Page(Budget _parent) {
+		super();
 		parent = _parent;
 	}
+	public Page clone() {
+		Page page = new Page(parent);
+		page.name = name;
+		page.created = new Date();
+		
+		page.incomes = new ArrayList<Income>();
+		for(Income income : incomes) {
+			page.incomes.add(income.clone(page));
+		}
+		
+		page.categories = new ArrayList<Category>();
+		for(Category category : categories) {
+			page.categories.add(category.clone(page));
+		}
+
+		return page;
+	}
+	
 	public Budget getParent() { return parent; }
 	
 	public BigDecimal getTotalIncome() {
@@ -49,13 +70,15 @@ public class Page extends ObjectID implements XMLSerializer {
 	}
 	
 	public void fromXML(Element element) {
+		/*
 		if(element.getAttribute("b100dist").equals("yes")) {
 			b100dist = true;
 		} else {
 			b100dist = false;
 		}
+		*/
 		name = element.getAttribute("name");
-		created = new Date(Integer.parseInt(element.getAttribute("ctime")));
+		created = new Date(Long.parseLong(element.getAttribute("ctime"))*1000L);
 		
 		//income / category
 		NodeList nl = element.getChildNodes();
@@ -75,9 +98,17 @@ public class Page extends ObjectID implements XMLSerializer {
 		}
 	}
 
-	public Element toXML() {
-		// TODO Auto-generated method stub
-		return null;
+	public Element toXML(Document doc) {
+		Element elem = doc.createElement("Page");
+		elem.setAttribute("name", name);
+		elem.setAttribute("ctime", String.valueOf(created.getTime()/1000L));
+		for(Income income : incomes) {
+			elem.appendChild(income.toXML(doc));
+		}
+		for(Category category : categories) {
+			elem.appendChild(category.toXML(doc));
+		}
+		return elem;
 	}
 	
 	public BigDecimal getBalance()

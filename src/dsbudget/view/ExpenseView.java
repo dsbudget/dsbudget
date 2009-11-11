@@ -33,6 +33,8 @@ public class ExpenseView extends DivRep {
 	class GraphView extends DivRep
 	{
 		Category category;
+		Boolean hidden;
+		
 		public GraphView(DivRep parent, Category _category) {
 			super(parent);
 			category = _category;
@@ -44,12 +46,16 @@ public class ExpenseView extends DivRep {
 			
 		}
 
-		@Override
+		public Boolean isHidden() { return hidden; }
+		public void setHidden(Boolean flag) { hidden = flag; }
+		
 		public void render(PrintWriter out) {
-			out.write("<div id=\""+getNodeID()+"\">");
-			Date current = new Date();
-			//time is to force reload when this divrep is refreshed
-			out.write("<img src=\"chart?type=balance&pageid="+mainview.getPageID()+"&catid="+category.getID()+"&time="+current.getTime()+"\"/>");
+			out.write("<div class=\"graph\" id=\""+getNodeID()+"\">");
+			if(!hidden) {
+				Date current = new Date();
+				//time is to force reload when this divrep is refreshed
+				out.write("<img src=\"chart?type=balance&pageid="+mainview.getPageID()+"&catid="+category.getID()+"&time="+current.getTime()+"\"/>");
+			}
 			out.write("</div>");
 		}	
 	}
@@ -57,26 +63,33 @@ public class ExpenseView extends DivRep {
 	class CategoryView extends DivRep 
 	{
 		Category category;
-		DivRepToggler graph_toggler;
+		DivRepButton graph_toggler;
+		GraphView graph;
 		DivRepButton addnewexpense;
 		
 		public CategoryView(DivRep parent, Category _category) {
 			super(parent);
 			category = _category;
-			graph_toggler = new DivRepToggler(this){
-				public DivRep createContent() {
-					return new GraphView(this, category);
-				}};
-			graph_toggler.setShowHtml("<span class=\"divrep_link\">Show Balance Graph</span>");
-			graph_toggler.setHideHtml("<span class=\"divrep_link\">Hide Balance Graph</span>");
-			graph_toggler.setShow(!category.hide_graph);
+			
+			graph = new GraphView(this, category);
+			graph.setHidden(category.hide_graph);
+			graph_toggler = new DivRepButton(this, "");
+			if(graph.isHidden()) {
+				graph_toggler.setTitle("Show Graph");
+			} else {
+				graph_toggler.setTitle("Hide Graph");					
+			}	
+			graph_toggler.setStyle(DivRepButton.Style.ALINK);
 			graph_toggler.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
-					if(e.value.equals("show")) {
-						category.hide_graph = false;
+					graph.setHidden(!graph.isHidden());
+					graph.redraw();
+					if(graph.isHidden()) {
+						graph_toggler.setTitle("Show Graph");
 					} else {
-						category.hide_graph = true;
+						graph_toggler.setTitle("Hide Graph");					
 					}
+					graph_toggler.redraw();
 				}
 			});
 			
@@ -95,7 +108,7 @@ public class ExpenseView extends DivRep {
 	 			for(Expense expense : category.getExpensesSortByDate()) {
 					if(expense.toString().equals(e.value)) {
 						mainview.removeExpense(category, expense);
-						break;
+			 			return;
 					}
 	 			}
 			} else {
@@ -103,7 +116,7 @@ public class ExpenseView extends DivRep {
 	 			for(Expense expense : category.getExpensesSortByDate()) {
 					if(expense.toString().equals(e.value)) {
 						mainview.expense_dialog.open(category, expense);
-						break;
+						return;
 					}
 	 			}
 			}
@@ -115,16 +128,16 @@ public class ExpenseView extends DivRep {
 			out.write("<tr class=\"expense_category\">");
 			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
-			out.write("<th class=\"note\" style=\"text-align: right;\">Budget</th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+nf.format(category.amount)+"</th><td width=\"20px\"></td>");
+			out.write("<th width=\"100px\"></th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+nf.format(category.amount)+"</th><td width=\"20px\"></td>");
 			out.write("</tr>");
 
 			for(Expense expense : category.getExpensesSortByDate()) {
 				out.write("<tr class=\"expense\" onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"')\">");
-				out.write("<td></td>"); //side
-				out.write("<th>"+expense.where+"&nbsp;</th>");
+				out.write("<th>&nbsp;</th>"); //side
+				out.write("<td>"+expense.where+"&nbsp;</td>");
 				out.write("<td>"+expense.description+"</td>");
 				out.write("<td style=\"text-align: right;\">"+df.format(expense.date)+"</td>");
-				out.write("<td style=\"text-align: right;\">"+nf.format(expense.amount)+"</td>");
+				out.write("<td style=\"text-align: right;\">- "+nf.format(expense.amount)+"</td>");
 				
 				out.write("<td>");
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
@@ -143,7 +156,9 @@ public class ExpenseView extends DivRep {
 			addnewexpense.render(out);
 			out.write("</td>");
 			
-			out.write("<td></td>"); //desc
+			out.write("<td style=\"text-align: right;\">");
+			graph_toggler.render(out);
+			out.write("</td>"); //desc
 			
 			out.write("<th style=\"text-align: right;\">Remaining</th>");
 			out.write("<th style=\"text-align: right;\">"+nf.format(remain)+"</th>");
@@ -153,10 +168,8 @@ public class ExpenseView extends DivRep {
 			out.write("</tr>");
 			
 			out.write("</table>");
-			
-			out.write("<div class=\"graph\">");
-			graph_toggler.render(out);
-			out.write("</div>");
+		
+			graph.render(out);
 		
 			out.write("</div>");
 		}

@@ -44,6 +44,7 @@ public class IncomeView extends DivRep {
  			for(Income income : mainview.getIncomes()) {
 				if(income.toString().equals(e.value)) {
 					mainview.removeIncome(income);
+		 			modified(true);
 					return;
 				}
  			}
@@ -83,7 +84,7 @@ public class IncomeView extends DivRep {
 		BigDecimal nettotal = new BigDecimal(0);
 		
 		out.write("<table width=\"100%\">");
-		out.write("<tr class=\"header\"><th width=\"20px\"></th><th></th><th></th><th></th><th width=\"90px\"></th><th width=\"10px\"></th></tr>");
+		//out.write("<tr class=\"header\"><th></th><th></th><th></th><th></th><th width=\"90px\"></th><th width=\"10px\"></th></tr>");
 		for(final Income income : mainview.getIncomes()) {	
 			
 			DivRepButton addnewdeduction = new DivRepButton(this, "Add Deduction");
@@ -101,19 +102,19 @@ public class IncomeView extends DivRep {
 		
 			//income
 			out.write("<tr class=\"income\" onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"')\">");
-			out.write("<th></th>");
+			out.write("<th width=\"20px\"></th>");
 
 			out.write("<th width=\"270px\">"+name+"</th>");
 			
 			if(income.deductions.size() > 0) {
-				out.write("<th class=\"note\">Deductions</th>");
+				out.write("<th class=\"note\"></th>");
 			} else {
 				out.write("<td class=\"newitem\">");
 				addnewdeduction.render(out);
 				out.write("</td>");
 			}
-			out.write("<th></th>");
-			out.write("<td style=\"text-align: right;\">"+nf.format(amount)+"</td>");
+			out.write("<th style=\"text-align: right;\" class=\"note\"></th>");
+			out.write("<td width=\"90px\" style=\"text-align: right;\">"+nf.format(amount)+"</td>");
 			out.write("<td width=\"20px\">");
 			out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
 			out.write("</td>"); //TODO - remove icon
@@ -123,10 +124,10 @@ public class IncomeView extends DivRep {
 			for(Deduction deduction : income.deductions) {
 				out.write("<tr class=\"deduction\" onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_edit')\">");
 				out.write("<th>&nbsp;</th>");
-				out.write("<td></td>");
 				out.write("<td>"+StringEscapeUtils.escapeHtml(deduction.description)+"</td>");
 				out.write("<td></td>");
-				out.write("<td width=\"90px\" style=\"text-align: right;\">"+nf.format(deduction.amount)+"</td>");
+				out.write("<td></td>");
+				out.write("<td width=\"90px\" style=\"text-align: right;\">- "+nf.format(deduction.amount)+"</td>");
 				out.write("<td>");
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
 				out.write("</td>");
@@ -137,16 +138,16 @@ public class IncomeView extends DivRep {
 			if(income.deductions.size() > 0) {
 				out.write("<tr class=\"info\">");
 				out.write("<th>&nbsp;</th>");
-				out.write("<th></th>");
 				out.write("<td class=\"newitem\">");
 				addnewdeduction.render(out);
 				out.write("</td>");
-				out.write("<th class=\"note\" style=\"text-align: right;\">Total Deduction</th>");
-				out.write("<th class=\"note\" style=\"text-align: right;\">"+nf.format(total_deduction)+"</th>");
+				out.write("<td></td>");
+				out.write("<th style=\"text-align: right;\">Available Income</th>");
+				out.write("<th style=\"text-align: right;\">"+nf.format(total)+"</th>");
 			}
 			out.write("<td></td>");
 			out.write("</tr>");
-			
+			/*
 			//total available income
 			if(income.deductions.size() > 0) {
 				out.write("<tr class=\"info\">");
@@ -158,6 +159,7 @@ public class IncomeView extends DivRep {
 				out.write("<td></td>");
 				out.write("</tr>");
 			}
+			*/
 		}		
 		
 		out.write("<tr class=\"header\">");

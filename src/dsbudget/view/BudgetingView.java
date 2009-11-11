@@ -47,14 +47,13 @@ public class BudgetingView extends DivRep {
 		
 	}
 
-	@Override
 	protected void onEvent(DivRepEvent e) {
 		if(e.action.equals("remove")) {
 			//remove
  			for(Category category : sliders.keySet()) {
 				if(category.toString().equals(e.value)) {
 					mainview.removeCategory(category);
-					break;
+		 			return;
 				}
  			}
 		} else {
@@ -62,7 +61,7 @@ public class BudgetingView extends DivRep {
  			for(Category category : sliders.keySet()) {
 				if(category.toString().equals(e.value)) {
 					mainview.category_dialog.open(category);
-					break;
+		 			return;
 				}
  			}
 		}
@@ -71,8 +70,6 @@ public class BudgetingView extends DivRep {
 	public void render(PrintWriter out) {
 
 		out.write("<div class=\"budgetting round8\"  id=\""+getNodeID()+"\">");
-
-		out.write("<h2>Budgetting</h2>");
 		
 		BigDecimal total_free_income = mainview.getTotalIncome();
 		total_free_income = total_free_income.subtract(mainview.getTotalIncomeDeduction());
@@ -83,7 +80,7 @@ public class BudgetingView extends DivRep {
 		Long max = total_free_income.longValue();
 		if(max > 0) {
 			out.write("<table width=\"100%\">");
-			out.write("<tr class=\"header\"><th width=\"20px\"></th><th></th><th class=\"note\">"+nf.format(0)+"</th><th class=\"note\" style=\"text-align: right;\">"+nf.format(total_free_income)+"</th><th style=\"text-align: right;\"></th><th width=\"10px\"></th></tr>");
+			out.write("<tr class=\"header\"><td colspan=2><h2>Budgetting</h2></td><th style=\"vertical-align: bottom\" class=\"note\">"+nf.format(0)+"</th><th class=\"note\" style=\"vertical-align: bottom; text-align: right;\">"+nf.format(total_free_income)+"</th><th style=\"text-align: right;\"></th><th width=\"10px\"></th></tr>");
 
 			for(Category category : sliders.keySet()) {
 	
@@ -94,7 +91,7 @@ public class BudgetingView extends DivRep {
 		
 				out.write("<tr class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");
 			
-				out.write("<td></td>");
+				out.write("<td width=\"20px\"></td>");
 				
 				out.write("<th width=\"270px\">"+category.name+"</th>");
 				
@@ -126,13 +123,8 @@ public class BudgetingView extends DivRep {
 			if(total_budgetted.compareTo(total_free_income) > 0) {
 				out.write("<p class=\"divrep_elementerror\">Total budgeted is more than the total income</p>");
 			}	
-		} else {
-			out.write("<p class=\"divrep_elementerror\">Please allocate your income first.</p>");
 		}
 			
-
-
-
 		out.write("</div>");
 	
 	}

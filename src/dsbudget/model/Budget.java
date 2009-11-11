@@ -3,12 +3,20 @@ package dsbudget.model;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -37,7 +45,7 @@ public class Budget implements XMLSerializer {
 		}
 	}
 	
-	public static Budget loadXML(String xmlpath) {// "c:\tmp\BudgetDocument.xml"
+	public static Budget loadXML(String xmlpath) {
 		Budget budget = new Budget();
 		
 		//Load as DOM
@@ -57,11 +65,52 @@ public class Budget implements XMLSerializer {
 
 		return budget;
 	}
+	public void saveXML(String xmlpath)
+	{
+        DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer serializer;
+		try {
+			docBuilder = dbfac.newDocumentBuilder();
+	        Document doc = docBuilder.newDocument();
+		    DOMSource source = new DOMSource(toXML(doc));
+			
+			serializer = tf.newTransformer();
+			StreamResult result = new StreamResult(new FileWriter(xmlpath));
+			serializer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
+			serializer.setOutputProperty(OutputKeys.INDENT,"no");
+			serializer.transform(source, result); 
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-	@Override
-	public Element toXML() {
-		// TODO Auto-generated method stub
-		return null;
+	public Element toXML(Document doc) {
+		Element elem = doc.createElement("Budget");
+		elem.setAttribute("docversion", "2.00");
+		elem.setAttribute("openpage", openpage);
+		for(Page page : pages) {
+			elem.appendChild(page.toXML(doc));
+		}
+		
+		//add "New Page" for backward compatibility
+		Element newpage = doc.createElement("Page");
+		newpage.setAttribute("name", "New Page");
+		newpage.setAttribute("ctime", "0");
+		elem.appendChild(newpage);
+		
+		return elem;
 	}
 	
 	public Page findPage(Integer pageid) {	
@@ -72,7 +121,6 @@ public class Budget implements XMLSerializer {
 		}
 		return null;
 	}
-	
 	
 	public Page findPage(String pagename) {	
 		for(Page p : pages) {

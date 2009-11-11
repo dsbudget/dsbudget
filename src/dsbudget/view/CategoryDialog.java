@@ -33,11 +33,12 @@ public class CategoryDialog extends DivRepDialog
 		name.setLabel("Name");
 		name.setWidth(200);
 		name.setRequired(true);
+		name.setSampleValue("Mortgage");
 		
 		amount = new DivRepTextBox(this);
 		amount.setLabel("Budget");
 		amount.setWidth(200);
-		amount.setSampleValue(nf.format(10));
+		amount.setSampleValue(nf.format(700));
 		amount.setRequired(true);
 		amount.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
@@ -59,7 +60,7 @@ public class CategoryDialog extends DivRepDialog
 		
 		description = new DivRepTextBox(this);
 		description.setLabel("Description");
-		description.setWidth(300);
+		description.setWidth(290);
 		
 		color = new DivRepColorPicker(this);
 		color.setLabel("Color");
