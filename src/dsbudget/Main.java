@@ -77,10 +77,9 @@ public class Main {
         InetAddress address = null;
         try {
             connector = new Connector();
-            connector.setSecure(false);
-            //address = InetAddress.getLocalHost();
+            //connector.setSecure(false);
             if (address != null) {
-                IntrospectionUtils.setProperty(connector, "address", "localhost");
+                IntrospectionUtils.setProperty(connector, "address", "127.0.0.1");
             }
             IntrospectionUtils.setProperty(connector, "port", port);     
         } catch (Exception ex) {

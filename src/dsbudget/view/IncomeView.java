@@ -44,7 +44,6 @@ public class IncomeView extends DivRep {
  			for(Income income : mainview.getIncomes()) {
 				if(income.toString().equals(e.value)) {
 					mainview.removeIncome(income);
-		 			modified(true);
 					return;
 				}
  			}

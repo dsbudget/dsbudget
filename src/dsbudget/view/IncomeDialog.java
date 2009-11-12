@@ -11,6 +11,8 @@ import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
+import com.divrep.validator.DivRepIValidator;
+
 import dsbudget.model.Income;
 import dsbudget.model.Page;
 
@@ -49,6 +51,21 @@ public class IncomeDialog extends DivRepDialog
 		balance_from_name.setRequired(true);
 		balance_from_name.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
+			}
+		});
+		balance_from_name.addValidator(new DivRepIValidator<Integer>() {
+			public String getErrorMessage() {
+				return "Circular depencency detected.";
+			}
+
+			public Boolean isValid(Integer value) {
+				//find the target page
+				Page target = mainview.findPage(value);
+				if(target.hasBalanceCircle(target)) {
+					return false;
+				} else {
+					return true;
+				}
 			}
 		});
 		

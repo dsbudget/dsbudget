@@ -4,17 +4,10 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Date;
-
-import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
-import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepTextBox;
-
-import dsbudget.model.Category;
 import dsbudget.model.Deduction;
-import dsbudget.model.Expense;
 import dsbudget.model.Income;
 
 public class DeductionDialog extends DivRepDialog

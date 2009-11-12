@@ -18,6 +18,16 @@ public class Page extends ObjectID implements XMLSerializer {
 	public ArrayList<Income> incomes = new ArrayList<Income>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
 	
+	public Boolean hasBalanceCircle(Page origin) {
+		if(this == origin) return true;
+		for(Income income : incomes) {
+			if(income.hasBalanceCircle(origin)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public Page(Budget _parent) {
 		super();
 		parent = _parent;

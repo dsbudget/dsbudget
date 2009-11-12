@@ -51,6 +51,14 @@ public class Income implements XMLSerializer {
 		}
 	}
 	
+	public Boolean hasBalanceCircle(Page origin) 
+	{
+		if(balance_from == null) {
+			return false;
+		}
+		return balance_from.hasBalanceCircle(origin);
+	}
+	
 	public String getName() {
 		String name = description;
 		if(balance_from != null) {
