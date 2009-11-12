@@ -30,6 +30,9 @@ public class IncomeDialog extends DivRepDialog
 		super(parent);
 		mainview = parent;
 		
+		setHeight(300);
+		setWidth(350);
+		
 		balance_from = new DivRepCheckBox(this);
 		balance_from.setLabel("This is a balance from another page");
 		balance_from.addEventListener(new DivRepEventListener() {

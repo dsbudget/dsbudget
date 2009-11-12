@@ -28,6 +28,9 @@ public class CategoryDialog extends DivRepDialog
 	public CategoryDialog(MainView parent) {
 		super(parent);
 		mainview = parent;
+		
+		setHeight(360);
+		setWidth(380);
 	
 		name = new DivRepTextBox(this);
 		name.setLabel("Name");

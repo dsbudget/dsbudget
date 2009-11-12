@@ -1,13 +1,20 @@
 package dsbudget.servlet;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.apache.catalina.LifecycleException;
 import org.apache.commons.lang.StringEscapeUtils;
 import com.divrep.DivRep;
 
+import dsbudget.Main;
 import dsbudget.model.Budget;
 import dsbudget.model.Page;
 import dsbudget.view.DivRepColorPicker;
@@ -23,13 +30,28 @@ public class ServletBase extends HttpServlet {
 		budget = (Budget)config.getServletContext().getAttribute("budget");
 		if(budget == null) {
 			log("Loading Budget Document for the first time");
-			budget = Budget.loadXML("C:/dev/java/dsbudget/BudgetDocument.xml");
+			try {
+				String path = System.getProperty("document");
+				if(path == null) {
+					System.out.println("System parameter 'document' is not set (must be a path to the budget document XML). Trying default name.");
+					path = "BudgetDocument.xml";
+					System.setProperty("document", path);
+				}
+				budget = Budget.loadXML(path);
+			} catch (Exception e) {
+				System.out.println("Failed to load XML " + System.getProperty("document"));
+				System.out.println("Creaing empty doc");
+				budget = new Budget();
+				Page page = new Page(budget);
+				page.name = "Untitled";
+				budget.pages.add(page);
+			}
 			config.getServletContext().setAttribute("budget", budget);
 			log("Loaded " + budget.pages.size() + " pages");
 		}
 	}
-	public void save() {
-		budget.saveXML("C:/dev/java/dsbudget/BudgetDocument.xml");
+	public void save() throws ParserConfigurationException, IOException, TransformerException {
+		budget.saveXML(System.getProperty("document"));
 	}
 
 	protected void renderHeader(PrintWriter out, HttpServletRequest request) 
@@ -62,7 +84,7 @@ public class ServletBase extends HttpServlet {
 	{
 		out.write("</div>");	
 		out.write("<div id=\"footer\">");
-		out.write("<span class=\"version\">dsBudget v2.0.0</span>&nbsp;");
+		out.write("<span class=\"version\">dsBudget v2.0.0a</span>&nbsp;");
 		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\">Soichi Hayashi</a></span>");
 		out.write("<br/>");
 		out.write("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");

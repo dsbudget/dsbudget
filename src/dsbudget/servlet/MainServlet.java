@@ -44,7 +44,6 @@ public class MainServlet extends ServletBase  {
 	
     public MainServlet() {
         super();
-        
     }
     
 	protected void decidePageToOpen(HttpServletRequest request)
@@ -57,6 +56,19 @@ public class MainServlet extends ServletBase  {
 			//then use document's openpage
 			page = budget.findPage(budget.openpage);
 		}
+		
+		//if we can't find, let's use the first page
+		if(page == null) {
+			if(budget.pages.size() > 0) {
+				page = budget.pages.get(0);
+			} else {
+				//we have no page whatsoever - create one
+				page = new Page(budget);
+				page.name = "Untitled";
+				budget.pages.add(page);
+			}
+		}
+		budget.openpage = page.name;
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
@@ -64,15 +76,6 @@ public class MainServlet extends ServletBase  {
 		decidePageToOpen(request);
 		
 		pageroot = DivRepRoot.initPageRoot(request);
-		/*
-		pageroot.addEventListener(new DivRepEventListener() {
-			public void handleEvent(DivRepEvent e) {
-				if(e.action.equals("close")) {
-					System.out.println("homework");
-				}
-			}
-		});
-		*/
 		initControls();
 		
 		PrintWriter out = response.getWriter();
@@ -89,7 +92,6 @@ public class MainServlet extends ServletBase  {
 		pageview = new MainView(pageroot, budget, page);
 	}
 	
-	
 	protected void initPageControl()
 	{
 		LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
@@ -99,6 +101,7 @@ public class MainServlet extends ServletBase  {
 			pages_kv.put(page.getID(), page.name);
 		}
 		pageselector = new DivRepSelectBox(pageroot, pages_kv);
+		pageselector.setHasNull(false);
 		pageselector.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
 				for(Page page : budget.pages) {
@@ -123,8 +126,12 @@ public class MainServlet extends ServletBase  {
         //saveclosebutton.setStyle(Style.ALINK);
         savebutton.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
-				save();
-				savebutton.alert("Saved!");
+				try {
+					save();
+					savebutton.alert("Saved!");
+				} catch(Exception e1) {
+					savebutton.alert("Sorry, we had a problem saving this document. " + e.toString());
+				}
 			}
 		});
 	}

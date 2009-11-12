@@ -3,10 +3,11 @@ package dsbudget.view;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
-import com.divrep.DivRepEventListener;
 
 import dsbudget.model.Budget;
 import dsbudget.model.Category;
@@ -116,7 +117,13 @@ public class MainView extends DivRep {
 		return page.incomes;
 	}
 	public ArrayList<Category> getCategories() {
-		return page.categories;
+		ArrayList<Category> sorted = page.categories;
+		Collections.sort(sorted, new Comparator<Category> () {
+			public int compare(Category a, Category b) {
+				return a.name.compareTo(b.name);
+			}
+		});
+		return sorted;
 	}
 	public Integer getPageID() {
 		return page.getID();

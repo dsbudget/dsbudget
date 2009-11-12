@@ -31,6 +31,9 @@ public class ExpenseDialog extends DivRepDialog
 	public ExpenseDialog(MainView parent) {
 		super(parent);
 		mainview = parent;
+		
+		setHeight(400);
+		setWidth(370);
 	
 		where = new DivRepTextBox(this);
 		where.setLabel("Where");
@@ -39,7 +42,7 @@ public class ExpenseDialog extends DivRepDialog
 		where.setRequired(true);
 		
 		note = new DivRepTextBox(this);
-		note.setLabel("Description");
+		note.setLabel("Note");
 		note.setWidth(300);
 		
 		date = new DivRepDate(this);
@@ -86,6 +89,11 @@ public class ExpenseDialog extends DivRepDialog
 			amount.setValue(nf.format(expense.amount));
 			note.setValue(expense.description);
 			date.setValue(expense.date);
+			
+			where.validate();
+			amount.validate();
+			note.validate();
+			date.validate();
 		}
 		where.redraw();
 		amount.redraw();

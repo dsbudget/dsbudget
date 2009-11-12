@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
@@ -20,7 +21,7 @@ import dsbudget.model.Page;
 public class BudgetingView extends DivRep {
 	MainView mainview;
 
-	HashMap<Category, DivRepSlider> sliders = new HashMap<Category, DivRepSlider>();
+	LinkedHashMap<Category, DivRepSlider> sliders = new LinkedHashMap<Category, DivRepSlider>();
 	DivRepButton addnewcategory;
 	
 	public BudgetingView(final MainView parent) {

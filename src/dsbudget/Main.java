@@ -14,11 +14,11 @@ import org.apache.tomcat.util.IntrospectionUtils;
 public class Main {
 	
 	private String path = null;
-    private Embedded embedded = null;
+    public static Embedded tomcat = null;
     private Host host = null;
     private Context rootcontext;
 
-    String port = "6091";
+    public static String port = "16091";
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -38,23 +38,23 @@ public class Main {
         System.setProperty("catalina.base", "tomcat");
         
         // Create an embedded server
-        embedded = new Embedded();
-        embedded.setCatalinaHome("tomcat");
+        tomcat = new Embedded();
+        tomcat.setCatalinaHome("tomcat");
 
         // set the memory realm
         MemoryRealm memRealm = new MemoryRealm();
-        embedded.setRealm(memRealm);
+        tomcat.setRealm(memRealm);
 
         // Create an engine
-        engine = embedded.createEngine();
+        engine = tomcat.createEngine();
         engine.setDefaultHost("localhost");
 
         // Create a default virtual host
-        host = embedded.createHost("localhost", "webapps");
+        host = tomcat.createHost("localhost", "webapps");
         engine.addChild(host);
   
         // Create the ROOT context
-        rootcontext = embedded.createContext("", "ROOT");
+        rootcontext = tomcat.createContext("", "ROOT");
         rootcontext.setReloadable(true);
         rootcontext.addWelcomeFile("index.jsp");
         host.addChild(rootcontext);
@@ -66,12 +66,12 @@ public class Main {
         this.host.addChild(appCtx);
         */
         
-        Context appCtx = embedded.createContext("/dsbudget", "dsbudget");
+        Context appCtx = tomcat.createContext("/dsbudget", "dsbudget");
         appCtx.setPrivileged(true); 
         host.addChild(appCtx);
         
         // Install the assembled container hierarchy
-        embedded.addEngine(engine);
+        tomcat.addEngine(engine);
         String addr = null;
         Connector connector = null;
         InetAddress address = null;
@@ -88,11 +88,11 @@ public class Main {
         }
         connector.setEnableLookups(false);
 
-        embedded.addConnector(connector);
-        embedded.start();
+        tomcat.addConnector(connector);
+        tomcat.start();
     }
     
     public void stopTomcat() throws Exception {
-        embedded.stop();
+    	tomcat.stop();
     }
 }

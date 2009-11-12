@@ -32,6 +32,9 @@ public class DeductionDialog extends DivRepDialog
 		super(parent);
 		mainview = parent;
 		
+		setHeight(250);
+		setWidth(450);
+		
 		description = new DivRepTextBox(this);
 		description.setLabel("Description");
 		description.setRequired(true);

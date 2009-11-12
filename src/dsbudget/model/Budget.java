@@ -45,55 +45,35 @@ public class Budget implements XMLSerializer {
 		}
 	}
 	
-	public static Budget loadXML(String xmlpath) {
+	public static Budget loadXML(String xmlpath) throws ParserConfigurationException, SAXException, IOException {
 		Budget budget = new Budget();
 		
 		//Load as DOM
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(xmlpath);
-			NodeList roots = doc.getElementsByTagName("Budget");
-			budget.fromXML((Element)roots.item(0));
-		}catch(ParserConfigurationException pce) {
-			pce.printStackTrace();
-		}catch(SAXException se) {
-			se.printStackTrace();
-		}catch(IOException ioe) {
-			ioe.printStackTrace();
-		}
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(xmlpath);
+		NodeList roots = doc.getElementsByTagName("Budget");
+		budget.fromXML((Element)roots.item(0));
+	
 
 		return budget;
 	}
-	public void saveXML(String xmlpath)
+	public void saveXML(String xmlpath) throws ParserConfigurationException, IOException, TransformerException
 	{
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer serializer;
-		try {
-			docBuilder = dbfac.newDocumentBuilder();
-	        Document doc = docBuilder.newDocument();
-		    DOMSource source = new DOMSource(toXML(doc));
-			
-			serializer = tf.newTransformer();
-			StreamResult result = new StreamResult(new FileWriter(xmlpath));
-			serializer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
-			serializer.setOutputProperty(OutputKeys.INDENT,"no");
-			serializer.transform(source, result); 
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
+		docBuilder = dbfac.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
+	    DOMSource source = new DOMSource(toXML(doc));
+		
+		serializer = tf.newTransformer();
+		StreamResult result = new StreamResult(new FileWriter(xmlpath));
+		serializer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
+		serializer.setOutputProperty(OutputKeys.INDENT,"no");
+		serializer.transform(source, result); 		
 	}
 
 	public Element toXML(Document doc) {
