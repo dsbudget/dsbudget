@@ -3,6 +3,8 @@ package dsbudget.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,6 +46,7 @@ public class ServletBase extends HttpServlet {
 				budget = new Budget();
 				Page page = new Page(budget);
 				page.name = "Untitled";
+				page.created = new Date();
 				budget.pages.add(page);
 			}
 			config.getServletContext().setAttribute("budget", budget);
@@ -76,7 +79,7 @@ public class ServletBase extends HttpServlet {
 		//out.write("<body onbeforeunload=\"if(confirm('Do you want to save the data?')) divrep('"+pageroot.getNodeID()+"', event, null, 'close')\">");
 		out.write("<body>");
 		
-		out.write("<div id=\"header\"><h1>dsBudget</h1><h2>Formally known as SimpleD Budget</h2></div>");
+		out.write("<div id=\"header\"><h1>dsBudget</h1><h2>Previously known as SimpleD Budget</h2></div>");
 		out.write("<div id=\"content\">");	
 	
 	}
@@ -84,7 +87,7 @@ public class ServletBase extends HttpServlet {
 	{
 		out.write("</div>");	
 		out.write("<div id=\"footer\">");
-		out.write("<span class=\"version\">dsBudget v2.0.0a</span>&nbsp;");
+		out.write("<span class=\"version\">dsBudget v2.0.1</span>&nbsp;");
 		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\">Soichi Hayashi</a></span>");
 		out.write("<br/>");
 		out.write("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");

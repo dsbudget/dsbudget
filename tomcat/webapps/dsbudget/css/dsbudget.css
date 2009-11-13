@@ -87,6 +87,10 @@ position: relative;
 color: white;
 padding-left: 3px;
 }
+.inline
+{
+display: inline;
+}
 
 .ui-widget {
 font-size: 0.9em;

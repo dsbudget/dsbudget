@@ -57,13 +57,19 @@ public class ChartServlet extends ServletBase {
 		Page page = budget.findPage(pageid);
 		Integer catid = Integer.parseInt(request.getParameter("catid"));
 		Category category = page.findCategory(catid);
-		renderBalanceChart(response.getOutputStream(), category);
+		renderBalanceChart(response.getOutputStream(), page, category);
 	}
 
-	public void renderBalanceChart(OutputStream out, Category category) {
+	public void renderBalanceChart(OutputStream out, Page page, Category category) {
 		TimeSeries pop = new TimeSeries("Balance", Day.class);
 		BigDecimal balance = category.amount;
+		
+		Boolean first = true;
 		for (Expense expense : category.getExpensesSortByDate()) {
+			if(first && expense.date.compareTo(page.created) > 0) {
+				pop.addOrUpdate(new Day(page.created), category.amount);
+			}
+			first = false;
 			balance = balance.subtract(expense.amount);
 			pop.addOrUpdate(new Day(expense.date), balance);
 		}

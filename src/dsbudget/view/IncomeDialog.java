@@ -37,7 +37,7 @@ public class IncomeDialog extends DivRepDialog
 		setWidth(350);
 		
 		balance_from = new DivRepCheckBox(this);
-		balance_from.setLabel("This is a balance from another page");
+		balance_from.setLabel("Use balance from another page");
 		balance_from.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
 				showHideBalance();

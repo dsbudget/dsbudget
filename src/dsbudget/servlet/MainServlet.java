@@ -32,14 +32,14 @@ import dsbudget.model.Expense;
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
-import dsbudget.view.NewPageDialog;
+import dsbudget.view.PageDialog;
 
 public class MainServlet extends ServletBase  {
 	
 	DivRepSelectBox pageselector;
-	DivRepButton newpagebutton;
+	DivRepButton pagesettingsbutton;
 	DivRepButton savebutton;
-	NewPageDialog newpage_dialog;
+	PageDialog pagedialog;
 	MainView pageview;
 	
     public MainServlet() {
@@ -88,7 +88,12 @@ public class MainServlet extends ServletBase  {
 	protected void initControls()
 	{
 		initPageControl();
-        newpage_dialog = new NewPageDialog(pageroot, budget, page);
+		pagedialog = new PageDialog(pageroot, budget, page) {
+			public void onCancel() {
+				pageselector.setValue(page.getID());
+				pageselector.redraw();
+				pagedialog.close();
+			}};
 		pageview = new MainView(pageroot, budget, page);
 	}
 	
@@ -100,7 +105,9 @@ public class MainServlet extends ServletBase  {
 		for(Page page : budget.pages) {
 			pages_kv.put(page.getID(), page.name);
 		}
+		pages_kv.put(-1, "(New Page)");
 		pageselector = new DivRepSelectBox(pageroot, pages_kv);
+		pageselector.addClass("inline");
 		pageselector.setHasNull(false);
 		pageselector.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
@@ -110,15 +117,17 @@ public class MainServlet extends ServletBase  {
 						return;
 					}
 				}
+				pagedialog.open(true);
 			}});
 		if(page != null) {
 			pageselector.setValue(page.getID());
 		}
-        newpagebutton = new DivRepButton(pageroot, "Create New Page ...");
-        //newpagebutton.setStyle(Style.ALINK);
-        newpagebutton.addEventListener(new DivRepEventListener(){
+		pagesettingsbutton = new DivRepButton(pageroot, "Page Settings");
+		pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
+		pagesettingsbutton.addClass("inline");
+		pagesettingsbutton.addEventListener(new DivRepEventListener(){
 			public void handleEvent(DivRepEvent e) {
-				newpage_dialog.open();
+				pagedialog.open(false);
 			}
 		});
         
@@ -144,11 +153,9 @@ public class MainServlet extends ServletBase  {
 		savebutton.render(out);
 		out.write("</td>");
 		
-		out.write("<td>");
-		newpagebutton.render(out);
-		out.write("</td>");
-		
 		out.write("<td class=\"pageselector\">");
+		pagesettingsbutton.render(out);
+		out.write("&nbsp;");
 		pageselector.render(out);
 		out.write("</td>");
 		
@@ -157,6 +164,6 @@ public class MainServlet extends ServletBase  {
 		out.write("<div id=\"main\">");
 		pageview.render(out);
 		out.write("</div>");
-		newpage_dialog.render(out);
+		pagedialog.render(out);
 	}
 }
