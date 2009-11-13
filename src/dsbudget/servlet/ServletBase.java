@@ -13,11 +13,11 @@ import javax.xml.transform.TransformerException;
 import org.apache.catalina.LifecycleException;
 import org.apache.commons.lang.StringEscapeUtils;
 import com.divrep.DivRep;
+import com.divrep.common.DivRepColorPicker;
 
 import dsbudget.Main;
 import dsbudget.model.Budget;
 import dsbudget.model.Page;
-import dsbudget.view.DivRepColorPicker;
 
 public class ServletBase extends HttpServlet {
 	DivRep pageroot;

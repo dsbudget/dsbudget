@@ -9,6 +9,8 @@ import java.text.ParseException;
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
+import com.divrep.common.DivRepColorPicker;
+import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepTextBox;
 
 import dsbudget.model.Category;

@@ -29,6 +29,7 @@ public class Main {
 			//let it continue..
 			e.printStackTrace();
 		}
+		System.out.println("Opening a browser...");
 		BrowserControl.displayURL("http://localhost:"+main.port+"/dsbudget/main");
 	}
 		

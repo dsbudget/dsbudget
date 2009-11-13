@@ -21,6 +21,7 @@ import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.DivRepRoot;
 import com.divrep.common.DivRepButton;
+import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
@@ -30,7 +31,6 @@ import dsbudget.model.Category;
 import dsbudget.model.Expense;
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
-import dsbudget.view.DivRepDialog;
 import dsbudget.view.MainView;
 import dsbudget.view.NewPageDialog;
 

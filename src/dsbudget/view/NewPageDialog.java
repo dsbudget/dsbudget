@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 
 import com.divrep.DivRep;
+import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;

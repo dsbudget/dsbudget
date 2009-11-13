@@ -59,7 +59,7 @@ margin-bottom: 3px;
 
 .controls {
 position: absolute;
-top: 20px;
+top: 23px;
 right: 0px;
 border-collapse: collapse;
 }
@@ -119,6 +119,16 @@ background-color: #ddd;
 border-bottom: 1px solid white;
 }
 
+/*for IE - which doesn't honer tr border...*/
+.budgetting tr.category td, 
+.budgetting tr.category th, 
+.incomeview tr.income td, 
+.incomeview tr.income th,
+.expenseview tr.expense_category td,
+.expenseview tr.expense_category th {
+border-bottom: 1px solid white;
+}
+
 .incomeview tr:hover.income,
 .incomeview tr:hover.deduction,
 .budgetting tr:hover.category, 
@@ -168,11 +178,20 @@ color: gray;
 
 .graph {
 text-align: right;
+padding-right: 10px;
 }
 
 tr.expense,
 tr.deduction {
 background-color: #fff;
+border-bottom: 1px solid #eee;
+}
+
+/*for IE - which doesn't honer tr border...*/
+tr.expense td,
+tr.deduction td,
+tr.expense th,
+tr.deduction th {
 border-bottom: 1px solid #eee;
 }
 
@@ -199,7 +218,7 @@ color: #555;
 -webkit-border-top-left-radius: 4px;
 -webkit-border-top-right-radius: 4px;
 -webkit-border-bottom-left-radius: 4px;
--webkit-border-bottom-right-radius: 4px;	
+-webkit-border-bottom-right-radius: 4px;
 }
 
 .round8 {
@@ -210,7 +229,7 @@ color: #555;
 -webkit-border-top-left-radius: 8px;
 -webkit-border-top-right-radius: 8px;
 -webkit-border-bottom-left-radius: 8px;
--webkit-border-bottom-right-radius: 8px;	
+-webkit-border-bottom-right-radius: 8px;
 }
 
 a.divrep_button {
@@ -226,6 +245,7 @@ color: #69f;
 color: white;
 text-align: center;
 line-height: 150%;
+padding-bottom: 10px;
 }
 #footer a {
 color: white;

@@ -12,6 +12,7 @@ import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepDate;
+import com.divrep.common.DivRepSlider;
 import com.divrep.common.DivRepTextBox;
 
 import dsbudget.model.Category;

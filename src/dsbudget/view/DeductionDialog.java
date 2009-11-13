@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
+import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepTextBox;
 import dsbudget.model.Deduction;
 import dsbudget.model.Income;
