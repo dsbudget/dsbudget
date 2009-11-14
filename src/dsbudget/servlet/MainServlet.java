@@ -105,7 +105,7 @@ public class MainServlet extends ServletBase  {
 		for(Page page : budget.pages) {
 			pages_kv.put(page.getID(), page.name);
 		}
-		pages_kv.put(-1, "(New Page)");
+		pages_kv.put(-1, "(Create New Page)");
 		pageselector = new DivRepSelectBox(pageroot, pages_kv);
 		pageselector.addClass("inline");
 		pageselector.setHasNull(false);
@@ -139,7 +139,7 @@ public class MainServlet extends ServletBase  {
 					save();
 					savebutton.alert("Saved!");
 				} catch(Exception e1) {
-					savebutton.alert("Sorry, we had a problem saving this document. " + e.toString());
+					savebutton.alert("Sorry, we had a problem saving this document. " + e1.getMessage());
 				}
 			}
 		});

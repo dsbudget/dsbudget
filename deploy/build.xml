@@ -40,6 +40,9 @@
 		</copy>
 		<copy file="../BudgetDocument.xml" todir="${deploy.dir}"/>
 		<copy file="run.bat" todir="${deploy.dir}"/>
+		<zip destfile="${deploy.dir}/../dsbudget.zip"
+		       basedir="${deploy.dir}"
+		  />
 	</target>
 	<target name="clean">
 		<delete dir="${deploy.dir}"/>

@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
+import com.divrep.DivRepEventListener;
+import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepSelectBox;
@@ -33,16 +35,27 @@ public abstract class PageDialog extends DivRepDialog
 	LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
 
 	class NewPageStuff extends DivRep {
+		
 		public Boolean hidden = false;
 		public DivRepSelectBox copy_from;
+		public DivRepCheckBox usebalance;
+		
 		public NewPageStuff(DivRep parent) {
 			super(parent);
 			for(Page page : budget.pages) {
 				pages_kv.put(page.getID(), page.name);
 			}
 			copy_from = new DivRepSelectBox(this, pages_kv);
-			copy_from.setNullLabel("(Empty Page)");
+			copy_from.setNullLabel("(Create an Empty Page)");
 			copy_from.setLabel("Copy Income & Budgetting from");
+			copy_from.addEventListener(new DivRepEventListener() {
+				public void handleEvent(DivRepEvent e) {
+					usebalance.setHidden(!e.value.equals("0"));		
+					usebalance.redraw();
+				}});
+			usebalance = new DivRepCheckBox(this);
+			usebalance.setLabel("Use balance from this page as an income");
+			usebalance.setValue(true);
 		}
 		protected void onEvent(DivRepEvent e) {
 			// TODO Auto-generated method stub
@@ -51,8 +64,9 @@ public abstract class PageDialog extends DivRepDialog
 		public void render(PrintWriter out) {
 			out.write("<div id=\""+getNodeID()+"\">");
 			if(!hidden) {
+				out.write("<br/>");
 				copy_from.render(out);
-				out.write("<p>* Balance Incomes and Expenses will not be copied</p>");	
+				usebalance.render(out);
 			}
 			out.write("</div>");
 		}
@@ -153,10 +167,11 @@ public abstract class PageDialog extends DivRepDialog
 	{
 		Page newpage;
 		
-		//copy from other page if requested
 		Integer id = newpage_stuff.copy_from.getValue();
 		if(id != null) {
-			newpage = current_page.clone();
+			//copy from the original page
+			Page original = budget.findPage(id);
+			newpage = original.clone();
 			
 			//clear expenses
 			for(Category category : newpage.categories) {
@@ -171,8 +186,16 @@ public abstract class PageDialog extends DivRepDialog
 				}
 			}
 			newpage.incomes = non_balance_incomes;
+		
+			//add balance as income
+			if(newpage_stuff.usebalance.getValue()) {
+				Income income = new Income(newpage);
+				income.balance_from = original;
+				newpage.incomes.add(income);
+			}
 			
 		} else {
+			//empty page
 			newpage = new Page(budget);
 		}
 		newpage.name = title.getValue();

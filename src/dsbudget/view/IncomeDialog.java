@@ -62,7 +62,7 @@ public class IncomeDialog extends DivRepDialog
 			public Boolean isValid(Integer value) {
 				//find the target page
 				Page target = mainview.findPage(value);
-				if(target.hasBalanceCircle(target)) {
+				if(target.hasBalanceCircle(mainview.page)) {
 					return false;
 				} else {
 					return true;
@@ -116,7 +116,9 @@ public class IncomeDialog extends DivRepDialog
 				balance_from.setValue(false);
 			}
 			description.setValue(income.description);
-			amount.setValue(nf.format(income.amount));
+			if(income.amount != null) {
+				amount.setValue(nf.format(income.amount));
+			}
 		}
 
 		showHideBalance();
@@ -158,10 +160,8 @@ public class IncomeDialog extends DivRepDialog
 			income.description = description.getValue();
 			if(balance_from.getValue()) {
 				income.balance_from = mainview.findPage(balance_from_name.getValue());
-				income.balance_from_name = income.balance_from.name;
 			} else {
 				income.balance_from = null;
-				income.balance_from_name = null;
 			}
 			mainview.updateIncomeView();
 			close();

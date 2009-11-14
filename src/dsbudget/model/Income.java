@@ -9,7 +9,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class Income implements XMLSerializer {
-	public String balance_from_name; //null if this is not a balance from any month
+	private String __balance_from_name; //used only temporarily to load the balance_from lateron
+	
 	public Page balance_from = null;
 	public BigDecimal amount;
 	public String description;
@@ -26,7 +27,7 @@ public class Income implements XMLSerializer {
 	public Income clone(Page newparent)
 	{
 		Income income = new Income(newparent);
-		income.balance_from_name = balance_from_name;
+		//income.balance_from_name = balance_from_name;
 		income.balance_from = balance_from;
 		income.amount = amount;
 		income.description = description;
@@ -40,13 +41,14 @@ public class Income implements XMLSerializer {
 	
 	public BigDecimal getAmount()
 	{
-		if(balance_from_name == null) {
+		if(__balance_from_name != null) {
+			balance_from =  parent.getParent().findPage(__balance_from_name);
+			__balance_from_name = null;//we don't need this anymore..
+		}
+		
+		if(balance_from == null) {
 			return amount;	
 		} else {
-			if(balance_from == null) {
-				balance_from = parent.getParent().findPage(balance_from_name);
-			}
-			//System.out.println(description + " -- Balance from " + balance_from.name + " is " + balance_from.getBalance());
 			return balance_from.getBalance();
 		}
 	}
@@ -62,7 +64,7 @@ public class Income implements XMLSerializer {
 	public String getName() {
 		String name = description;
 		if(balance_from != null) {
-			name = "Balance from " + StringEscapeUtils.escapeHtml(balance_from_name);
+			name = "Balance from " + StringEscapeUtils.escapeHtml(balance_from.name);
 		}
 		return name;
 	}
@@ -78,12 +80,13 @@ public class Income implements XMLSerializer {
 	public void fromXML(Element element) 
 	{
 		if(element.getAttribute("balance").equals("yes")) {
-			balance_from_name = element.getAttribute("balance_from");
+			__balance_from_name = element.getAttribute("balance_from");
 			//balance_from will be set later (when requested)
 		} else {
-			balance_from_name = null;
+			amount = Loader.loadAmount(element.getAttribute("amount"));
+			__balance_from_name = null;
 		}
-		amount = Loader.loadAmount(element.getAttribute("amount"));
+
 		description = element.getAttribute("desc");
 		
 		//deduction
@@ -102,13 +105,13 @@ public class Income implements XMLSerializer {
 
 	public Element toXML(Document doc) {
 		Element elem = doc.createElement("Income");
-		if(balance_from_name == null) {
+		if(balance_from == null) {
 			elem.setAttribute("balance", "no");
+			elem.setAttribute("amount", Loader.saveAmount(getAmount()).toString());
 		} else {
 			elem.setAttribute("balance", "yes");
-			elem.setAttribute("balance_from", balance_from_name);
+			elem.setAttribute("balance_from", balance_from.name);
 		}
-		elem.setAttribute("amount", Loader.saveAmount(amount).toString());
 		elem.setAttribute("desc", description);
 		for(Deduction deduction : deductions) {
 			elem.appendChild(deduction.toXML(doc));

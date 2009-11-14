@@ -2,6 +2,8 @@ package dsbudget.servlet;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.IOException;
@@ -17,6 +19,9 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -26,9 +31,11 @@ import dsbudget.model.Expense;
 import dsbudget.model.Page;
 import dsbudget.view.Chart;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 public class ChartServlet extends ServletBase {
 
@@ -51,15 +58,14 @@ public class ChartServlet extends ServletBase {
 		}
 	}
 
-	protected void drawBalance(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	protected void drawBalance(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Integer pageid = Integer.parseInt(request.getParameter("pageid"));
 		Page page = budget.findPage(pageid);
 		Integer catid = Integer.parseInt(request.getParameter("catid"));
 		Category category = page.findCategory(catid);
 		renderBalanceChart(response.getOutputStream(), page, category);
 	}
-
+/*
 	public void renderBalanceChart(OutputStream out, Page page, Category category) {
 		TimeSeries pop = new TimeSeries("Balance", Day.class);
 		BigDecimal balance = category.amount;
@@ -84,9 +90,91 @@ public class ChartServlet extends ServletBase {
 		plot.setRangeGridlinePaint(Color.gray);
 		plot.setBackgroundPaint(Color.white);
 		plot.setOutlineVisible(false);
-		plot.getRenderer().setSeriesStroke(0, new BasicStroke(3));
-		plot.getRenderer().setSeriesPaint(0, category.color);
-		// plot.getRenderer().setSeriesShape(0, new Rectangle(5,5));
+		
+		XYItemRenderer renderer = plot.getRenderer();
+		renderer.setSeriesStroke(0, new BasicStroke(3));
+		renderer.setSeriesPaint(0, category.color);
+        if (renderer instanceof XYLineAndShapeRenderer) {
+            XYLineAndShapeRenderer r = (XYLineAndShapeRenderer)renderer;
+            r.setBaseShapesVisible(true);
+            r.setBaseShapesFilled(true);
+            r.setDrawSeriesLineAsPath(true);
+        }
+		try {
+			ChartUtilities.writeChartAsPNG(out, chart, 600, 150);//650 is bit too large for printing with current 40px padding on the right
+		} catch (IOException e) {
+			System.err.println("Problem occurred creating chart.");
+		}
+	}
+*/
+	public void renderBalanceChart(OutputStream out, Page page, Category category) {
+		
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+	
+		///////////////////////////////////////////////////////////////////////////////////////////
+		TimeSeries pop = new TimeSeries("Balance");
+		BigDecimal balance = category.amount;
+		Boolean first = true;
+		Date last = page.created;
+		for (Expense expense : category.getExpensesSortByDate()) {
+			if(first && expense.date.compareTo(page.created) > 0) {
+				pop.addOrUpdate(new Day(page.created), category.amount);
+			}
+			first = false;
+			balance = balance.subtract(expense.amount);
+			pop.addOrUpdate(new Day(expense.date), balance);
+			if(last.compareTo(expense.date) < 0) {
+				last = expense.date;
+			}
+		}
+		dataset.addSeries(pop);
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+		TimeSeries zero = new TimeSeries("Zero");
+		zero.add(new Day(page.created), 0);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(page.created);
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)+1);
+		cal.set(Calendar.DAY_OF_MONTH, 0);
+		if(last.compareTo(cal.getTime()) < 0) {
+			zero.add(new Day(cal.getTime()), 0);
+		} else {
+			zero.add(new Day(last), 0);
+		}
+		dataset.addSeries(zero);
+		
+		///////////////////////////////////////////////////////////////////////////////////////////
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(null, null, "Balance", dataset, false, false, false);
+
+		XYPlot plot = chart.getXYPlot();
+		plot.setDomainGridlinePaint(Color.gray);
+		plot.setRangeGridlinePaint(Color.gray);
+		plot.setBackgroundPaint(Color.white);
+		plot.setOutlineVisible(false);
+/*
+	     final GradientPaint gp0 = new GradientPaint(
+	             0.0f, 0.0f, Color.yellow, 
+	             0.0f, 0.0f, new Color(0, 0, 64)
+	         );
+	         */
+       final XYDifferenceRenderer renderer = new XYDifferenceRenderer(
+               new Color(category.color.getRed(),category.color.getGreen(),category.color.getBlue(),32), new Color(0,0,0,127), false
+           );
+		renderer.setSeriesStroke(0, new BasicStroke(3));
+		renderer.setSeriesPaint(0, category.color);
+		//renderer.setSeriesPaint(1, new Color(0,0,0,0));
+		renderer.setSeriesPaint(1, Color.black);
+		
+		/*
+        if (renderer instanceof XYLineAndShapeRenderer) {
+            XYLineAndShapeRenderer r = (XYLineAndShapeRenderer)renderer;
+            r.setBaseShapesVisible(true);
+            r.setBaseShapesFilled(true);
+            r.setDrawSeriesLineAsPath(true);
+        }*/
+        
+        plot.setRenderer(renderer);
+        
 		try {
 			ChartUtilities.writeChartAsPNG(out, chart, 600, 150);//650 is bit too large for printing with current 40px padding on the right
 		} catch (IOException e) {
