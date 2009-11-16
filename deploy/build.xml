@@ -4,8 +4,8 @@
     <target name="create_run_jar">
         <jar destfile="${deploy.dir}/dsbudget.jar" filesetmanifest="mergewithoutmain">
             <manifest>
+            	<attribute name="Built-By" value="Soichi Hayashi"/>
                 <attribute name="Main-Class" value="dsbudget.Main"/>
-                <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="../bin"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina-optional.jar"/>

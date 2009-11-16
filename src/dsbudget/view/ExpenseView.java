@@ -98,6 +98,15 @@ public class ExpenseView extends DivRep {
 		CategoryBalanceGraphView graph;
 		DivRepButton addnewexpense;
 		
+		private void setGraphTogglerTitle()
+		{
+			if(graph.isHidden()) {
+				graph_toggler.setTitle("Show Balance Graph");
+			} else {
+				graph_toggler.setTitle("Hide Balance Graph");					
+			}	
+		}
+		
 		public CategoryView(DivRep parent, Category _category) {
 			super(parent);
 			category = _category;
@@ -105,22 +114,16 @@ public class ExpenseView extends DivRep {
 			graph = new CategoryBalanceGraphView(this, category);
 			graph.setHidden(category.hide_graph);
 			graph_toggler = new DivRepButton(this, "");
-			if(graph.isHidden()) {
-				graph_toggler.setTitle("Show Balance Graph");
-			} else {
-				graph_toggler.setTitle("Hide Balance Graph");					
-			}	
+			setGraphTogglerTitle();
+
 			graph_toggler.setStyle(DivRepButton.Style.ALINK);
+			//graph_toggler.addClass("html_button");
 			graph_toggler.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
 					graph.setHidden(!graph.isHidden());
 					category.hide_graph = graph.isHidden();
 					graph.redraw();
-					if(graph.isHidden()) {
-						graph_toggler.setTitle("Show Balance Graph");
-					} else {
-						graph_toggler.setTitle("Hide Balance Graph");					
-					}
+					setGraphTogglerTitle();
 					graph_toggler.redraw();
 				}
 			});

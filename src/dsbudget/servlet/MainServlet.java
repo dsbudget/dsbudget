@@ -2,33 +2,15 @@ package dsbudget.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-
-import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.DivRepRoot;
 import com.divrep.common.DivRepButton;
-import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepSelectBox;
-import com.divrep.common.DivRepTextBox;
-import com.divrep.validator.DivRepIValidator;
-
-import dsbudget.model.Budget;
-import dsbudget.model.Category;
-import dsbudget.model.Expense;
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
