@@ -87,7 +87,7 @@ public class ServletBase extends HttpServlet {
 	{
 		out.write("</div>");	
 		out.write("<div id=\"footer\">");
-		out.write("<span class=\"version\">dsBudget v2.0.2</span>&nbsp;");
+		out.write("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
 		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\">Soichi Hayashi</a></span>");
 		out.write("<br/>");
 		out.write("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");

@@ -13,6 +13,8 @@ import org.apache.tomcat.util.IntrospectionUtils;
 
 public class Main {
 	
+	static public String version = "2.0.3";
+	
 	private String path = null;
     public static Embedded tomcat = null;
     private Host host = null;

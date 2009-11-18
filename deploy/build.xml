@@ -38,9 +38,10 @@
 		<copy todir="${deploy.dir}/tomcat/webapps">
 		    <fileset dir="../tomcat/webapps"/>
 		</copy>
-		<copy file="../BudgetDocument.xml" todir="${deploy.dir}"/>
+		<copy file="BudgetDocument.xml" todir="${deploy.dir}"/>
 		<copy file="run.bat" todir="${deploy.dir}"/>
-		<zip destfile="${deploy.dir}/../dsbudget.zip"
+		<copy file="run.sh" todir="${deploy.dir}"/>
+		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget.zip"
 		       basedir="${deploy.dir}"
 		  />
 	</target>
