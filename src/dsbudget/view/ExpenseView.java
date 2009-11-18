@@ -172,7 +172,11 @@ public class ExpenseView extends DivRep {
 				out.write("<td>"+expense.where+"&nbsp;</td>");
 				out.write("<td>"+expense.description+"</td>");
 				out.write("<td style=\"text-align: right;\">"+df.format(expense.date)+"</td>");
-				out.write("<td style=\"text-align: right;\">- "+nf.format(expense.amount)+"</td>");
+				String negative = "";
+				if(expense.amount.compareTo(BigDecimal.ZERO) < 0) {
+					negative = "negative";
+				}
+				out.write("<td style=\"text-align: right;\" class=\""+negative+"\">- "+nf.format(expense.amount)+"</td>");
 				
 				out.write("<td>");
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
@@ -196,7 +200,11 @@ public class ExpenseView extends DivRep {
 			out.write("</td>"); //desc
 			
 			out.write("<th style=\"text-align: right;\">Remaining</th>");
-			out.write("<th style=\"text-align: right;\">"+nf.format(remain)+"</th>");
+			String negative = "";
+			if(remain.compareTo(BigDecimal.ZERO) < 0) {
+				negative = "negative";
+			}
+			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(remain)+"</th>");
 			
 			out.write("<td></td>"); //remove button
 			

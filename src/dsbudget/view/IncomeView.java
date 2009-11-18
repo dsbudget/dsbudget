@@ -113,7 +113,11 @@ public class IncomeView extends DivRep {
 				out.write("</td>");
 			}
 			out.write("<th style=\"text-align: right;\" class=\"note\"></th>");
-			out.write("<td width=\"90px\" style=\"text-align: right;\">"+nf.format(amount)+"</td>");
+			String negative = "";
+			if(amount.compareTo(BigDecimal.ZERO) < 0) {
+				negative = "negative";
+			}
+			out.write("<td width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(amount)+"</td>");
 			out.write("<td width=\"20px\">");
 			out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
 			out.write("</td>"); //TODO - remove icon
@@ -126,7 +130,11 @@ public class IncomeView extends DivRep {
 				out.write("<td>"+StringEscapeUtils.escapeHtml(deduction.description)+"</td>");
 				out.write("<td></td>");
 				out.write("<td></td>");
-				out.write("<td width=\"90px\" style=\"text-align: right;\">- "+nf.format(deduction.amount)+"</td>");
+				negative = "";
+				if(deduction.amount.compareTo(BigDecimal.ZERO) < 0) {
+					negative = "negative";
+				}
+				out.write("<td width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">- "+nf.format(deduction.amount)+"</td>");
 				out.write("<td>");
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
 				out.write("</td>");
@@ -142,7 +150,11 @@ public class IncomeView extends DivRep {
 				out.write("</td>");
 				out.write("<td></td>");
 				out.write("<th style=\"text-align: right;\">Available Income</th>");
-				out.write("<th style=\"text-align: right;\">"+nf.format(total)+"</th>");
+				negative = "";
+				if(total.compareTo(BigDecimal.ZERO) < 0) {
+					negative = "negative";
+				}
+				out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(total)+"</th>");
 			}
 			out.write("<td></td>");
 			out.write("</tr>");

@@ -137,9 +137,9 @@ public class ChartServlet extends ServletBase {
 		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)+1);
 		cal.set(Calendar.DAY_OF_MONTH, 0);
 		if(last.compareTo(cal.getTime()) < 0) {
-			zero.add(new Day(cal.getTime()), 0);
+			zero.addOrUpdate(new Day(cal.getTime()), 0);
 		} else {
-			zero.add(new Day(last), 0);
+			zero.addOrUpdate(new Day(last), 0);
 		}
 		dataset.addSeries(zero);
 		

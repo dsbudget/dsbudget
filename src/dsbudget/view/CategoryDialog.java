@@ -12,6 +12,7 @@ import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepColorPicker;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepTextBox;
+import com.divrep.validator.DivRepIValidator;
 
 import dsbudget.model.Category;
 
@@ -62,6 +63,24 @@ public class CategoryDialog extends DivRepDialog
 				amount.redraw();
 			}
 		});
+		amount.addValidator(new DivRepIValidator<String>(){
+			public String getErrorMessage() {
+				return "Please use a positive amount.";
+			}
+
+			public Boolean isValid(String value) {
+				try {
+					BigDecimal a = new BigDecimal(nf.parse(value).doubleValue());
+					if(a.compareTo(BigDecimal.ZERO) < 0) {
+						return false;
+					}
+				} catch (NumberFormatException ne) {
+					//ignore then
+				} catch (ParseException e) {
+					//ignore then
+				}
+				return true;
+			}});
 		
 		description = new DivRepTextBox(this);
 		description.setLabel("Description");

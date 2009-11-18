@@ -82,7 +82,7 @@ public class BudgetingView extends DivRep {
 		Long max = total_free_income.longValue();
 		if(max > 0) {
 			out.write("<table width=\"100%\">");
-			out.write("<tr class=\"header\"><td colspan=2><h2>Budgetting</h2></td><th style=\"vertical-align: bottom\" class=\"note\">"+nf.format(0)+"</th><th class=\"note\" style=\"vertical-align: bottom; text-align: right;\">"+nf.format(total_free_income)+"</th><th style=\"text-align: right;\"></th><th width=\"10px\"></th></tr>");
+			out.write("<tr class=\"header\"><td colspan=2><h2>Budgeting</h2></td><th style=\"vertical-align: bottom\" class=\"note\">"+nf.format(0)+"</th><th class=\"note\" style=\"vertical-align: bottom; text-align: right;\">"+nf.format(total_free_income)+"</th><th style=\"text-align: right;\"></th><th width=\"10px\"></th></tr>");
 
 			for(Category category : sliders.keySet()) {
 	
