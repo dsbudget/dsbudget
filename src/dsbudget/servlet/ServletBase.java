@@ -55,6 +55,7 @@ public class ServletBase extends HttpServlet {
 	}
 	public void save() throws ParserConfigurationException, IOException, TransformerException {
 		budget.saveXML(System.getProperty("document"));
+		System.out.println("Saved the document: " + System.getProperty("document"));
 	}
 
 	protected void renderHeader(PrintWriter out, HttpServletRequest request) 
@@ -72,8 +73,6 @@ public class ServletBase extends HttpServlet {
 		out.write("<script type=\"text/javascript\" src=\"jquery-ui-1.7.2.custom.min.js\"></script>");
 		//out.write("<script type=\"text/javascript\" src=\"colorpicker/js/colorpicker.js\"></script>");
 		out.write("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
-		
-		DivRepColorPicker.renderInit(out);
 		
 		out.write("</head>");
 		//out.write("<body onbeforeunload=\"if(confirm('Do you want to save the data?')) divrep('"+pageroot.getNodeID()+"', event, null, 'close')\">");

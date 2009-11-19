@@ -44,10 +44,12 @@ public class Main {
         tomcat = new Embedded();
         tomcat.setCatalinaHome("tomcat");
 
+        /*
         // set the memory realm
         MemoryRealm memRealm = new MemoryRealm();
         tomcat.setRealm(memRealm);
-
+		*/
+        
         // Create an engine
         engine = tomcat.createEngine();
         engine.setDefaultHost("localhost");
@@ -57,11 +59,12 @@ public class Main {
         engine.addChild(host);
   
         // Create the ROOT context
+        /*
         rootcontext = tomcat.createContext("", "ROOT");
         rootcontext.setReloadable(true);
         rootcontext.addWelcomeFile("index.jsp");
         host.addChild(rootcontext);
-		
+		*/
         // create another application Context
         /*
         Context appCtx = this.embedded.createContext("/manager", "manager");

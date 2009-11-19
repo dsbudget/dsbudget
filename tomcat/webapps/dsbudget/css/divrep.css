@@ -48,28 +48,52 @@ background-image:url(images/loading.gif);
 background-repeat:no-repeat;
 padding-left: 20px;
 }
-.divrep_folderopen
-{
+.divrep_folderopen {
 background-image:url(images/folder-open.gif);
 background-repeat:no-repeat;
 padding-left: 20px;
 }
-.divrep_folderopen
-{
+
+.divrep_folderopen {
 background-image:url(images/folder-close.gif);
 background-repeat:no-repeat;
 padding-left: 20px;
 }
-.divrep_underline
-{
+
+.divrep_underline {
 text-decoration: underline;
 }
-.divrep_inline
-{
+
+.divrep_inline {
 display: inline;
 }
-.divrep_link
-{
+
+.divrep_link {
 text-decoration: underline;
 cursor: pointer;
 }
+
+.divrep_colorpicker_preset {
+margin-top: 3px;
+margin-bottom: 6px;
+}
+
+.divrep_colorpicker_preset span {
+border: 1px solid black;
+margin: 1px;
+cursor: pointer;
+}
+.divrep_colorpicker_red, .divrep_colorpicker_green, .divrep_colorpicker_blue {
+margin-left: 55px; width: 250px; margin-bottom: 6px;
+}
+.divrep_colorpicker_red .ui-slider-range { background: #f00; }
+.divrep_colorpicker_green .ui-slider-range { background: #0f0; }
+.divrep_colorpicker_blue .ui-slider-range { background: #00f; }
+
+.divrep_colorpicker_color { 
+width: 45px; 
+height: 45px;
+border: 1px solid black;
+float: left;
+}
+

@@ -179,7 +179,13 @@ public class IncomeView extends DivRep {
 		addnewincome.render(out);
 		out.write("</td>");
 		out.write("<td></td>");
-		out.write("<th style=\"text-align: right;\">Total Available Income</th><th style=\"text-align: right;\">"+nf.format(nettotal)+"</th><th></th></tr>");
+		if(mainview.getIncomes().size() > 1) {
+			out.write("<th style=\"text-align: right;\">Total Available Income</th><th style=\"text-align: right;\">"+nf.format(nettotal)+"</th>");
+		} else {
+			out.write("<th></th><th></th>");
+			
+		}
+		out.write("<th>&nbsp;</th></tr>");
 		out.write("</table>");
 		
 		out.write("</div>");
