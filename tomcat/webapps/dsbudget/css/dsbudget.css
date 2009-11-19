@@ -87,6 +87,12 @@ position: relative;
 color: white;
 padding-left: 3px;
 }
+
+.pageselector a.divrep_button
+{
+margin-right: 10px;
+}
+
 .inline
 {
 display: inline;

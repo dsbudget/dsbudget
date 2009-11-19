@@ -15,13 +15,18 @@ import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
 import dsbudget.view.PageDialog;
+import dsbudget.view.RemoveDialog;
 
 public class MainServlet extends ServletBase  {
 	
 	DivRepSelectBox pageselector;
 	DivRepButton pagesettingsbutton;
+	DivRepButton removepagebutton;
 	DivRepButton savebutton;
+	
+	RemoveDialog removedialog;
 	PageDialog pagedialog;
+	
 	MainView pageview;
 	
     public MainServlet() {
@@ -75,7 +80,10 @@ public class MainServlet extends ServletBase  {
 				pageselector.setValue(page.getID());
 				pageselector.redraw();
 				pagedialog.close();
-			}};
+			}
+		};
+		removedialog = new RemoveDialog(pageroot, budget, page);
+		
 		pageview = new MainView(pageroot, budget, page);
 	}
 	
@@ -104,17 +112,26 @@ public class MainServlet extends ServletBase  {
 		if(page != null) {
 			pageselector.setValue(page.getID());
 		}
-		pagesettingsbutton = new DivRepButton(pageroot, "Page Settings");
+		pagesettingsbutton = new DivRepButton(pageroot, "Settings");
 		pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
-		pagesettingsbutton.addClass("inline");
+		pagesettingsbutton.setToolTip("Edit settings for currently opened page");
 		pagesettingsbutton.addEventListener(new DivRepEventListener(){
 			public void handleEvent(DivRepEvent e) {
 				pagedialog.open(false);
 			}
 		});
+		
+		removepagebutton = new DivRepButton(pageroot, "Remove");
+		removepagebutton.setStyle(DivRepButton.Style.ALINK);
+		removepagebutton.setToolTip("Remove currently opened page");
+		removepagebutton.addEventListener(new DivRepEventListener(){
+			public void handleEvent(DivRepEvent e) {
+				removedialog.open();
+			}
+		});
         
         savebutton = new DivRepButton(pageroot, "Save");
-        //saveclosebutton.setStyle(Style.ALINK);
+        savebutton.setToolTip("Save any changes you've made since you started");
         savebutton.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
 				try {
@@ -130,14 +147,16 @@ public class MainServlet extends ServletBase  {
 	void renderContent(PrintWriter out, HttpServletRequest request)
 	{	
 		out.write("<table class=\"controls\"><tr>");
-		
+
 		out.write("<td>");
 		savebutton.render(out);
 		out.write("</td>");
 		
 		out.write("<td class=\"pageselector\">");
+		
 		pagesettingsbutton.render(out);
-		out.write("&nbsp;");
+		removepagebutton.render(out);
+		
 		pageselector.render(out);
 		out.write("</td>");
 		
@@ -146,6 +165,8 @@ public class MainServlet extends ServletBase  {
 		out.write("<div id=\"main\">");
 		pageview.render(out);
 		out.write("</div>");
+		
 		pagedialog.render(out);
+		removedialog.render(out);
 	}
 }

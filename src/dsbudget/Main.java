@@ -1,6 +1,7 @@
 package dsbudget;
 
 import java.net.InetAddress;
+import java.util.Date;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.Engine;
@@ -10,6 +11,9 @@ import org.apache.catalina.connector.Connector;
 import org.apache.catalina.realm.MemoryRealm;
 import org.apache.catalina.startup.Embedded;
 import org.apache.tomcat.util.IntrospectionUtils;
+
+import dsbudget.model.Budget;
+import dsbudget.model.Page;
 
 public class Main {
 	
@@ -99,5 +103,12 @@ public class Main {
     
     public void stopTomcat() throws Exception {
     	tomcat.stop();
+    }
+    
+    static public Page createEmptyPage(Budget budget) {
+		Page page = new Page(budget);
+		page.name = "Untitled";
+		page.created = new Date();
+		return page;
     }
 }

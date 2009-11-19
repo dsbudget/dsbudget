@@ -44,9 +44,7 @@ public class ServletBase extends HttpServlet {
 				System.out.println("Failed to load XML " + System.getProperty("document"));
 				System.out.println("Creaing empty doc");
 				budget = new Budget();
-				Page page = new Page(budget);
-				page.name = "Untitled";
-				page.created = new Date();
+				Page page = Main.createEmptyPage(budget);
 				budget.pages.add(page);
 			}
 			config.getServletContext().setAttribute("budget", budget);
