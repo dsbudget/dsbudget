@@ -28,6 +28,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Main main = new Main();
+		System.out.println("Starting dsBudget server " + Main.version);
 		try {
 			main.startTomcat();
 		} catch (LifecycleException e) {

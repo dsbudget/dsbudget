@@ -6,6 +6,7 @@ import java.awt.GradientPaint;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.encoders.KeypointPNGEncoderAdapter;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
@@ -145,7 +147,7 @@ public class ChartServlet extends ServletBase {
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(null, null, "Balance", dataset, false, false, false);
-
+		
 		XYPlot plot = chart.getXYPlot();
 		plot.setDomainGridlinePaint(Color.gray);
 		plot.setRangeGridlinePaint(Color.gray);
@@ -175,10 +177,22 @@ public class ChartServlet extends ServletBase {
         
         plot.setRenderer(renderer);
         
+        /*
+		try {
+			KeypointPNGEncoderAdapter encorder = new KeypointPNGEncoderAdapter();
+			encorder.setEncodingAlpha(true);
+			out.write(encorder.encode(chart.createBufferedImage(600, 150, BufferedImage.BITMASK, null)));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
+		
 		try {
 			ChartUtilities.writeChartAsPNG(out, chart, 600, 150);//650 is bit too large for printing with current 40px padding on the right
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
 		}
+		
 	}
 }
