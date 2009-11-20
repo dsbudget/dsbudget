@@ -1,5 +1,6 @@
 package dsbudget.view;
 
+import java.awt.Color;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -160,7 +161,23 @@ public class ExpenseView extends DivRep {
 		public void render(PrintWriter out) {
 			out.write("<div id=\""+getNodeID()+"\" class=\"expense_category\">");
 			out.write("<table width=\"100%\">");
-			out.write("<tr class=\"expense_category\">");
+			
+			Color orig = category.color;
+			int r = (255 + 255 + orig.getRed())/3;
+			int g = (255 + 255 + orig.getGreen())/3;
+			int b = (255 + 255 + orig.getBlue())/3;
+			
+			Color header_color = new Color(r,g,b);
+			
+			/*//make it lighter, and de-saturate
+			Color orig = category.color.brighter();
+			float []hsb = Color.RGBtoHSB(orig.getRed(), orig.getGreen(), orig.getBlue(), null);//category.color;
+			hsb[1] /= 4;
+			//hsb[2] *= 2;
+			Color header_color = Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
+			*/
+			
+			out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\" class=\"expense_category\">");
 			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
 			out.write("<th width=\"100px\"></th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+nf.format(category.amount)+"</th><td width=\"20px\"></td>");

@@ -75,7 +75,8 @@ cursor: pointer;
 
 .divrep_colorpicker_preset {
 margin-top: 3px;
-margin-bottom: 6px;
+margin-bottom: 3px;
+line-height: 150%;
 }
 
 .divrep_colorpicker_preset span {

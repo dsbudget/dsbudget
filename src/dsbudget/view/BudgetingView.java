@@ -71,11 +71,11 @@ public class BudgetingView extends DivRep {
 
 	public void render(PrintWriter out) {
 
-		out.write("<div class=\"budgetting round8\"  id=\""+getNodeID()+"\">");
+		out.write("<div class=\"budgetting round8\" id=\""+getNodeID()+"\">");
 		
 		BigDecimal total_free_income = mainview.getTotalIncome();
 		total_free_income = total_free_income.subtract(mainview.getTotalIncomeDeduction());
-		BigDecimal total_budgetted = mainview.getTotalBudgetted();
+		BigDecimal total_unbudgetted = total_free_income.subtract(mainview.getTotalBudgetted());
 		
 		NumberFormat nf = NumberFormat.getCurrencyInstance();
 
@@ -118,12 +118,16 @@ public class BudgetingView extends DivRep {
 			addnewcategory.render(out);
 			out.write("</td>");
 			
-			out.write("<th class=\"note\" style=\"text-align: right;\"></th><th style=\"text-align: right;\">Total Budgeted</th><th width=\"90px\" style=\"text-align: right;\">"+nf.format(total_budgetted)+"</th><th></th></tr>");
+			String negative = "";
+			if(total_unbudgetted.compareTo(BigDecimal.ZERO) < 0) {
+				negative = "negative";
+			}
+			out.write("<th class=\"note\" style=\"text-align: right;\"></th><th style=\"text-align: right;\">Total Unbudgeted</th><th width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(total_unbudgetted)+"</th><th></th></tr>");
 		
 			out.write("</table>");
 			
-			if(total_budgetted.compareTo(total_free_income) > 0) {
-				out.write("<p class=\"divrep_elementerror\">Total budgeted is more than the total income</p>");
+			if(total_unbudgetted.compareTo(BigDecimal.ZERO) < 0) {
+				out.write("<p class=\"divrep_elementerror\">Total budgeted is more than the total income. Please reduce the amount of budgets.</p>");
 			}	
 		}
 			

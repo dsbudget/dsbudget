@@ -15,6 +15,7 @@ import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
 
 import dsbudget.model.Category;
+import dsbudget.model.Page;
 
 public class CategoryDialog extends DivRepDialog
 {
@@ -88,6 +89,12 @@ public class CategoryDialog extends DivRepDialog
 		
 		color = new DivRepColorPicker(this);
 		color.setLabel("Color");
+
+		for(Page page : mainview.getPages()) {
+			for(Category category : page.categories) {
+				color.addPresetColor(category.color);
+			}
+		}
 	}
 	
 	public void open(Category _category)
@@ -142,6 +149,9 @@ public class CategoryDialog extends DivRepDialog
 			mainview.redraw();
 			mainview.initView();
 			close();
+			
+			//add current color to preset
+			color.addPresetColor(color.getValue());
 		}
 	}
 	public void renderDialog(PrintWriter out) {
