@@ -12,6 +12,7 @@ import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
+import com.divrep.common.DivRepButton.Style;
 
 import dsbudget.model.Category;
 import dsbudget.model.Deduction;
@@ -86,7 +87,7 @@ public class IncomeView extends DivRep {
 		//out.write("<tr class=\"header\"><th></th><th></th><th></th><th></th><th width=\"90px\"></th><th width=\"10px\"></th></tr>");
 		for(final Income income : mainview.getIncomes()) {	
 			
-			DivRepButton addnewdeduction = new DivRepButton(this, "Add Deduction");
+			DivRepButton addnewdeduction = new DivRepButton(this, "Add New Deduction");
 			addnewdeduction.setStyle(DivRepButton.Style.ALINK);
 			addnewdeduction.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
@@ -106,7 +107,19 @@ public class IncomeView extends DivRep {
 			out.write("<th width=\"270px\">"+name+"</th>");
 			
 			if(income.deductions.size() > 0) {
-				out.write("<th class=\"note\"></th>");
+				out.write("<td class=\"note\">");
+				DivRepButton showhidedeductionbutton = new DivRepButton(this, "Show Deductions");
+				if(income.show_deductions) {
+					showhidedeductionbutton.setTitle("Hide Deductions");
+				}
+				showhidedeductionbutton.setStyle(Style.ALINK);
+				showhidedeductionbutton.addEventListener(new DivRepEventListener() {
+					public void handleEvent(DivRepEvent arg0) {
+						redraw();
+						income.show_deductions = !income.show_deductions;
+					}});
+				showhidedeductionbutton.render(out);
+				out.write("</td>");
 			} else {
 				out.write("<td class=\"newitem\">");
 				addnewdeduction.render(out);
@@ -124,21 +137,23 @@ public class IncomeView extends DivRep {
 			out.write("</tr>");
 			
 			//deduction
-			for(Deduction deduction : income.deductions) {
-				out.write("<tr class=\"deduction\" onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_edit')\">");
-				out.write("<th>&nbsp;</th>");
-				out.write("<td>"+StringEscapeUtils.escapeHtml(deduction.description)+"</td>");
-				out.write("<td></td>");
-				out.write("<td></td>");
-				negative = "";
-				if(deduction.amount.compareTo(BigDecimal.ZERO) < 0) {
-					negative = "negative";
+			if(income.show_deductions) {
+				for(Deduction deduction : income.deductions) {
+					out.write("<tr class=\"deduction\" onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_edit')\">");
+					out.write("<th>&nbsp;</th>");
+					out.write("<td>"+StringEscapeUtils.escapeHtml(deduction.description)+"</td>");
+					out.write("<td></td>");
+					out.write("<td></td>");
+					negative = "";
+					if(deduction.amount.compareTo(BigDecimal.ZERO) < 0) {
+						negative = "negative";
+					}
+					out.write("<td width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">- "+nf.format(deduction.amount)+"</td>");
+					out.write("<td>");
+					out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
+					out.write("</td>");
+					out.write("</tr>");
 				}
-				out.write("<td width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">- "+nf.format(deduction.amount)+"</td>");
-				out.write("<td>");
-				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
-				out.write("</td>");
-				out.write("</tr>");
 			}
 			
 			//total deduction

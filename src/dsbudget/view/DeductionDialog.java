@@ -83,7 +83,7 @@ public class DeductionDialog extends DivRepDialog
 	public void onSubmit() {
 		if(validate()) {
 			if(deduction == null) {
-				//new expense
+				//new deduction
 				deduction = new Deduction();
 				income.deductions.add(deduction);
 			}

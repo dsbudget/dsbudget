@@ -15,6 +15,7 @@ public class Income implements XMLSerializer {
 	public BigDecimal amount;
 	public String description;
 	public ArrayList<Deduction> deductions = new ArrayList<Deduction>();
+	public Boolean show_deductions = true;
 	
 	Page parent;
 	
@@ -32,6 +33,7 @@ public class Income implements XMLSerializer {
 		income.amount = amount;
 		income.description = description;
 		income.deductions = new ArrayList<Deduction>();
+		income.show_deductions = show_deductions;
 		for(Deduction deduction : deductions) {
 			income.deductions.add(deduction.clone());
 		}
@@ -88,6 +90,7 @@ public class Income implements XMLSerializer {
 		}
 
 		description = element.getAttribute("desc");
+		show_deductions = element.getAttribute("show_deductions").equals("true");
 		
 		//deduction
 		NodeList nl = element.getChildNodes();
@@ -113,6 +116,7 @@ public class Income implements XMLSerializer {
 			elem.setAttribute("balance_from", balance_from.name);
 		}
 		elem.setAttribute("desc", description);
+		elem.setAttribute("show_deductions", show_deductions.toString());
 		for(Deduction deduction : deductions) {
 			elem.appendChild(deduction.toXML(doc));
 		}
