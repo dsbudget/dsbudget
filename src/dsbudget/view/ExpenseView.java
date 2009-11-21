@@ -159,7 +159,7 @@ public class ExpenseView extends DivRep {
 		}
 
 		public void render(PrintWriter out) {
-			out.write("<div id=\""+getNodeID()+"\" class=\"expense_category\">");
+			out.write("<div id=\""+getNodeID()+"\" class=\"expense_category_container\">");
 			out.write("<table width=\"100%\">");
 			
 			Color orig = category.color;

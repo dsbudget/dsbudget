@@ -83,6 +83,11 @@ public class ServletBase extends HttpServlet {
 	protected void renderFooter(PrintWriter out, HttpServletRequest request) 
 	{
 		out.write("</div>");	
+		/*
+		out.write("<script type=\"text/javascript\">");
+		out.write("$('.ui-slider').bind('click', function() {alert('hello');});");
+		out.write("</script>");
+		*/
 		out.write("<div id=\"footer\">");
 		out.write("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
 		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\">Soichi Hayashi</a></span>");

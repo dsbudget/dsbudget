@@ -41,7 +41,7 @@
 		<copy file="BudgetDocument.xml" todir="${deploy.dir}"/>
 		<copy file="run.bat" todir="${deploy.dir}"/>
 		<copy file="run.sh" todir="${deploy.dir}"/>
-		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget.zip"
+		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget_2.0.X.zip"
 		       basedir="${deploy.dir}"
 		  />
 	</target>

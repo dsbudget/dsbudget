@@ -2,6 +2,7 @@
 padding: 0px;
 margin: 0px;
 }
+
 body {
 font-family: Arial,"Lucida Sans Unicode",sans-serif;
 font-size: 10pt;
@@ -18,6 +19,7 @@ padding: 5px;
 margin-top: 3px;
 margin-bottom: 3px;
 }
+
 select {
 padding: 2px;
 margin-top: 3px;
@@ -47,7 +49,7 @@ padding-left: 20px;
 }
 
 #content {
-margin: 10px;
+margin: 15px;
 }
 
 #main h2 {
@@ -63,6 +65,7 @@ top: 23px;
 right: 0px;
 border-collapse: collapse;
 }
+
 .controls td
 {
 padding:5px;
@@ -71,10 +74,12 @@ color: white;
 align: bottom;
 vertical-align: bottom;
 }
+
 .controls input
 {
 margin-bottom: 3px;
 }
+
 .controls .pageselector {
 padding-right: 10px;
 padding-left: 10px;
@@ -82,6 +87,7 @@ background-color: #369;
 -moz-border-radius-topleft: 8px;
 -webkit-border-top-left-radius: 8px;
 }
+
 .controls a.divrep_button {
 position: relative;
 color: white;
@@ -106,7 +112,7 @@ font-size: 0.9em;
 .incomeview, 
 .expenseview {
 background-color: white;
-margin-bottom: 5px;
+margin-bottom: 15px;
 padding-bottom: 10px;
 }
 
@@ -216,6 +222,10 @@ padding-top: 2px;
 padding-bottom: 2px;
 }
 
+.expense_category_container {
+margin-bottom: 25px;
+}
+
 .note {
 color: #555;
 }
@@ -257,20 +267,21 @@ text-align: center;
 line-height: 150%;
 padding-bottom: 10px;
 }
+
 #footer a {
 color: white;
 }
+
 #footer .version {
 font-weight: bold;
 }
 
-.html_button
-{
+.html_button {
 color:#666666;
 font-size:9pt;
 text-decoration: underline;
 }
-.negative
-{
+
+.negative {
 color: red;	
 }
