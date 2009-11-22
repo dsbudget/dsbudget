@@ -66,7 +66,7 @@ public class Income implements XMLSerializer {
 	public String getName() {
 		String name = description;
 		if(balance_from != null) {
-			name = "Balance from " + StringEscapeUtils.escapeHtml(balance_from.name);
+			name = "Balance from " + balance_from.name;
 		}
 		return name;
 	}

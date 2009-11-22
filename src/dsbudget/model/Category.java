@@ -22,6 +22,7 @@ public class Category extends ObjectID implements XMLSerializer {
 	public Boolean fixed;
 	public Boolean hide_graph;
 	public String name;
+	public Boolean auto_adjust;
 	
 	public ArrayList<Expense> expenses = new ArrayList<Expense>();
 	
@@ -34,6 +35,7 @@ public class Category extends ObjectID implements XMLSerializer {
 		category.fixed = fixed;
 		category.hide_graph = hide_graph;
 		category.name = name;
+		category.auto_adjust = auto_adjust;
 		
 		category.expenses = new ArrayList<Expense>();
 		for(Expense expense : expenses) {
@@ -97,6 +99,11 @@ public class Category extends ObjectID implements XMLSerializer {
 		} else {
 			hide_graph = false;
 		}
+		if(element.getAttribute("auto_adjust").equals("yes")) {
+			auto_adjust = true;
+		} else {
+			auto_adjust = false;
+		}
 		name = element.getAttribute("name");
 		
 		//expense
@@ -136,6 +143,7 @@ public class Category extends ObjectID implements XMLSerializer {
 		elem.setAttribute("fixed", (fixed==true?"yes":"no"));
 		elem.setAttribute("hide_graph", (hide_graph==true?"yes":"no"));
 		elem.setAttribute("name", name);
+		elem.setAttribute("auto_adjust", (auto_adjust==true?"yes":"no"));
 		for(Expense expense : expenses) {
 			elem.appendChild(expense.toXML(doc));
 		}

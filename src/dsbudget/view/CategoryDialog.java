@@ -111,18 +111,21 @@ public class CategoryDialog extends DivRepDialog
 			description.setValue("");
 			amount.setValue("");	
 			color.setValue(Color.blue);
+			auto_adjust.setValue(false);
 		} else {
 			setTitle("Update Bucket");
 			name.setValue(category.name);
 			description.setValue(category.description);
 			amount.setValue(nf.format(category.amount));
 			color.setValue(category.color);
+			auto_adjust.setValue(category.auto_adjust);
 		}
 		
 		name.redraw();
 		description.redraw();
 		amount.redraw();
 		color.redraw();
+		auto_adjust.redraw();
 		
 		super.open();
 	}
@@ -150,6 +153,7 @@ public class CategoryDialog extends DivRepDialog
 			category.name = name.getValue();
 			category.description = description.getValue();
 			category.color = color.getValue();
+			category.auto_adjust = auto_adjust.getValue();
 			
 			mainview.redraw();
 			mainview.initView();
@@ -178,6 +182,7 @@ public class CategoryDialog extends DivRepDialog
 		valid &= description.isValid();
 		valid &= amount.isValid();
 		valid &= color.isValid();
+		valid &= auto_adjust.isValid();
 		return valid;
 	}
 };

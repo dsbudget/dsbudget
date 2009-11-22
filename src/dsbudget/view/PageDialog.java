@@ -50,7 +50,11 @@ public abstract class PageDialog extends DivRepDialog
 			copy_from.setLabel("Copy Income & Budgetting from");
 			copy_from.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
-					usebalance.setHidden(!e.value.equals("0"));		
+					if(e.value.equals("")) {
+						usebalance.setHidden(true);
+					} else {
+						usebalance.setHidden(false);	
+					}
 					usebalance.redraw();
 				}});
 			usebalance = new DivRepCheckBox(this);
