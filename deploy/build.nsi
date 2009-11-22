@@ -19,65 +19,77 @@ DirText "Select the directory to install dsBudget in:"
 ;Request application privileges for Windows Vista
 RequestExecutionLevel user
 
-Section "" ; (default section)
+Section "Normal" ; (default section)
 
-SetOutPath "$INSTDIR"
-
-File /r "C:\tmp\dsbudget\tomcat"
-File "C:\tmp\dsbudget\dsbudget.jar"
-
-IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
-DocNotExists:
-	DetailPrint "BudgetDocument.xml is not installed"
+	;check if we have java
+	Call GetJRE
+	Pop $R0
 	
-	;if we don't have BudgetDocument.xml in the install dir yet, and SimpleD Budget doc exists, copy it
-	ReadRegStr $0 HKEY_CURRENT_USER "Software\SimpleD Software\SimpleD Budget\Settings" "PrevDoc"
-	DetailPrint "SimpleD Budget PrevDoc is set at $0"
-	StrCmp $0 "" CopySample
+	StrCmp $R0 "" NoJava
 	
-	IfFileExists $0 CopyOld CopySample
-CopyOld:
-	messageBox MB_OK "You have SimpleD Budget document in $0. Creating a copy for dsBudget at $INSTDIR."
-	DetailPrint "Copying SimpleD Budget doc"
-	CopyFiles $0 $INSTDIR/BudgetDocument.xml
-	Goto DoneDocInstall
+	; main installation
+	SetOutPath "$INSTDIR"
+	File /r "C:\tmp\dsbudget\tomcat"
+	File "C:\tmp\dsbudget\dsbudget.jar"
 	
-CopySample:
-	DetailPrint "Installing Sample Doc"
-	File "C:\tmp\dsbudget\BudgetDocument.xml"
+	IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
+	DocNotExists:
+		DetailPrint "BudgetDocument.xml is not installed"
+		
+		;if we don't have BudgetDocument.xml in the install dir yet, and SimpleD Budget doc exists, copy it
+		ReadRegStr $0 HKEY_CURRENT_USER "Software\SimpleD Software\SimpleD Budget\Settings" "PrevDoc"
+		DetailPrint "SimpleD Budget PrevDoc is set at $0"
+		StrCmp $0 "" CopySample
+		
+		IfFileExists $0 CopyOld CopySample
+	CopyOld:
+		messageBox MB_OK "You have SimpleD Budget document in $0. Creating a copy for dsBudget at $INSTDIR."
+		DetailPrint "Copying SimpleD Budget doc"
+		CopyFiles $0 $INSTDIR/BudgetDocument.xml
+		Goto DoneDocInstall
+		
+	CopySample:
+		DetailPrint "Installing Sample Doc"
+		File "C:\tmp\dsbudget\BudgetDocument.xml"
+	
+	DoneDocInstall:
+	
+	; Create Start Menu shortcuts
+	CreateDirectory $SMPROGRAMS\dsBudget
+	createShortCut "$SMPROGRAMS\dsBudget\Run dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
+	createShortCut "$INSTDIR\run.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar'
+	
+	createShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
+	
+	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\dsBudget" "" "$INSTDIR"
+	WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" "DisplayName" "dsBudget (remove only)"
+	WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" "UninstallString" '"$INSTDIR\uninstall.exe"'
+	; write out uninstaller
+	WriteUninstaller "$INSTDIR\uninstall.exe"
 
-DoneDocInstall:
-
-; Create Start Menu shortcuts
-CreateDirectory $SMPROGRAMS\dsBudget
-Call GetJRE
-Pop $R0
-createShortCut "$SMPROGRAMS\dsBudget\Run dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
-createShortCut "$INSTDIR\run.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar'
-
-createShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
-
-WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\dsBudget" "" "$INSTDIR"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" "DisplayName" "dsBudget (remove only)"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" "UninstallString" '"$INSTDIR\uninstall.exe"'
-; write out uninstaller
-WriteUninstaller "$INSTDIR\uninstall.exe"
-
+	;done of normal installation - define some special cases
+	Goto Done
+	
+	NoJava:
+	messageBox MB_OK "dsBudget requires Java to be installed on your machine. Please download it from http://java.com and install it first."
+	
+	Done:
+	
 SectionEnd ; end of default section
 
 ; begin uninstall settings/section
 UninstallText "This will uninstall dsBudget from your system"
 
 Section Uninstall
-
-RMDir /r "$INSTDIR\tomcat"
-Delete "$INSTDIR\dsbudget.jar"
-Delete "$INSTDIR\uninstall.exe"
-Delete "$INSTDIR\run.lnk"
-
-RMDir /r "$SMPROGRAMS\dsBudget"
-DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\dsBudget"
-DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget"
+	
+	RMDir /r "$INSTDIR\tomcat"
+	Delete "$INSTDIR\dsbudget.jar"
+	Delete "$INSTDIR\uninstall.exe"
+	Delete "$INSTDIR\run.lnk"
+	
+	RMDir /r "$SMPROGRAMS\dsBudget"
+	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\dsBudget"
+	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget"
 
 SectionEnd ; end of uninstall section
 
@@ -113,7 +125,7 @@ Function GetJRE
   StrCpy $R0 "$R0\bin\${JAVAEXE}"
  
   IfErrors 0 JreFound  ;; 3) found it in the registry
-  StrCpy $R0 "${JAVAEXE}"  ;; 4) wishing you good luck
+  StrCpy $R0 "" ;; couldn't find it..
  
  JreFound:
   Pop $R1
