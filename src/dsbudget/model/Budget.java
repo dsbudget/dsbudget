@@ -16,8 +16,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 //Using XML - http://www.totheriver.com/learn/xml/xmltutorial.html#5.1
@@ -62,18 +65,18 @@ public class Budget implements XMLSerializer {
 	{
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer serializer;
 	
 		docBuilder = dbfac.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
 	    DOMSource source = new DOMSource(toXML(doc));
 		
-		serializer = tf.newTransformer();
-		StreamResult result = new StreamResult(new FileWriter(xmlpath));
-		serializer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
-		serializer.setOutputProperty(OutputKeys.INDENT,"no");
-		serializer.transform(source, result); 		
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer;
+	    transformer = tf.newTransformer();
+		StreamResult result = new StreamResult(new OutputStreamWriter(new FileOutputStream(xmlpath), Charset.forName("UTF-8")));
+		transformer.setOutputProperty(OutputKeys.INDENT,"no");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
+		transformer.transform(source, result); 		
 	}
 
 	public Element toXML(Document doc) {

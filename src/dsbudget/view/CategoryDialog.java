@@ -9,6 +9,7 @@ import java.text.ParseException;
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
+import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepColorPicker;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepTextBox;
@@ -25,6 +26,7 @@ public class CategoryDialog extends DivRepDialog
 	public DivRepTextBox description;
 	public DivRepTextBox amount;
 	public DivRepColorPicker color;
+	public DivRepCheckBox auto_adjust;
 	
 	Category category;
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -33,8 +35,8 @@ public class CategoryDialog extends DivRepDialog
 		super(parent);
 		mainview = parent;
 		
-		setHeight(360);
-		setWidth(380);
+		setHeight(460);
+		setWidth(450);
 	
 		name = new DivRepTextBox(this);
 		name.setLabel("Name");
@@ -84,7 +86,7 @@ public class CategoryDialog extends DivRepDialog
 			}});
 		
 		description = new DivRepTextBox(this);
-		description.setLabel("Description");
+		description.setLabel("Note");
 		description.setWidth(290);
 		
 		color = new DivRepColorPicker(this);
@@ -95,6 +97,9 @@ public class CategoryDialog extends DivRepDialog
 				color.addPresetColor(category.color);
 			}
 		}
+		
+		auto_adjust = new DivRepCheckBox(this);
+		auto_adjust.setLabel("Auto adjust budget based on the balance for new page");
 	}
 	
 	public void open(Category _category)
@@ -157,6 +162,12 @@ public class CategoryDialog extends DivRepDialog
 	public void renderDialog(PrintWriter out) {
 		name.render(out);
 		amount.render(out);
+
+		out.write("<div style=\"background-color: #ccc; padding: 10px; margin-bottom: 5px;\" class=\"round4\">");
+		auto_adjust.render(out);
+		out.write("<br/><p>If this is a saving bucket, or if you want the balance to be accumulated, this will allow the budget to grow or shrink based on the balance when you create a copy of this page.</p>");
+		out.write("</div>");
+		
 		description.render(out);
 		color.render(out);
 	}

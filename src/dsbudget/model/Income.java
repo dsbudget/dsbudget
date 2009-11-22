@@ -90,8 +90,9 @@ public class Income implements XMLSerializer {
 		}
 
 		description = element.getAttribute("desc");
-		show_deductions = element.getAttribute("show_deductions").equals("true");
-		
+		if(element.hasAttribute("show_deductions")) {
+			show_deductions = element.getAttribute("show_deductions").equals("true");
+		}
 		//deduction
 		NodeList nl = element.getChildNodes();
 		if(nl != null && nl.getLength() > 0) {

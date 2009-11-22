@@ -72,6 +72,8 @@ public class ServletBase extends HttpServlet {
 		//out.write("<script type=\"text/javascript\" src=\"colorpicker/js/colorpicker.js\"></script>");
 		out.write("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
 		
+		out.write("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");
+		
 		out.write("</head>");
 		//out.write("<body onbeforeunload=\"if(confirm('Do you want to save the data?')) divrep('"+pageroot.getNodeID()+"', event, null, 'close')\">");
 		out.write("<body>");

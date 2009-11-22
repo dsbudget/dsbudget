@@ -186,8 +186,8 @@ public class ExpenseView extends DivRep {
 			for(Expense expense : category.getExpensesSortByDate()) {
 				out.write("<tr class=\"expense\" onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"')\">");
 				out.write("<th>&nbsp;</th>"); //side
-				out.write("<td>"+expense.where+"&nbsp;</td>");
-				out.write("<td>"+expense.description+"</td>");
+				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.where)+"&nbsp;</td>");
+				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.description)+"</td>");
 				out.write("<td style=\"text-align: right;\">"+df.format(expense.date)+"</td>");
 				String negative = "";
 				if(expense.amount.compareTo(BigDecimal.ZERO) < 0) {

@@ -185,3 +185,4 @@ function colorpicker_hexFromRGB (r, g, b) {
 	});
 	return hex.join('').toUpperCase();
 }
+

@@ -117,6 +117,7 @@ public class MainView extends DivRep {
 		return page.incomes;
 	}
 	public ArrayList<Category> getCategories() {
+		/*
 		ArrayList<Category> sorted = page.categories;
 		Collections.sort(sorted, new Comparator<Category> () {
 			public int compare(Category a, Category b) {
@@ -124,6 +125,11 @@ public class MainView extends DivRep {
 			}
 		});
 		return sorted;
+		*/
+		return page.categories;
+	}
+	public void setCategories(ArrayList<Category> list) {
+		page.categories = list;
 	}
 	public Integer getPageID() {
 		return page.getID();

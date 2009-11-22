@@ -16,9 +16,12 @@ font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
 input[type='text'], textarea {
 border: 1px solid #ccc;
 padding: 5px;
-margin-top: 3px;
 margin-bottom: 3px;
 }
+input {
+margin-top: 3px;
+}
+
 
 select {
 padding: 2px;
@@ -81,7 +84,7 @@ margin-bottom: 3px;
 }
 
 .controls .pageselector {
-padding-right: 10px;
+padding-right: 15px;
 padding-left: 10px;
 background-color: #369;
 -moz-border-radius-topleft: 8px;
@@ -97,6 +100,7 @@ padding-left: 3px;
 .pageselector a.divrep_button
 {
 margin-right: 10px;
+vertical-align: middle;
 }
 
 .inline
@@ -128,20 +132,10 @@ border-collapse: collapse;
 font-size: 10pt;
 }
 
-.budgetting tr.category, 
+#budgetting_list li, 
 .incomeview tr.income, 
 .expenseview tr.expense_category {
 background-color: #ddd;
-border-bottom: 1px solid white;
-}
-
-/*for IE - which doesn't honer tr border...*/
-.budgetting tr.category td, 
-.budgetting tr.category th, 
-.incomeview tr.income td, 
-.incomeview tr.income th,
-.expenseview tr.expense_category td,
-.expenseview tr.expense_category th {
 border-bottom: 1px solid white;
 }
 
@@ -156,6 +150,7 @@ cursor: pointer;
 .incomeview tr:hover.income img.remove_button, 
 .incomeview tr:hover.deduction img.remove_button, 
 .budgetting tr:hover.category img.remove_button, 
+.budgetting tr:hover.category span.sort_button, 
 .expenseview tr:hover.expense img.remove_button {
 visibility: visible;
 }
@@ -163,6 +158,7 @@ visibility: visible;
 .incomeview tr.income img.remove_button,
 .incomeview tr.deduction img.remove_button,
 .budgetting tr.category img.remove_button,
+.budgetting tr.category span.sort_button, 
 .expenseview tr.expense img.remove_button {
 visibility: hidden;
 }
