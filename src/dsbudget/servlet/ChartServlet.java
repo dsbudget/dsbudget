@@ -116,24 +116,28 @@ public class ChartServlet extends ServletBase {
 		///////////////////////////////////////////////////////////////////////////////////////////
 		TimeSeries pop = new TimeSeries("Balance");
 		BigDecimal balance = category.amount;
-		Boolean first = true;
+		Boolean bfirst = true;
 		Date last = page.created;
+		Date first = page.created;
 		for (Expense expense : category.getExpensesSortByDate()) {
-			if(first && expense.date.compareTo(page.created) > 0) {
+			if(bfirst && expense.date.compareTo(page.created) > 0) {
 				pop.addOrUpdate(new Day(page.created), category.amount);
 			}
-			first = false;
+			bfirst = false;
 			balance = balance.subtract(expense.amount);
 			pop.addOrUpdate(new Day(expense.date), balance);
-			if(last.compareTo(expense.date) < 0) {
+			if(last == null || last.compareTo(expense.date) < 0) {
 				last = expense.date;
+			}
+			if(first == null || first.compareTo(expense.date) > 0) {
+				first = expense.date;
 			}
 		}
 		dataset.addSeries(pop);
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 		TimeSeries zero = new TimeSeries("Zero");
-		zero.add(new Day(page.created), 0);
+		zero.add(new Day(first), 0);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(page.created);
 		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)+1);

@@ -130,6 +130,7 @@ public class MainView extends DivRep {
 	}
 	public void setCategories(ArrayList<Category> list) {
 		page.categories = list;
+		expenseview.initView();
 	}
 	public Integer getPageID() {
 		return page.getID();

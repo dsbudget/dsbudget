@@ -26,7 +26,7 @@ import dsbudget.model.Page;
 public class ExpenseView extends DivRep {
 	MainView mainview;
 
-	ArrayList<CategoryView> category_views = new ArrayList<CategoryView>();
+	ArrayList<CategoryView> category_views;
 	//BalanceView balance_view;
 	
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -169,14 +169,6 @@ public class ExpenseView extends DivRep {
 			
 			Color header_color = new Color(r,g,b);
 			
-			/*//make it lighter, and de-saturate
-			Color orig = category.color.brighter();
-			float []hsb = Color.RGBtoHSB(orig.getRed(), orig.getGreen(), orig.getBlue(), null);//category.color;
-			hsb[1] /= 4;
-			//hsb[2] *= 2;
-			Color header_color = Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
-			*/
-			
 			out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\" class=\"expense_category\">");
 			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
@@ -309,11 +301,16 @@ public class ExpenseView extends DivRep {
 		super(parent);
 		mainview = parent;
 		
+		initView();
+	}
+	
+	public void initView() 
+	{
+		category_views = new ArrayList<CategoryView>();
 		for(Category category : mainview.getCategories()) {	
 			category_views.add(new CategoryView(this, category));
 		}		
-		
-		//balance_view = new BalanceView(this, mainview.page);
+		redraw();
 	}
 
 	@Override

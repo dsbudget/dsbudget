@@ -99,21 +99,21 @@ public class CategoryDialog extends DivRepDialog
 		}
 		
 		auto_adjust = new DivRepCheckBox(this);
-		auto_adjust.setLabel("Auto adjust budget based on the balance for new page");
+		auto_adjust.setLabel("This is a rollover category");
 	}
 	
 	public void open(Category _category)
 	{
 		category = _category;
 		if(category == null) {
-			setTitle("New Bucket");
+			setTitle("New Category");
 			name.setValue("");
 			description.setValue("");
 			amount.setValue("");	
 			color.setValue(Color.blue);
 			auto_adjust.setValue(false);
 		} else {
-			setTitle("Update Bucket");
+			setTitle("Update Category");
 			name.setValue(category.name);
 			description.setValue(category.description);
 			amount.setValue(nf.format(category.amount));
@@ -169,7 +169,7 @@ public class CategoryDialog extends DivRepDialog
 
 		out.write("<div style=\"background-color: #ccc; padding: 10px; margin-bottom: 5px;\" class=\"round4\">");
 		auto_adjust.render(out);
-		out.write("<br/><p>If this is a saving bucket, or if you want the balance to be accumulated, this will allow the budget to grow or shrink based on the balance when you create a copy of this page.</p>");
+		out.write("<br/><p>Please check this if you want the balance of this category to be added to the budget for the same category when you open a new page. This is commonly used for saving categories.</p>");
 		out.write("</div>");
 		
 		description.render(out);

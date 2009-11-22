@@ -1,6 +1,7 @@
 package dsbudget.view;
 
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,15 +51,10 @@ public abstract class PageDialog extends DivRepDialog
 			copy_from.setLabel("Copy Income & Budgetting from");
 			copy_from.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
-					if(e.value.equals("")) {
-						usebalance.setHidden(true);
-					} else {
-						usebalance.setHidden(false);	
-					}
-					usebalance.redraw();
+					usebalanceShowHide();
 				}});
 			usebalance = new DivRepCheckBox(this);
-			usebalance.setLabel("Use balance from this page as an income");
+			usebalance.setLabel("Add balance from this page as an income");
 			usebalance.setValue(true);
 		}
 		protected void onEvent(DivRepEvent e) {
@@ -70,9 +66,40 @@ public abstract class PageDialog extends DivRepDialog
 			if(!hidden) {
 				out.write("<br/>");
 				copy_from.render(out);
-				usebalance.render(out);
+				if(copySourceHasAutoAdjust()) {
+					out.write("<div class=\"round4\" style=\"background-color: #ccc;padding: 5px; margin: 5px;\">");
+					out.write("Selected page contains categories that are marked as 'Rollover Category'. Page balance will be added as income in order for the adjustments to be valid.");
+					out.write("</div>");
+				} else {
+					usebalance.render(out);
+				}
 			}
 			out.write("</div>");
+		}
+		public Boolean copySourceHasAutoAdjust()
+		{
+			Integer id = copy_from.getValue();
+			if(id == null) return false;
+			
+			Page copy_from = budget.findPage(id);
+			Boolean auto_adjust = false;
+			for(Category cat : copy_from.categories) {
+				if(cat.auto_adjust) {
+					auto_adjust = true;
+					break;
+				}
+			}
+			return auto_adjust;
+		}
+		public void usebalanceShowHide()
+		{
+			Integer id = copy_from.getValue();
+			if(id == null || id.equals("")) {
+				usebalance.setHidden(true);
+			} else {
+				usebalance.setHidden(false);	
+			}
+			redraw();
 		}
 	};
 	
@@ -96,6 +123,7 @@ public abstract class PageDialog extends DivRepDialog
 			
 			newpage_stuff.copy_from.setValue(current_page.getID()); //copy from current page by default
 			newpage_stuff.hidden = false;
+			newpage_stuff.usebalanceShowHide();
 		} else {
 			//update current page settings
 			setTitle("Page Settings");	
@@ -115,7 +143,7 @@ public abstract class PageDialog extends DivRepDialog
 	public PageDialog(DivRep parent, Budget _budget, Page _current_page) {
 		super(parent, true);
 		
-		setHeight(300);
+		setHeight(350);
 		setWidth(400);	
 		
 		budget = _budget;
@@ -177,10 +205,6 @@ public abstract class PageDialog extends DivRepDialog
 			Page original = budget.findPage(id);
 			newpage = original.clone();
 			
-			//clear expenses
-			for(Category category : newpage.categories) {
-				category.expenses = new ArrayList<Expense>();
-			}
 			
 			//clear balance income
 			ArrayList<Income> non_balance_incomes = new ArrayList<Income>();
@@ -196,6 +220,20 @@ public abstract class PageDialog extends DivRepDialog
 				Income income = new Income(newpage);
 				income.balance_from = original;
 				newpage.incomes.add(income);
+			}
+			
+			//run budget auto-adjust
+			for(Category category : newpage.categories) {
+				if(category.auto_adjust) {
+					BigDecimal balance = category.amount;
+					balance = balance.subtract(category.getTotalExpense());
+					category.amount = category.amount.add(balance);
+				}
+			}	
+			
+			//clear expenses
+			for(Category category : newpage.categories) {
+				category.expenses = new ArrayList<Expense>();
 			}
 			
 		} else {

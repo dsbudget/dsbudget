@@ -97,4 +97,7 @@ height: 45px;
 border: 1px solid black;
 float: left;
 }
-
+.divrep_disabled
+{
+color: gray;
+}
