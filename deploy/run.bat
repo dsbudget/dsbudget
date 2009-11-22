@@ -1,1 +1,0 @@
-java -Ddocument="BudgetDocument.xml" -jar dsbudget.jar 
