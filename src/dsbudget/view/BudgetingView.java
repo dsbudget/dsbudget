@@ -119,8 +119,9 @@ public class BudgetingView extends DivRep {
 		out.write("<div class=\"budgetting round8\" id=\""+getNodeID()+"\">");
 		
 		BigDecimal total_free_income = mainview.getTotalIncome();
-		total_free_income = total_free_income.subtract(mainview.getTotalIncomeDeduction());
-		BigDecimal total_unbudgetted = total_free_income.subtract(mainview.getTotalBudgetted());
+		//total_free_income = total_free_income.subtract(mainview.getTotalIncomeDeduction());
+		//BigDecimal total_unbudgetted = total_free_income.subtract(mainview.getTotalBudgetted());
+		final AmountView total_unbudgetted_view = new AmountView(this, mainview.getTotalUnBudgetted());
 		
 		NumberFormat nf = NumberFormat.getCurrencyInstance();
 
@@ -141,13 +142,16 @@ public class BudgetingView extends DivRep {
 				DivRepSlider slider = new DivRepSlider(this);
 				slider.addEventListener(new DivRepEventListener() {
 					public void handleEvent(DivRepEvent e) {
-						category.amount = new BigDecimal(e.value);
-						redraw();
-						mainview.updateExpenseCategory(category);
+						if(e.action.equals("slidechange")) {
+							category.amount = new BigDecimal(e.value);
+							redraw();
+							mainview.updateExpenseCategory(category);
+						}
 					}});
 				//sliders.put(category, slider);
 				//DivRepSlider slider = sliders.get(category);
 				
+				slider.setListenSlideEvents(true);
 				slider.setMax(max);
 				slider.setValue(category.amount.longValue());
 				slider.setColor(category.color);
@@ -164,7 +168,20 @@ public class BudgetingView extends DivRep {
 				out.write("</td>");
 				
 				out.write("<th style=\"text-align: right;\" width=\"90px\">");
-				out.write(nf.format(category.amount));
+				final AmountView av = new AmountView(this, category.amount);
+				av.render(out);
+				slider.addEventListener(new DivRepEventListener(){
+					public void handleEvent(DivRepEvent e) {
+						if(e.action.equals("slide")) {
+							category.amount = new BigDecimal(e.value);
+
+							av.setValue(category.amount);
+							av.redraw();
+							
+							total_unbudgetted_view.setValue(mainview.getTotalUnBudgetted());
+							total_unbudgetted_view.redraw();
+						}
+					}});
 				out.write("</th>");
 		
 				out.write("<td width=\"20px\">");
@@ -184,12 +201,10 @@ public class BudgetingView extends DivRep {
 			out.write("<td class=\"newitem\">");
 			addnewcategory.render(out);
 			out.write("</td>");
-			
-			String negative = "";
-			if(total_unbudgetted.compareTo(BigDecimal.ZERO) < 0) {
-				negative = "negative";
-			}
-			out.write("<th class=\"note\" style=\"text-align: right;\">Total Unbudgeted</th><th width=\"90px\" style=\"text-align: right;\" class=\"note "+negative+"\">"+nf.format(total_unbudgetted)+"</th><th width=\"20px\"></th></tr>");
+
+			out.write("<th class=\"note\" style=\"text-align: right;\">Total Unbudgeted</th><th width=\"90px\" style=\"text-align: right;\" class=\"note\">");
+			total_unbudgetted_view.render(out);
+			out.write("</th><th width=\"20px\"></th></tr>");
 		
 			out.write("</table>");
 			
@@ -197,7 +212,7 @@ public class BudgetingView extends DivRep {
 			out.write("$('#budgetting_list').sortable({tolerance: 'pointer', handle: 'span', containment: 'parent', stop: function(event, ui) {divrep('"+getNodeID()+"', event, ui.item.attr('id')+\"&\"+ui.item.prev().attr('id'));}, axis: 'y'}).disableSelection();");
 			out.write("</script>");
 			
-			if(total_unbudgetted.compareTo(BigDecimal.ZERO) < 0) {
+			if(mainview.getTotalUnBudgetted().compareTo(BigDecimal.ZERO) < 0) {
 				out.write("<p class=\"divrep_elementerror\">Total budgeted is more than the total income. Please reduce the amount of budgets.</p>");
 			}
 		} else {

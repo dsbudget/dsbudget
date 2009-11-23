@@ -141,6 +141,11 @@ public class MainView extends DivRep {
 	public BigDecimal getTotalBudgetted() {
 		return page.getTotalBudgetted();
 	}
+	public BigDecimal getTotalUnBudgetted() {
+		BigDecimal total_free_income = getTotalIncome();
+		total_free_income = total_free_income.subtract(getTotalIncomeDeduction());
+		return total_free_income.subtract(getTotalBudgetted());
+	}
 	public BigDecimal getTotalIncome() {
 		return page.getTotalIncome();
 	}

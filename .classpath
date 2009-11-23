@@ -7,10 +7,6 @@
 	<classpathentry kind="lib" path="tomcat/lib/commons-el.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/commons-modeler-2.0.1.jar"/>
-	<classpathentry kind="lib" path="tomcat/lib/jasper-compiler-jdt.jar"/>
-	<classpathentry kind="lib" path="tomcat/lib/jasper-compiler.jar"/>
-	<classpathentry kind="lib" path="tomcat/lib/jasper-runtime.jar"/>
-	<classpathentry kind="lib" path="tomcat/lib/jsp-api.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/naming-factory.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/naming-resources.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/servlet-api.jar"/>
