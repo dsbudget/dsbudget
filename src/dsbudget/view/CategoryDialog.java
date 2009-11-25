@@ -166,12 +166,12 @@ public class CategoryDialog extends DivRepDialog
 	public void renderDialog(PrintWriter out) {
 		name.render(out);
 		amount.render(out);
-
+/*
 		out.write("<div style=\"background-color: #ccc; padding: 10px; margin-bottom: 5px;\" class=\"round4\">");
 		//auto_adjust.render(out);
 		out.write("<br/><p>Please check this if you want the balance of this category to be added to the budget for the same category when you open a new page. This is commonly used for saving categories.</p>");
 		out.write("</div>");
-		
+		*/	
 		description.render(out);
 		color.render(out);
 	}
