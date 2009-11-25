@@ -61,6 +61,7 @@ public class Main {
 
         // Create a default virtual host
         host = tomcat.createHost("localhost", "webapps");
+        host.setAutoDeploy(false);
         engine.addChild(host);
   
         // Create the ROOT context

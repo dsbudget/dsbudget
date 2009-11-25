@@ -26,7 +26,7 @@ public class CategoryDialog extends DivRepDialog
 	public DivRepTextBox description;
 	public DivRepTextBox amount;
 	public DivRepColorPicker color;
-	public DivRepCheckBox auto_adjust;
+	//public DivRepCheckBox auto_adjust;
 	
 	Category category;
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -98,8 +98,8 @@ public class CategoryDialog extends DivRepDialog
 			}
 		}
 		
-		auto_adjust = new DivRepCheckBox(this);
-		auto_adjust.setLabel("This is a rollover category");
+		//auto_adjust = new DivRepCheckBox(this);
+		//auto_adjust.setLabel("This is a rollover category");
 	}
 	
 	public void open(Category _category)
@@ -111,21 +111,21 @@ public class CategoryDialog extends DivRepDialog
 			description.setValue("");
 			amount.setValue("");	
 			color.setValue(Color.blue);
-			auto_adjust.setValue(false);
+			//auto_adjust.setValue(false);
 		} else {
 			setTitle("Update Category");
 			name.setValue(category.name);
 			description.setValue(category.description);
 			amount.setValue(nf.format(category.amount));
 			color.setValue(category.color);
-			auto_adjust.setValue(category.auto_adjust);
+			//auto_adjust.setValue(category.auto_adjust);
 		}
 		
 		name.redraw();
 		description.redraw();
 		amount.redraw();
 		color.redraw();
-		auto_adjust.redraw();
+		//auto_adjust.redraw();
 		
 		super.open();
 	}
@@ -153,7 +153,7 @@ public class CategoryDialog extends DivRepDialog
 			category.name = name.getValue();
 			category.description = description.getValue();
 			category.color = color.getValue();
-			category.auto_adjust = auto_adjust.getValue();
+			//category.auto_adjust = auto_adjust.getValue();
 			
 			mainview.redraw();
 			mainview.initView();
@@ -168,7 +168,7 @@ public class CategoryDialog extends DivRepDialog
 		amount.render(out);
 
 		out.write("<div style=\"background-color: #ccc; padding: 10px; margin-bottom: 5px;\" class=\"round4\">");
-		auto_adjust.render(out);
+		//auto_adjust.render(out);
 		out.write("<br/><p>Please check this if you want the balance of this category to be added to the budget for the same category when you open a new page. This is commonly used for saving categories.</p>");
 		out.write("</div>");
 		
@@ -182,7 +182,7 @@ public class CategoryDialog extends DivRepDialog
 		valid &= description.isValid();
 		valid &= amount.isValid();
 		valid &= color.isValid();
-		valid &= auto_adjust.isValid();
+		//valid &= auto_adjust.isValid();
 		return valid;
 	}
 };

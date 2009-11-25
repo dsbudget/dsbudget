@@ -42,7 +42,6 @@ public class ExpenseView extends DivRep {
 			page = _page;
 		}
 
-		@Override
 		protected void onEvent(DivRepEvent e) {
 			// TODO Auto-generated method stub
 			
@@ -118,7 +117,6 @@ public class ExpenseView extends DivRep {
 			setGraphTogglerTitle();
 
 			graph_toggler.setStyle(DivRepButton.Style.ALINK);
-			//graph_toggler.addClass("html_button");
 			graph_toggler.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
 					graph.setHidden(!graph.isHidden());
@@ -185,7 +183,13 @@ public class ExpenseView extends DivRep {
 				if(expense.amount.compareTo(BigDecimal.ZERO) < 0) {
 					negative = "negative";
 				}
-				out.write("<td style=\"text-align: right;\" class=\""+negative+"\">- "+nf.format(expense.amount)+"</td>");
+				out.write("<td style=\"text-align: right;\" class=\""+negative+"\">");
+				/*
+				if(expense.amount.compareTo(BigDecimal.ZERO) > 0) {
+					out.write("- ");
+				}
+				*/
+				out.write(nf.format(expense.amount)+"</td>");
 				
 				out.write("<td>");
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");

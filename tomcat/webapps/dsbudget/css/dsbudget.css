@@ -257,6 +257,10 @@ a:hover.divrep_button {
 color: #69f;
 }
 
+a.divrep_button img {
+border: none;
+}
+
 #footer {
 color: white;
 text-align: center;

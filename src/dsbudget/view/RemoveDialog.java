@@ -1,25 +1,11 @@
 package dsbudget.view;
 
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-
 import com.divrep.DivRep;
-import com.divrep.DivRepEvent;
-import com.divrep.DivRepEventListener;
-import com.divrep.common.DivRepCheckBox;
-import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
-import com.divrep.common.DivRepSelectBox;
-import com.divrep.common.DivRepTextBox;
-import com.divrep.validator.DivRepIValidator;
-
 import dsbudget.Main;
 import dsbudget.model.Budget;
-import dsbudget.model.Category;
-import dsbudget.model.Expense;
 import dsbudget.model.Income;
 import dsbudget.model.Page;
 
@@ -32,6 +18,7 @@ public class RemoveDialog extends DivRepDialog
 	public RemoveDialog(DivRep parent, Budget _budget, Page _current_page) {
 		super(parent, true);
 		
+		setTitle("Remove Page");
 		budget = _budget;
 		current_page = _current_page;
 	}
@@ -58,6 +45,7 @@ public class RemoveDialog extends DivRepDialog
 			budget.pages.add(openpage);
 		} 
 		openpage = budget.pages.get(0);
+		close();
 		redirect("?page="+openpage.getID());
 	}
 

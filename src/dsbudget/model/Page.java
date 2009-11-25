@@ -13,7 +13,7 @@ public class Page extends ObjectID implements XMLSerializer {
 	
 	public String name;
 	public Date created;
-	//public Boolean b100dist;
+	public Boolean hide_budget;
 	
 	public ArrayList<Income> incomes = new ArrayList<Income>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
@@ -36,6 +36,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		Page page = new Page(parent);
 		page.name = name;
 		page.created = new Date();
+		page.hide_budget = hide_budget;
 		
 		page.incomes = new ArrayList<Income>();
 		for(Income income : incomes) {
@@ -80,15 +81,19 @@ public class Page extends ObjectID implements XMLSerializer {
 	}
 	
 	public void fromXML(Element element) {
-		/*
-		if(element.getAttribute("b100dist").equals("yes")) {
-			b100dist = true;
-		} else {
-			b100dist = false;
-		}
-		*/
+
 		name = element.getAttribute("name");
 		created = new Date(Long.parseLong(element.getAttribute("ctime"))*1000L);
+		
+		if(element.hasAttribute("hide_budget")) {
+			if(element.getAttribute("hide_budget").equals("yes")) {
+				hide_budget = true;
+			} else {
+				hide_budget = false;
+			}
+		} else {
+			hide_budget = false;
+		}
 		
 		//income / category
 		NodeList nl = element.getChildNodes();
@@ -112,6 +117,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		Element elem = doc.createElement("Page");
 		elem.setAttribute("name", name);
 		elem.setAttribute("ctime", String.valueOf(created.getTime()/1000L));
+		elem.setAttribute("hide_budget", (hide_budget==true?"yes":"no"));
 		for(Income income : incomes) {
 			elem.appendChild(income.toXML(doc));
 		}

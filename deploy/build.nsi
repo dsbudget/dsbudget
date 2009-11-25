@@ -31,6 +31,7 @@ Section "Normal" ; (default section)
 	SetOutPath "$INSTDIR"
 	File /r "C:\tmp\dsbudget\tomcat"
 	File "C:\tmp\dsbudget\dsbudget.jar"
+	File "C:\tmp\dsbudget\dsbudget.ico"
 	
 	IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
 	DocNotExists:
@@ -56,7 +57,10 @@ Section "Normal" ; (default section)
 	
 	; Create Start Menu shortcuts
 	CreateDirectory $SMPROGRAMS\dsBudget
+	
+	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
 	createShortCut "$SMPROGRAMS\dsBudget\Run dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
+
 	createShortCut "$INSTDIR\run.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar'
 	
 	createShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
@@ -84,10 +88,13 @@ Section Uninstall
 	
 	RMDir /r "$INSTDIR\tomcat"
 	Delete "$INSTDIR\dsbudget.jar"
+	Delete "$INSTDIR\dsbudget.ico"
 	Delete "$INSTDIR\uninstall.exe"
 	Delete "$INSTDIR\run.lnk"
 	
 	RMDir /r "$SMPROGRAMS\dsBudget"
+	Delete "$DESKTOP\dsBudget.lnk"
+	
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\dsBudget"
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget"
 

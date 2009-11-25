@@ -14,7 +14,7 @@
 	<classpathentry kind="lib" path="tomcat/lib/tomcat-coyote.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/tomcat-http.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/tomcat-util.jar"/>
-	<classpathentry kind="lib" path="tomcat/webapps/dsbudget/WEB-INF/lib/divrep.jar"/>
+	<classpathentry kind="lib" path="tomcat/webapps/dsbudget/WEB-INF/lib/divrep.jar" sourcepath="/divrep"/>
 	<classpathentry kind="lib" path="tomcat/webapps/dsbudget/WEB-INF/lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="tomcat/webapps/dsbudget/WEB-INF/lib/commons-validator-1.3.1.jar"/>
 	<classpathentry kind="lib" path="tomcat/webapps/dsbudget/WEB-INF/lib/jcommon-1.0.16.jar"/>

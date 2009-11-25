@@ -27,6 +27,7 @@ public class BudgetingView extends DivRep {
 
 	//LinkedHashMap<Category, DivRepSlider> sliders = new LinkedHashMap<Category, DivRepSlider>();
 	DivRepButton addnewcategory;
+	DivRepButton toggler;
 	
 	public BudgetingView(final MainView parent) {
 		super(parent);
@@ -50,6 +51,25 @@ public class BudgetingView extends DivRep {
 				mainview.category_dialog.open(null);
 			}});
 		
+		toggler = new DivRepButton(this, "");
+		toggler.setStyle(DivRepButton.Style.IMAGE);
+		setTogglerIcon();
+		toggler.addEventListener(new DivRepEventListener() {
+			public void handleEvent(DivRepEvent e) {
+				mainview.page.hide_budget = !mainview.page.hide_budget;
+				setTogglerIcon();
+				redraw();
+			}});
+		
+	}
+	
+	protected void setTogglerIcon()
+	{
+		if(mainview.page.hide_budget) {
+			toggler.setTitle("css/images/expand.gif");
+		} else {
+			toggler.setTitle("css/images/collapse.gif");	
+		}
 	}
 
 	protected void onEvent(DivRepEvent e) {
@@ -119,8 +139,7 @@ public class BudgetingView extends DivRep {
 		out.write("<div class=\"budgetting round8\" id=\""+getNodeID()+"\">");
 		
 		BigDecimal total_free_income = mainview.getTotalIncome();
-		//total_free_income = total_free_income.subtract(mainview.getTotalIncomeDeduction());
-		//BigDecimal total_unbudgetted = total_free_income.subtract(mainview.getTotalBudgetted());
+		total_free_income = total_free_income.subtract(mainview.getTotalIncomeDeduction());
 		final AmountView total_unbudgetted_view = new AmountView(this, mainview.getTotalUnBudgetted());
 		
 		NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -128,78 +147,91 @@ public class BudgetingView extends DivRep {
 		Long max = total_free_income.longValue();
 		if(max > 0) {
 			out.write("<table width=\"100%\">");
-			out.write("<tr class=\"header\"><td width=\"300px\"><h2>Budgeting</h2></td><th style=\"vertical-align: bottom\" class=\"note\">"+nf.format(0)+"</th><th class=\"note\" style=\"vertical-align: bottom; text-align: right;\">"+nf.format(total_free_income)+"</th><th width=\"90px\" style=\"text-align: right;\"></th><th width=\"20px\"></th></tr>");
+			out.write("<tr class=\"header\"><td width=\"300px\"><h2>Budgeting</h2></td><th style=\"vertical-align: bottom\" class=\"note\">");
+			if(!mainview.page.hide_budget) {
+				out.write(nf.format(0));
+			}
+			out.write("</th>");
+			out.write("<th class=\"note\" style=\"vertical-align: bottom; text-align: right;\">");
+			if(!mainview.page.hide_budget) {
+				out.write(nf.format(total_free_income));
+			}
+			out.write("</th>");
+			out.write("<th width=\"90px\" style=\"text-align: right;\"></th><th width=\"20px\">");
+			toggler.render(out);
+			out.write("</th></tr>");
 			out.write("</table>");
 			
 			out.write("<style>");
 			out.write("#budgetting_list { list-style-type: none; margin: 0; padding: 0; width: 100%; }");
-			//out.write("#budgetting_list li { margin: 0px; padding: 0px;border: 0px;}");
 			out.write("</style>");
 			
-			out.write("<ul id=\"budgetting_list\">");
-			//for(Category category : sliders.keySet()) {
-			for(final Category category : mainview.getCategories()) {
-				DivRepSlider slider = new DivRepSlider(this);
-				slider.addEventListener(new DivRepEventListener() {
-					public void handleEvent(DivRepEvent e) {
-						if(e.action.equals("slidechange")) {
-							category.amount = new BigDecimal(e.value);
-							redraw();
-							mainview.updateExpenseCategory(category);
+			if(!mainview.page.hide_budget) {
+				out.write("<ul id=\"budgetting_list\">");
+				for(final Category category : mainview.getCategories()) {
+					DivRepSlider slider = new DivRepSlider(this);
+					slider.addEventListener(new DivRepEventListener() {
+						public void handleEvent(DivRepEvent e) {
+							if(e.action.equals("slidechange")) {
+								category.amount = new BigDecimal(e.value);
+								redraw();
+								mainview.updateExpenseCategory(category);
+							}
 						}
-					}});
-				//sliders.put(category, slider);
-				//DivRepSlider slider = sliders.get(category);
-				
-				slider.setListenSlideEvents(true);
-				slider.setMax(max);
-				slider.setValue(category.amount.longValue());
-				slider.setColor(category.color);
-				
-				out.write("<li id=\"cat_"+category.getID()+"\" >");
-
-				out.write("<table id=\"budgetting_table\" width=\"100%\">");
-				out.write("<tr class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");			
-				out.write("<td width=\"20px\"><span class=\"sort_button ui-icon ui-icon-arrowthick-2-n-s\"></span></td>");				
-				out.write("<th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
+					});
+					
+					slider.setListenSlideEvents(true);
+					slider.setMax(max);
+					slider.setValue(category.amount.longValue());
+					slider.setColor(category.color);
+					
+					out.write("<li id=\"cat_"+category.getID()+"\" >");
+	
+					out.write("<table id=\"budgetting_table\" width=\"100%\">");
+					out.write("<tr class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");			
+					out.write("<td width=\"20px\"><span class=\"sort_button ui-icon ui-icon-arrowthick-2-n-s\"></span></td>");				
+					out.write("<th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
+									
+					out.write("<td colspan=\"2\">");
+					slider.render(out);
+					out.write("</td>");
+					
+					out.write("<th style=\"text-align: right;\" width=\"90px\">");
+					final AmountView av = new AmountView(this, category.amount);
+					av.render(out);
+					slider.addEventListener(new DivRepEventListener(){
+						public void handleEvent(DivRepEvent e) {
+							if(e.action.equals("slide")) {
+								category.amount = new BigDecimal(e.value);
+	
+								av.setValue(category.amount);
+								av.redraw();
 								
-				out.write("<td colspan=\"2\">");
-				slider.render(out);
-				out.write("</td>");
-				
-				out.write("<th style=\"text-align: right;\" width=\"90px\">");
-				final AmountView av = new AmountView(this, category.amount);
-				av.render(out);
-				slider.addEventListener(new DivRepEventListener(){
-					public void handleEvent(DivRepEvent e) {
-						if(e.action.equals("slide")) {
-							category.amount = new BigDecimal(e.value);
-
-							av.setValue(category.amount);
-							av.redraw();
-							
-							total_unbudgetted_view.setValue(mainview.getTotalUnBudgetted());
-							total_unbudgetted_view.redraw();
-						}
-					}});
-				out.write("</th>");
-		
-				out.write("<td width=\"20px\">");
-				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
-				out.write("</td>");			
-
-				out.write("</tr>");
-				out.write("</table>");
-				
-				out.write("</li>");
+								total_unbudgetted_view.setValue(mainview.getTotalUnBudgetted());
+								total_unbudgetted_view.redraw();
+							}
+						}});
+					out.write("</th>");
+			
+					out.write("<td width=\"20px\">");
+					out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
+					out.write("</td>");			
+	
+					out.write("</tr>");
+					out.write("</table>");
+					
+					out.write("</li>");
+				}
+				out.write("</ul>");
 			}
-			out.write("</ul>");
 			
 			out.write("<table width=\"100%\">");
 			out.write("<tr class=\"header\"><th width=\"20px\"></th>");
 			
 			out.write("<td class=\"newitem\">");
-			addnewcategory.render(out);
+			if(!mainview.page.hide_budget) {
+				addnewcategory.render(out);
+			}
 			out.write("</td>");
 
 			out.write("<th class=\"note\" style=\"text-align: right;\">Total Unbudgeted</th><th width=\"90px\" style=\"text-align: right;\" class=\"note\">");
