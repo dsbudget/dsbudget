@@ -1,8 +1,11 @@
 package dsbudget.servlet;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.ServletConfig;
@@ -31,15 +34,16 @@ public class ServletBase extends HttpServlet {
 		
 		budget = (Budget)config.getServletContext().getAttribute("budget");
 		if(budget == null) {
-			log("Loading Budget Document for the first time");
+			String path = System.getProperty("document");
+			log("Loading Budget Document: " + path);
 			try {
-				String path = System.getProperty("document");
 				if(path == null) {
 					System.out.println("System parameter 'document' is not set (must be a path to the budget document XML). Trying default name.");
 					path = "BudgetDocument.xml";
 					System.setProperty("document", path);
 				}
 				budget = Budget.loadXML(path);
+				
 			} catch (Exception e) {
 				System.out.println("Failed to load XML " + System.getProperty("document"));
 				System.out.println("Creaing empty doc");
@@ -47,10 +51,51 @@ public class ServletBase extends HttpServlet {
 				Page page = Main.createEmptyPage(budget);
 				budget.pages.add(page);
 			}
+			
+			Date today = new Date();
+			
+			//remove old backups
+			long keep_backup_for = 1000*3600*24*7;
+			File parent = new File(".");
+			String[] files = parent.list();
+			for(String file : files) {
+				if(file.startsWith(path+".backup.")) {
+					File bfile = new File(file);
+					if(today.getTime() - bfile.lastModified() > keep_backup_for) {
+						System.out.println("Removing old backup file: " + bfile.toString());
+						bfile.delete();
+					}
+				}
+			}
+			
+			try {
+				//create a backup
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd.HH-mm-ss");
+				String backup_path = path + ".backup." + format.format(today);
+				System.out.println("Backing up the current document to " + backup_path);
+				copy(path, backup_path);
+			} catch (Exception e) {
+				System.out.println("Failed to create a backup: " + e.toString());
+			}
+			
 			config.getServletContext().setAttribute("budget", budget);
 			log("Loaded " + budget.pages.size() + " pages");
 		}
 	}
+
+	void copy(String source, String dest) throws IOException 
+	{
+	    FileReader in = new FileReader(source);
+	    FileWriter out = new FileWriter(dest);
+	    int c;
+
+	    while ((c = in.read()) != -1)
+	      out.write(c);
+
+	    in.close();
+	    out.close();
+	  }
+	  
 	public void save() throws ParserConfigurationException, IOException, TransformerException {
 		budget.saveXML(System.getProperty("document"));
 		System.out.println("Saved the document: " + System.getProperty("document"));
