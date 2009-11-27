@@ -126,6 +126,7 @@ public class ExpenseDialog extends DivRepDialog
 			
 			close();
 			mainview.updateExpenseCategory(category);
+			mainview.save();
 		}
 	}
 	public void renderDialog(PrintWriter out) {

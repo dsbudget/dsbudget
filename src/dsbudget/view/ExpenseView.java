@@ -124,6 +124,7 @@ public class ExpenseView extends DivRep {
 					graph.redraw();
 					setGraphTogglerTitle();
 					graph_toggler.redraw();
+					mainview.save();
 				}
 			});
 			
@@ -142,6 +143,7 @@ public class ExpenseView extends DivRep {
 	 			for(Expense expense : category.getExpensesSortByDate()) {
 					if(expense.toString().equals(e.value)) {
 						mainview.removeExpense(category, expense);
+						mainview.save();
 			 			return;
 					}
 	 			}
@@ -326,6 +328,7 @@ public class ExpenseView extends DivRep {
 		for(CategoryView view : category_views) {
 			if(view.category == category) {
 				view.redraw();
+				return;
 			}
 		}
 	}

@@ -47,6 +47,7 @@ public class RemoveDialog extends DivRepDialog
 		openpage = budget.pages.get(0);
 		close();
 		redirect("?page="+openpage.getID());
+		budget.save();
 	}
 
 	public void renderDialog(PrintWriter out) {

@@ -45,6 +45,7 @@ public class IncomeView extends DivRep {
  			for(Income income : mainview.getIncomes()) {
 				if(income.toString().equals(e.value)) {
 					mainview.removeIncome(income);
+					mainview.save();
 					return;
 				}
  			}
@@ -63,6 +64,7 @@ public class IncomeView extends DivRep {
 					if(deduction.toString().equals(e.value)) {
 						income.deductions.remove(deduction);
 						mainview.updateIncomeView();
+						mainview.save();
 						return;
 					}
 	 			}
@@ -125,6 +127,7 @@ public class IncomeView extends DivRep {
 					public void handleEvent(DivRepEvent arg0) {
 						redraw();
 						income.show_deductions = !income.show_deductions;
+						mainview.save();
 					}});
 				showhidedeductionbutton.render(out);
 				out.write("</td>");

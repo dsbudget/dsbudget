@@ -98,6 +98,7 @@ public class DeductionDialog extends DivRepDialog
 			
 			close();
 			mainview.updateIncomeView();
+			mainview.save();
 		}
 	}
 	public void renderDialog(PrintWriter out) {

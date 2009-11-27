@@ -155,4 +155,7 @@ public class MainView extends DivRep {
 	public Page findPage(Integer pageid) {
 		return budget.findPage(pageid);
 	}
+	public void save() {
+		budget.save();
+	}
 }

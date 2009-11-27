@@ -94,12 +94,8 @@ public class ServletBase extends HttpServlet {
 
 	    in.close();
 	    out.close();
-	  }
-	  
-	public void save() throws ParserConfigurationException, IOException, TransformerException {
-		budget.saveXML(System.getProperty("document"));
-		System.out.println("Saved the document: " + System.getProperty("document"));
 	}
+
 
 	protected void renderHeader(PrintWriter out, HttpServletRequest request) 
 	{	

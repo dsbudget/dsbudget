@@ -161,6 +161,7 @@ public class CategoryDialog extends DivRepDialog
 			
 			//add current color to preset
 			color.addPresetColor(color.getValue());
+			mainview.save();
 		}
 	}
 	public void renderDialog(PrintWriter out) {

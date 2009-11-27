@@ -203,6 +203,7 @@ public abstract class PageDialog extends DivRepDialog
 			} else {
 				updatePage();
 			}
+			budget.save();
 		}
 	}
 	

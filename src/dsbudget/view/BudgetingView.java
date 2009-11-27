@@ -59,6 +59,7 @@ public class BudgetingView extends DivRep {
 				mainview.page.hide_budget = !mainview.page.hide_budget;
 				setTogglerIcon();
 				redraw();
+				mainview.save();
 			}});
 		
 	}
@@ -78,6 +79,7 @@ public class BudgetingView extends DivRep {
  			for(Category category : mainview.getCategories()) {
 				if(category.toString().equals(e.value)) {
 					mainview.removeCategory(category);
+					mainview.save();
 		 			return;
 				}
  			}
@@ -123,6 +125,7 @@ public class BudgetingView extends DivRep {
 			}
 			
 			mainview.setCategories(newlist);
+			mainview.save();
 		} else {
 			//edit
  			for(Category category : mainview.getCategories()) {
@@ -176,6 +179,7 @@ public class BudgetingView extends DivRep {
 								category.amount = new BigDecimal(e.value);
 								redraw();
 								mainview.updateExpenseCategory(category);
+								mainview.save();
 							}
 						}
 					});

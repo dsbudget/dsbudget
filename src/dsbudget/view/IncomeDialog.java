@@ -165,6 +165,7 @@ public class IncomeDialog extends DivRepDialog
 			}
 			mainview.updateIncomeView();
 			close();
+			mainview.save();
 		}
 	}
 	public void renderDialog(PrintWriter out) {
