@@ -29,13 +29,6 @@ public class Budget implements XMLSerializer {
 	public ArrayList<Page> pages = new ArrayList<Page>();
 	public String openpage;
 	
-	private SaveThread savethread;
-	
-	public Budget()
-	{
-		savethread = null;
-	}
-	
 	public void fromXML(Element node) {
 		openpage = node.getAttribute("openpage");
 		
@@ -69,28 +62,24 @@ public class Budget implements XMLSerializer {
 	}
 	
 	public void save() {
-		if(savethread == null || !savethread.isAlive()) {
-			savethread = new SaveThread();
-			savethread.start();
-		} else {
-			System.out.println("SaveThread is still running - skipping save");
-		}
+		SaveThread savethread = new SaveThread();
+		savethread.start();
 	}
 	
     class SaveThread extends Thread {
         public void run() {
-    		System.out.println("Saving Document: " + System.getProperty("document"));
+    		//System.out.println("Saving Document: " + System.getProperty("document"));
     		try {
     			saveXML(System.getProperty("document"));
     		} catch (Exception e) {
     			System.out.println("Failed to save document: " + e.toString());
     		}
-    		System.out.println("Done!");
+    		//System.out.println("Done!");
         }
     }
 
 	
-	public void saveXML(String xmlpath) throws ParserConfigurationException, IOException, TransformerException
+	public synchronized void saveXML(String xmlpath) throws ParserConfigurationException, IOException, TransformerException
 	{	
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;

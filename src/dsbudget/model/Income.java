@@ -49,6 +49,9 @@ public class Income implements XMLSerializer {
 		}
 		
 		if(balance_from == null) {
+			if(amount == null) {
+				return BigDecimal.ZERO;
+			}
 			return amount;	
 		} else {
 			return balance_from.getBalance();
