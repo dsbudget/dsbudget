@@ -114,7 +114,11 @@ public class IncomeView extends DivRep {
 			out.write("<tr class=\"income\" onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"')\">");
 			out.write("<th width=\"20px\"></th>");
 
-			out.write("<th width=\"270px\">"+StringEscapeUtils.escapeHtml(name)+"</th>");
+			out.write("<th width=\"270px\"");
+			if(income.balance_from != null) {
+				out.write(" class=\"note\"");
+			}
+			out.write(">"+StringEscapeUtils.escapeHtml(name)+"</th>");
 			
 			if(income.deductions.size() > 0) {
 				out.write("<td class=\"note\">");

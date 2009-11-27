@@ -32,6 +32,8 @@ public class ServletBase extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		
+		Date today = new Date();
+		
 		budget = (Budget)config.getServletContext().getAttribute("budget");
 		if(budget == null) {
 			String path = System.getProperty("document");
@@ -44,6 +46,16 @@ public class ServletBase extends HttpServlet {
 				}
 				budget = Budget.loadXML(path);
 				
+				//create a backup
+				try {
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd.HH-mm-ss");
+					String backup_path = path + ".backup." + format.format(today);
+					System.out.println("Backing up the current document to " + backup_path);
+					copy(path, backup_path);
+				} catch (Exception e) {
+					System.out.println("Failed to create a backup: " + e.toString());
+				}
+				
 			} catch (Exception e) {
 				System.out.println("Failed to load XML " + System.getProperty("document"));
 				System.out.println("Creaing empty doc");
@@ -51,8 +63,7 @@ public class ServletBase extends HttpServlet {
 				Page page = Main.createEmptyPage(budget);
 				budget.pages.add(page);
 			}
-			
-			Date today = new Date();
+		
 			
 			//remove old backups
 			long keep_backup_for = 1000*3600*24*7;
@@ -68,15 +79,6 @@ public class ServletBase extends HttpServlet {
 				}
 			}
 			
-			try {
-				//create a backup
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd.HH-mm-ss");
-				String backup_path = path + ".backup." + format.format(today);
-				System.out.println("Backing up the current document to " + backup_path);
-				copy(path, backup_path);
-			} catch (Exception e) {
-				System.out.println("Failed to create a backup: " + e.toString());
-			}
 			
 			config.getServletContext().setAttribute("budget", budget);
 			log("Loaded " + budget.pages.size() + " pages");

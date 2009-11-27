@@ -17,7 +17,7 @@ import dsbudget.model.Page;
 
 public class Main {
 	
-	static public String version = "2.0.7";
+	static public String version = "2.0.7.1";
 	
 	private String path = null;
     public static Embedded tomcat = null;
@@ -109,8 +109,6 @@ public class Main {
     
     static public Page createEmptyPage(Budget budget) {
 		Page page = new Page(budget);
-		page.name = "Untitled";
-		page.created = new Date();
 		return page;
     }
 }

@@ -45,13 +45,17 @@ public class Income implements XMLSerializer {
 	{
 		if(__balance_from_name != null) {
 			balance_from =  parent.getParent().findPage(__balance_from_name);
+			if(balance_from == null) {
+				System.out.println("Page [" + parent.name + "] contains balance income from page [" + __balance_from_name + "] which does not exist. Please reset.");
+				
+				balance_from = null;
+				amount = BigDecimal.ZERO;
+				description = "(Invalid Balance originally from [" + __balance_from_name +"])";
+			}
 			__balance_from_name = null;//we don't need this anymore..
 		}
 		
 		if(balance_from == null) {
-			if(amount == null) {
-				return BigDecimal.ZERO;
-			}
 			return amount;	
 		} else {
 			return balance_from.getBalance();

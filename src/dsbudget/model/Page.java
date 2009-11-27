@@ -31,6 +31,10 @@ public class Page extends ObjectID implements XMLSerializer {
 	public Page(Budget _parent) {
 		super();
 		parent = _parent;
+		
+		name = "Untitled";
+		created = new Date();
+		hide_budget = false;
 	}
 	public Page clone() {
 		Page page = new Page(parent);
