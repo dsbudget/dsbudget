@@ -32,7 +32,8 @@ Section "Normal" ; (default section)
 	File /r "C:\tmp\dsbudget\tomcat"
 	File "C:\tmp\dsbudget\dsbudget.jar"
 	File "C:\tmp\dsbudget\dsbudget.ico"
-	
+	File "C:\tmp\dsbudget\dsbudget.conf"
+		
 	IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
 	DocNotExists:
 		DetailPrint "BudgetDocument.xml is not installed"
@@ -89,9 +90,10 @@ Section Uninstall
 	RMDir /r "$INSTDIR\tomcat"
 	Delete "$INSTDIR\dsbudget.jar"
 	Delete "$INSTDIR\dsbudget.ico"
+	Delete "$INSTDIR\dsbudget.conf"
 	Delete "$INSTDIR\uninstall.exe"
 	Delete "$INSTDIR\run.lnk"
-	
+
 	RMDir /r "$SMPROGRAMS\dsBudget"
 	Delete "$DESKTOP\dsBudget.lnk"
 	

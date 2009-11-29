@@ -1,7 +1,11 @@
 package dsbudget;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.Properties;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.Engine;
@@ -17,24 +21,36 @@ import dsbudget.model.Page;
 
 public class Main {
 	
-	static public String version = "2.0.7.1";
+	static public String version = "2.0.7.2";
 	
 	private String path = null;
     public static Embedded tomcat = null;
     private Host host = null;
     private Context rootcontext;
 
+    public static Properties conf;
     public static String port = "16091";
 
 	public static void main(String[] args) {
 		Main main = new Main();
 		System.out.println("Starting dsBudget server " + Main.version);
+		
+		conf = new Properties();
+		try {
+			conf.load(new FileInputStream("dsbudget.conf"));
+		} catch (FileNotFoundException e1) {
+			System.out.println(e1.toString());
+			System.exit(1);
+		} catch (IOException e1) {
+			System.out.println(e1.toString());
+			System.exit(1);
+		}
+		
 		try {
 			main.startTomcat();
 		} catch (LifecycleException e) {
-			//if I can't start the server, maybe there is another one already running..
-			//let it continue..
-			e.printStackTrace();
+			System.out.println(e.toString());
+			System.exit(1);
 		}
 		System.out.println("Opening a browser...");
 		BrowserControl.displayURL("http://localhost:"+main.port+"/dsbudget/main");
@@ -84,15 +100,10 @@ public class Main {
         
         // Install the assembled container hierarchy
         tomcat.addEngine(engine);
-        String addr = null;
         Connector connector = null;
-        InetAddress address = null;
         try {
             connector = new Connector();
-            //connector.setSecure(false);
-            if (address != null) {
-                IntrospectionUtils.setProperty(connector, "address", "127.0.0.1");
-            }
+            IntrospectionUtils.setProperty(connector, "address", "127.0.0.1");
             IntrospectionUtils.setProperty(connector, "port", port);     
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -40,6 +40,7 @@
 		</copy>
 		<copy file="BudgetDocument.xml" todir="${deploy.dir}"/>
 		<copy file="run.sh" todir="${deploy.dir}"/>
+		<copy file="dsbudget.conf" todir="${deploy.dir}"/>
 		<copy file="dsbudget.ico" todir="${deploy.dir}"/>
 		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget_2.0.X.zip"
 		       basedir="${deploy.dir}"
