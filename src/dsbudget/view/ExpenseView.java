@@ -310,14 +310,15 @@ public class ExpenseView extends DivRep {
 		initView();
 	}
 	
+	
 	public void initView() 
 	{
 		category_views = new ArrayList<CategoryView>();
 		for(Category category : mainview.getCategories()) {	
 			category_views.add(new CategoryView(this, category));
 		}		
-		redraw();
 	}
+	
 
 	@Override
 	protected void onEvent(DivRepEvent e) {
