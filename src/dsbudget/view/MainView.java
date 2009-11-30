@@ -46,14 +46,6 @@ public class MainView extends DivRep {
 		incomeview = new IncomeView(this);
 		budgettingview = new BudgetingView(this);
 		expenseview = new ExpenseView(this);
-		/*
-		//handle category slider change
-		budgettingview.addEventListener(new DivRepEventListener() {
-			public void handleEvent(DivRepEvent e) {
-				expenseview.updateExpenseCategory(e.value);
-			}
-		});
-		*/
 	}
 	@Override
 	protected void onEvent(DivRepEvent e) {
@@ -117,15 +109,6 @@ public class MainView extends DivRep {
 		return page.incomes;
 	}
 	public ArrayList<Category> getCategories() {
-		/*
-		ArrayList<Category> sorted = page.categories;
-		Collections.sort(sorted, new Comparator<Category> () {
-			public int compare(Category a, Category b) {
-				return a.name.compareTo(b.name);
-			}
-		});
-		return sorted;
-		*/
 		return page.categories;
 	}
 	public void setCategories(ArrayList<Category> list) {

@@ -28,6 +28,7 @@ import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
+import dsbudget.Main;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
 import dsbudget.model.Page;
@@ -49,10 +50,6 @@ public class ChartServlet extends ServletBase {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("image/png");
-		// Chart.generatePieChart(response.getOutputStream());
-		// Chart.generateXYChart(response.getOutputStream());
-		// Chart.generateBarChart(response.getOutputStream());
-		// Chart.generateTimeSeriesChart(response.getOutputStream());
 
 		String type = request.getParameter("type");
 		if (type.equals("balance")) {
@@ -67,48 +64,7 @@ public class ChartServlet extends ServletBase {
 		Category category = page.findCategory(catid);
 		renderBalanceChart(response.getOutputStream(), page, category);
 	}
-/*
-	public void renderBalanceChart(OutputStream out, Page page, Category category) {
-		TimeSeries pop = new TimeSeries("Balance", Day.class);
-		BigDecimal balance = category.amount;
-		
-		Boolean first = true;
-		for (Expense expense : category.getExpensesSortByDate()) {
-			if(first && expense.date.compareTo(page.created) > 0) {
-				pop.addOrUpdate(new Day(page.created), category.amount);
-			}
-			first = false;
-			balance = balance.subtract(expense.amount);
-			pop.addOrUpdate(new Day(expense.date), balance);
-		}
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		dataset.addSeries(pop);
 
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(null, null,
-				"Balance", dataset, false, false, false);
-
-		XYPlot plot = chart.getXYPlot();
-		plot.setDomainGridlinePaint(Color.gray);
-		plot.setRangeGridlinePaint(Color.gray);
-		plot.setBackgroundPaint(Color.white);
-		plot.setOutlineVisible(false);
-		
-		XYItemRenderer renderer = plot.getRenderer();
-		renderer.setSeriesStroke(0, new BasicStroke(3));
-		renderer.setSeriesPaint(0, category.color);
-        if (renderer instanceof XYLineAndShapeRenderer) {
-            XYLineAndShapeRenderer r = (XYLineAndShapeRenderer)renderer;
-            r.setBaseShapesVisible(true);
-            r.setBaseShapesFilled(true);
-            r.setDrawSeriesLineAsPath(true);
-        }
-		try {
-			ChartUtilities.writeChartAsPNG(out, chart, 600, 150);//650 is bit too large for printing with current 40px padding on the right
-		} catch (IOException e) {
-			System.err.println("Problem occurred creating chart.");
-		}
-	}
-*/
 	public void renderBalanceChart(OutputStream out, Page page, Category category) {
 		
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -157,46 +113,22 @@ public class ChartServlet extends ServletBase {
 		plot.setRangeGridlinePaint(Color.gray);
 		plot.setBackgroundPaint(Color.white);
 		plot.setOutlineVisible(false);
-/*
-	     final GradientPaint gp0 = new GradientPaint(
-	             0.0f, 0.0f, Color.yellow, 
-	             0.0f, 0.0f, new Color(0, 0, 64)
-	         );
-	         */
-       final XYDifferenceRenderer renderer = new XYDifferenceRenderer(
+
+        final XYDifferenceRenderer renderer = new XYDifferenceRenderer(
                new Color(category.color.getRed(),category.color.getGreen(),category.color.getBlue(),32), new Color(0,0,0,127), false
            );
 		renderer.setSeriesStroke(0, new BasicStroke(3));
 		renderer.setSeriesPaint(0, category.color);
-		//renderer.setSeriesPaint(1, new Color(0,0,0,0));
 		renderer.setSeriesPaint(1, Color.black);
-		
-		/*
-        if (renderer instanceof XYLineAndShapeRenderer) {
-            XYLineAndShapeRenderer r = (XYLineAndShapeRenderer)renderer;
-            r.setBaseShapesVisible(true);
-            r.setBaseShapesFilled(true);
-            r.setDrawSeriesLineAsPath(true);
-        }*/
-        
+
         plot.setRenderer(renderer);
-        
-        /*
+
 		try {
-			KeypointPNGEncoderAdapter encorder = new KeypointPNGEncoderAdapter();
-			encorder.setEncodingAlpha(true);
-			out.write(encorder.encode(chart.createBufferedImage(600, 150, BufferedImage.BITMASK, null)));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		*/
-		
-		try {
-			ChartUtilities.writeChartAsPNG(out, chart, 600, 150);//650 is bit too large for printing with current 40px padding on the right
+			ChartUtilities.writeChartAsPNG(out, chart, 
+					Integer.parseInt(Main.conf.getProperty("balance_graph_width").trim()), 
+					Integer.parseInt(Main.conf.getProperty("balance_graph_height").trim()));
 		} catch (IOException e) {
 			System.err.println("Problem occurred creating chart.");
 		}
-		
 	}
 }

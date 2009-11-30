@@ -27,7 +27,6 @@ public class ExpenseView extends DivRep {
 	MainView mainview;
 
 	ArrayList<CategoryView> category_views;
-	//BalanceView balance_view;
 	
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
 	DateFormat df = DateFormat.getDateInstance();
@@ -232,76 +231,6 @@ public class ExpenseView extends DivRep {
 			out.write("</div>");
 		}
 	}
-	/*
-	class BalanceView extends DivRep 
-	{
-		DivRepButton graph_toggler;
-		PageBalanceGraphView graph;
-		Page page;
-		
-		public BalanceView(DivRep parent, Page _page) {
-			super(parent);
-			page = _page;
-			
-			graph = new PageBalanceGraphView(this, page);
-			graph_toggler = new DivRepButton(this, "Hide Balance Graph");
-			if(graph.isHidden()) {
-				graph_toggler.setTitle("Show Balance Graph");
-			}
-			graph_toggler.setStyle(DivRepButton.Style.ALINK);
-			graph_toggler.addEventListener(new DivRepEventListener() {
-				public void handleEvent(DivRepEvent e) {
-					graph.setHidden(!graph.isHidden());
-					graph.redraw();
-					if(graph.isHidden()) {
-						graph_toggler.setTitle("Show Graph");
-					} else {
-						graph_toggler.setTitle("Hide Graph");					
-					}
-					graph_toggler.redraw();
-				}
-			});
-		}
-
-		protected void onEvent(DivRepEvent e) {
-		}
-
-		public void render(PrintWriter out) {
-			out.write("<div id=\""+getNodeID()+"\" class=\"expense_category\">");
-			out.write("<table width=\"100%\">");
-			out.write("<tr class=\"expense_category\">");
-			out.write("<th width=\"20px\"></th><th width=\"270px\">Total</th>");
-			out.write("<td></td>");
-			out.write("<th width=\"100px\"></th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+nf.format(page.getTotalBudgetted())+"</th><td width=\"20px\"></td>");
-			out.write("</tr>");
-			
-			//balance
-			out.write("<tr class=\"expense_footer\">");
-			
-			out.write("<td></td>");
-			
-			out.write("<td>");
-			out.write("</td>");
-			
-			out.write("<td style=\"text-align: right;\">");
-			graph_toggler.render(out);
-			out.write("</td>");
-			
-			out.write("<th style=\"text-align: right;\">Remaining</th>");
-			out.write("<th style=\"text-align: right;\">"+nf.format(page.getBalance())+"</th>");
-			
-			out.write("<td></td>"); //remove button
-			
-			out.write("</tr>");
-			
-			out.write("</table>");
-		
-			graph.render(out);
-		
-			out.write("</div>");
-		}
-	}
-	*/
 	
 	public ExpenseView(final MainView parent) {
 		super(parent);
@@ -340,7 +269,6 @@ public class ExpenseView extends DivRep {
 		for(CategoryView view : category_views) {
 			view.render(out);
 		}
-		//balance_view.render(out);
 		out.write("</div>");
 	}
 

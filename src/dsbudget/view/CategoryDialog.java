@@ -26,7 +26,6 @@ public class CategoryDialog extends DivRepDialog
 	public DivRepTextBox description;
 	public DivRepTextBox amount;
 	public DivRepColorPicker color;
-	//public DivRepCheckBox auto_adjust;
 	
 	Category category;
 	NumberFormat nf = NumberFormat.getCurrencyInstance();

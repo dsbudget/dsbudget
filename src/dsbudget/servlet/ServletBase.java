@@ -36,14 +36,10 @@ public class ServletBase extends HttpServlet {
 		
 		budget = (Budget)config.getServletContext().getAttribute("budget");
 		if(budget == null) {
-			String path = System.getProperty("document");
-			log("Loading Budget Document: " + path);
+			String path = Main.conf.getProperty("document");
+			log("Loading Budget Document at: " + path);
 			try {
-				if(path == null) {
-					System.out.println("System parameter 'document' is not set (must be a path to the budget document XML). Trying default name.");
-					path = "BudgetDocument.xml";
-					System.setProperty("document", path);
-				}
+				//load the document
 				budget = Budget.loadXML(path);
 				
 				//create a backup
@@ -57,16 +53,15 @@ public class ServletBase extends HttpServlet {
 				}
 				
 			} catch (Exception e) {
-				System.out.println("Failed to load XML " + System.getProperty("document"));
+				System.out.println("Failed to load XML " + path);
 				System.out.println("Creaing empty doc");
 				budget = new Budget();
 				Page page = Main.createEmptyPage(budget);
 				budget.pages.add(page);
 			}
 		
-			
 			//remove old backups
-			long keep_backup_for = 1000*3600*24*7;
+			long keep_backup_for = 1000*3600*24*Long.parseLong(Main.conf.getProperty("keep_backup_for").trim());
 			File parent = new File(".");
 			String[] files = parent.list();
 			for(String file : files) {
@@ -78,7 +73,6 @@ public class ServletBase extends HttpServlet {
 					}
 				}
 			}
-			
 			
 			config.getServletContext().setAttribute("budget", budget);
 			log("Loaded " + budget.pages.size() + " pages");
@@ -98,41 +92,34 @@ public class ServletBase extends HttpServlet {
 	    out.close();
 	}
 
-
 	protected void renderHeader(PrintWriter out, HttpServletRequest request) 
 	{	
 		out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 		out.write("<html><head>");
 		out.write("<title>"+StringEscapeUtils.escapeHtml(page.name)+"</title>");
+
 		out.write("<link href=\"css/smoothness/jquery-ui-1.7.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
-		//out.write("<link href=\"colorpicker/css/colorpicker.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.write("<link href=\"css/divrep.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.write("<link href=\"css/dsbudget.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.write("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"css/dsbudget.print.css\" />");
 		
 		out.write("<script type=\"text/javascript\" src=\"jquery-1.3.2.min.js\"></script>");
 		out.write("<script type=\"text/javascript\" src=\"jquery-ui-1.7.2.custom.min.js\"></script>");
-		//out.write("<script type=\"text/javascript\" src=\"colorpicker/js/colorpicker.js\"></script>");
 		out.write("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
 		
 		out.write("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");
 		
 		out.write("</head>");
-		//out.write("<body onbeforeunload=\"if(confirm('Do you want to save the data?')) divrep('"+pageroot.getNodeID()+"', event, null, 'close')\">");
 		out.write("<body>");
 		
 		out.write("<div id=\"header\"><h1>dsBudget</h1><h2>Previously known as SimpleD Budget</h2></div>");
 		out.write("<div id=\"content\">");	
-	
 	}
+	
 	protected void renderFooter(PrintWriter out, HttpServletRequest request) 
 	{
-		out.write("</div>");	
-		/*
-		out.write("<script type=\"text/javascript\">");
-		out.write("$('.ui-slider').bind('click', function() {alert('hello');});");
-		out.write("</script>");
-		*/
+		out.write("</div>"); //end of content
+
 		out.write("<div id=\"footer\">");
 		out.write("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
 		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\">Soichi Hayashi</a></span>");
@@ -144,6 +131,7 @@ public class ServletBase extends HttpServlet {
 		out.write("<a href=\"http://code.google.com/p/dsbudget/issues/list\" target=\"_blank\">Report Bugs</a>");
 		out.write(" | ");
 		out.write("<a href=\"http://groups.google.com/group/dsbudget/topics\" target=\"_blank\">Discussion Forum</a>");
+
 		out.write("</div>");
 		out.write("</body></html>");
 	}

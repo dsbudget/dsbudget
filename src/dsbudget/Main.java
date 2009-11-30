@@ -23,13 +23,10 @@ public class Main {
 	
 	static public String version = "2.0.8";
 	
-	private String path = null;
     public static Embedded tomcat = null;
     private Host host = null;
-    private Context rootcontext;
 
     public static Properties conf;
-    public static String port = "16091";
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -46,6 +43,13 @@ public class Main {
 			System.exit(1);
 		}
 		
+		//configuration overrides
+		String document_override = System.getProperty("document");
+		if(document_override != null) {
+			System.out.println("Overriding document path: " + document_override);
+			Main.conf.setProperty("document", document_override);
+		}
+		
 		try {
 			main.startTomcat();
 		} catch (LifecycleException e) {
@@ -53,7 +57,7 @@ public class Main {
 			System.exit(1);
 		}
 		System.out.println("Opening a browser...");
-		BrowserControl.displayURL("http://localhost:"+main.port+"/dsbudget/main");
+		BrowserControl.displayURL("http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main");
 	}
 		
     public void startTomcat() throws LifecycleException {
@@ -64,12 +68,6 @@ public class Main {
         // Create an embedded server
         tomcat = new Embedded();
         tomcat.setCatalinaHome("tomcat");
-
-        /*
-        // set the memory realm
-        MemoryRealm memRealm = new MemoryRealm();
-        tomcat.setRealm(memRealm);
-		*/
         
         // Create an engine
         engine = tomcat.createEngine();
@@ -79,20 +77,6 @@ public class Main {
         host = tomcat.createHost("localhost", "webapps");
         host.setAutoDeploy(false);
         engine.addChild(host);
-  
-        // Create the ROOT context
-        /*
-        rootcontext = tomcat.createContext("", "ROOT");
-        rootcontext.setReloadable(true);
-        rootcontext.addWelcomeFile("index.jsp");
-        host.addChild(rootcontext);
-		*/
-        // create another application Context
-        /*
-        Context appCtx = this.embedded.createContext("/manager", "manager");
-        appCtx.setPrivileged(true); 
-        this.host.addChild(appCtx);
-        */
         
         Context appCtx = tomcat.createContext("/dsbudget", "dsbudget");
         appCtx.setPrivileged(true); 
@@ -104,7 +88,7 @@ public class Main {
         try {
             connector = new Connector();
             IntrospectionUtils.setProperty(connector, "address", "127.0.0.1");
-            IntrospectionUtils.setProperty(connector, "port", port);     
+            IntrospectionUtils.setProperty(connector, "port", conf.getProperty("tomcat_port"));     
         } catch (Exception ex) {
             ex.printStackTrace();
         }

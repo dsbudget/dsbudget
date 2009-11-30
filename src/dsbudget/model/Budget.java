@@ -16,6 +16,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import dsbudget.Main;
+
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -68,13 +70,11 @@ public class Budget implements XMLSerializer {
 	
     class SaveThread extends Thread {
         public void run() {
-    		//System.out.println("Saving Document: " + System.getProperty("document"));
     		try {
-    			saveXML(System.getProperty("document"));
+    			saveXML(Main.conf.getProperty("document"));
     		} catch (Exception e) {
     			System.out.println("Failed to save document: " + e.toString());
     		}
-    		//System.out.println("Done!");
         }
     }
 

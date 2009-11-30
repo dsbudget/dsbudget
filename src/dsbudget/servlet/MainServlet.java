@@ -22,7 +22,6 @@ public class MainServlet extends ServletBase  {
 	DivRepSelectBox pageselector;
 	DivRepButton pagesettingsbutton;
 	DivRepButton removepagebutton;
-	//DivRepButton savebutton;
 	
 	RemoveDialog removedialog;
 	PageDialog pagedialog;
@@ -131,30 +130,12 @@ public class MainServlet extends ServletBase  {
 			}
 		});
         
-		/*
-        savebutton = new DivRepButton(pageroot, "Save");
-        savebutton.setToolTip("Save any changes you've made since you started");
-        savebutton.addEventListener(new DivRepEventListener() {
-			public void handleEvent(DivRepEvent e) {
-				try {
-					save();
-					savebutton.alert("Saved!");
-				} catch(Exception e1) {
-					savebutton.alert("Sorry, we had a problem saving this document. " + e1.getMessage());
-				}
-			}
-		});
-		*/
 	}
 	
 	void renderContent(PrintWriter out, HttpServletRequest request)
 	{	
 		out.write("<table class=\"controls\"><tr>");
-/*
-		out.write("<td>");
-		savebutton.render(out);
-		out.write("</td>");
-*/	
+
 		out.write("<td class=\"pageselector\">");
 		
 		pagesettingsbutton.render(out);
