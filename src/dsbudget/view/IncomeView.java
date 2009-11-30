@@ -186,7 +186,7 @@ public class IncomeView extends DivRep {
 			}
 			
 			//total deduction
-			if(income.deductions.size() > 0) {
+			if(income.deductions.size() > 0 && income.show_deductions == true) {
 				out.write("<tr class=\"info\">");
 				out.write("<th>&nbsp;</th>");
 				out.write("<td class=\"newitem\">");
@@ -196,22 +196,9 @@ public class IncomeView extends DivRep {
 				out.write("<th></th>");
 				out.write("<th></th>");
 				out.write("<td></td>");
-			}
-			out.write("<td></td>");
-			out.write("</tr>");
-			/*
-			//total available income
-			if(income.deductions.size() > 0) {
-				out.write("<tr class=\"info\">");
-				out.write("<th>&nbsp;</th>");
-				out.write("<td></td>");
-				out.write("<td></td>");
-				out.write("<th class=\"note\" style=\"text-align: right;\">Available Income</th>");
-				out.write("<th class=\"note\" style=\"text-align: right;\">"+nf.format(total)+"</th>");
 				out.write("<td></td>");
 				out.write("</tr>");
 			}
-			*/
 		}		
 		
 		out.write("<tr class=\"header\">");

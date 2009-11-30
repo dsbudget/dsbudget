@@ -40,7 +40,7 @@ public class ServletBase extends HttpServlet {
 			log("Loading Budget Document at: " + path);
 			try {
 				//load the document
-				budget = Budget.loadXML(path);
+				budget = Budget.loadXML(new File(path));
 				
 				//create a backup
 				try {
@@ -53,7 +53,7 @@ public class ServletBase extends HttpServlet {
 				}
 				
 			} catch (Exception e) {
-				System.out.println("Failed to load XML " + path);
+				System.out.println("Failed to load XML " + path + " -- " + e.toString());
 				System.out.println("Creaing empty doc");
 				budget = new Budget();
 				Page page = Main.createEmptyPage(budget);

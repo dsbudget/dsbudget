@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 
 import dsbudget.Main;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class Budget implements XMLSerializer {
 		}
 	}
 	
-	public static Budget loadXML(String xmlpath) throws ParserConfigurationException, SAXException, IOException {
+	public static Budget loadXML(File xmlpath) throws ParserConfigurationException, SAXException, IOException {
 		Budget budget = new Budget();
 		
 		//Load as DOM
@@ -77,7 +78,6 @@ public class Budget implements XMLSerializer {
     		}
         }
     }
-
 	
 	public synchronized void saveXML(String xmlpath) throws ParserConfigurationException, IOException, TransformerException
 	{	
