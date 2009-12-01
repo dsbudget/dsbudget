@@ -89,7 +89,7 @@ public class DeductionDialog extends DivRepDialog
 			}
 			
 			try {
-				deduction.amount = new BigDecimal(nf.parse(amount.getValue()).doubleValue());
+				deduction.amount = new BigDecimal(nf.parse(amount.getValue()).toString());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

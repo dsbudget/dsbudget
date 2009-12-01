@@ -144,7 +144,7 @@ public class CategoryDialog extends DivRepDialog
 			}
 			
 			try {
-				category.amount = new BigDecimal(nf.parse(amount.getValue()).doubleValue());
+				category.amount = new BigDecimal(nf.parse(amount.getValue()).toString());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

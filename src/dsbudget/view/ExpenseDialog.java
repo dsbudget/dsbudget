@@ -115,7 +115,9 @@ public class ExpenseDialog extends DivRepDialog
 			}
 			
 			try {
-				expense.amount = new BigDecimal(nf.parse(amount.getValue()).doubleValue());
+				Number parsed = nf.parse(amount.getValue());
+				BigDecimal bd = new BigDecimal(parsed.toString());
+				expense.amount = bd;
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
