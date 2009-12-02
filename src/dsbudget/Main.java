@@ -69,7 +69,6 @@ public class Main {
 			main.createTrayIcon();
 		} catch (LifecycleException e) {
 			System.out.println(e.toString());
-			System.exit(1);
 		}
 		System.out.println("Opening a browser...");
 		page_url = "http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main";

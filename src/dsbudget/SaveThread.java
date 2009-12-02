@@ -20,7 +20,7 @@ public class SaveThread extends Thread {
 	    			budget.saveXML(Main.conf.getProperty("document"));
 	    			System.out.println("Saved");
     			}
-    			sleep(3000);
+    			sleep(1000);
     		} catch (Exception e) {
     			System.out.println("Failed to save document: " + e.toString());
     		}

@@ -60,10 +60,10 @@ Section "Normal" ; (default section)
 	; Create Start Menu shortcuts
 	CreateDirectory $SMPROGRAMS\dsBudget
 	
-	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
-	createShortCut "$SMPROGRAMS\dsBudget\Run dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
+	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
+	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
 
-	createShortCut "$INSTDIR\run.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar'
+	createShortCut "$INSTDIR\run.lnk" "$R0" '-jar dsbudget.jar'
 	
 	createShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
 	
