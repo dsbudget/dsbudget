@@ -29,6 +29,7 @@ public class ServletBase extends HttpServlet {
 	Budget budget;
 	Page page; //current page
 	
+	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		

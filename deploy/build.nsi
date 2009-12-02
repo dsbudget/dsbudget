@@ -32,6 +32,7 @@ Section "Normal" ; (default section)
 	File /r "C:\tmp\dsbudget\tomcat"
 	File "C:\tmp\dsbudget\dsbudget.jar"
 	File "C:\tmp\dsbudget\dsbudget.ico"
+	File "C:\tmp\dsbudget\dsbudget.png"
 	File "C:\tmp\dsbudget\dsbudget.conf"
 		
 	IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
@@ -90,6 +91,7 @@ Section Uninstall
 	RMDir /r "$INSTDIR\tomcat"
 	Delete "$INSTDIR\dsbudget.jar"
 	Delete "$INSTDIR\dsbudget.ico"
+	Delete "$INSTDIR\dsbudget.png"
 	Delete "$INSTDIR\dsbudget.conf"
 	Delete "$INSTDIR\uninstall.exe"
 	Delete "$INSTDIR\run.lnk"
@@ -116,7 +118,7 @@ Function GetJRE
  
   ; use javaw.exe to avoid dosbox.
   ; use java.exe to keep stdout/stderr
-  !define JAVAEXE "java.exe"
+  !define JAVAEXE "javaw.exe"
  
   ClearErrors
   StrCpy $R0 "$EXEDIR\jre\bin\${JAVAEXE}"

@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import dsbudget.Main;
+import dsbudget.SaveThread;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,6 +32,18 @@ import java.util.ArrayList;
 public class Budget implements XMLSerializer {
 	public ArrayList<Page> pages = new ArrayList<Page>();
 	public String openpage;
+	public static SaveThread savethread;
+	
+	public Budget()
+	{
+		savethread = new SaveThread(this);
+		savethread.start();
+	}
+	
+	public void save()
+	{
+		savethread.save();
+	}
 	
 	public void fromXML(Element node) {
 		openpage = node.getAttribute("openpage");
@@ -62,23 +75,8 @@ public class Budget implements XMLSerializer {
 		budget.fromXML((Element)roots.item(0));
 
 		return budget;
-	}
-	
-	public void save() {
-		SaveThread savethread = new SaveThread();
-		savethread.start();
-	}
-	
-    class SaveThread extends Thread {
-        public void run() {
-    		try {
-    			saveXML(Main.conf.getProperty("document"));
-    		} catch (Exception e) {
-    			System.out.println("Failed to save document: " + e.toString());
-    		}
-        }
-    }
-	
+	}	
+		
 	public synchronized void saveXML(String xmlpath) throws ParserConfigurationException, IOException, TransformerException
 	{	
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
