@@ -1,1 +1,1 @@
-java -Ddocument="BudgetDocument.xml" -jar dsbudget.jar 
+javaw -jar dsbudget.jar 
