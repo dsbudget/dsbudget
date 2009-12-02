@@ -65,7 +65,7 @@ public abstract class PageDialog extends DivRepDialog
 			kv.put(2, "Add to each categories as negative expenses");
 			balance_handling = new DivRepSelectBox(this, kv);
 			balance_handling.setNullLabel("(Do Nothing)");
-			balance_handling.setLabel("What do you wan to do with the balance?");
+			balance_handling.setLabel("What do you want to do with the balance?");
 		}
 		protected void onEvent(DivRepEvent e) {
 			// TODO Auto-generated method stub
