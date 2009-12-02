@@ -152,7 +152,11 @@ public class IncomeDialog extends DivRepDialog
 			}
 			
 			try {
-				income.amount = new BigDecimal(nf.parse(amount.getValue()).toString());
+				if(amount.getValue() == null) {
+					income.amount = null;
+				} else {
+					income.amount = new BigDecimal(nf.parse(amount.getValue()).toString());
+				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
