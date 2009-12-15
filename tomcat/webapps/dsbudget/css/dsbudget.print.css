@@ -2,6 +2,9 @@
 display: none;
 }
 
-.controls {
-top: -5px;
+#main {
+margin: 0px;
+}
+#side {
+display: none;
 }
