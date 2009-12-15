@@ -34,10 +34,11 @@ width:16px;
 -webkit-border-bottom-left-radius: 4px;
 -webkit-border-bottom-right-radius: 4px;
 }
-.divrep_indent
-{
+
+.divrep_indent {
 margin-left: 40px;
 }
+
 .divrep_hidden
 {
 display: none;

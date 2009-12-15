@@ -113,7 +113,8 @@ public class ServletBase extends HttpServlet {
 		out.write("</head>");
 		out.write("<body>");
 		
-		out.write("<div id=\"header\"><h1>dsBudget</h1><h2>Previously known as SimpleD Budget</h2></div>");
+		out.write("<div id=\"header\"><span class=\"application_header\">dsBudget</span>");
+		out.write("<span class=\"application_subheader\">Previously known as SimpleD Budget</span></div>");
 		out.write("<div id=\"content\">");	
 	}
 	
@@ -123,7 +124,7 @@ public class ServletBase extends HttpServlet {
 
 		out.write("<div id=\"footer\">");
 		out.write("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
-		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\">Soichi Hayashi</a></span>");
+		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\" target=\"_blank\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\" target=\"_blank\">Soichi Hayashi</a></span>");
 		out.write("<br/>");
 		out.write("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");
 		out.write(" | ");

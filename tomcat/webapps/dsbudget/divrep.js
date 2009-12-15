@@ -14,6 +14,7 @@ function divrep(id, event, value, action) {
 		event.cancelBubble = true;//IE
 		if(event.stopPropagation) event.stopPropagation();//Standard
 	}
+	
 	if(!action)  {
 		if(event) {
 			var action = event.type;
@@ -39,7 +40,6 @@ function divrep(id, event, value, action) {
 	}
 	
 	divrep_processing_id = id;
-	
 	jQuery.ajax({
 		url: "divrep",
 		async: true,//now running in async mode to not hose up browser..
@@ -49,12 +49,12 @@ function divrep(id, event, value, action) {
 		type: "POST",
 		contentType: "application/x-www-form-urlencoded; charset=UTF-8",//IE doesn't set charset correctly..
 		dataType: "script",//Evaluates the response as JavaScript and returns it as plain text. Disables caching unless option "cache" is used. Note: This will turn POSTs into GETs for remote-domain requests. 
-	    success: function(msg){
+	    success: function(msg) {
 		    divrepClearProcessing();
 		},
 	    error: function (XMLHttpRequest, textStatus, errorThrown) {
-		   alert(textStatus.errorThrown);
-		   divrepClearProcessing();
+		    alert("Sorry! Server is having trouble processing your request.\n\n"+textStatus + ": " + errorThrown);
+		    divrepClearProcessing();
 	    }
 	});
 }
@@ -62,7 +62,7 @@ function divrep(id, event, value, action) {
 //this is basically the same thing as jquery.load, but instead of replacing the content 
 //of the div, it replace the whole div using replaceWith().
 var divrep_replace_counter = 0;
-function divrep_replace(node, url) 
+function divrep_replace_old(node, url) 
 {
 	//count how many requests are there
 	divrep_replace_counter++;
@@ -89,6 +89,16 @@ function divrep_replace(node, url)
 		}
 	});
 	return this;
+}
+function divrep_replace(node, content) 
+{
+	if(node.length == 0) {
+		alert("couldn't find the divrep node - maybe it's not wrapped with div?\n" + url);
+	}
+	//why am I emptying the content before replacing it? because jQuery's replaceWith adds new content before removing the
+	//old content. This causes identical ID to coexist in the dom structure and causes redraw issue
+	node.empty();
+	node.replaceWith(content);
 }
 
 var divrep_jscallback = null;
@@ -185,4 +195,3 @@ function colorpicker_hexFromRGB (r, g, b) {
 	});
 	return hex.join('').toUpperCase();
 }
-

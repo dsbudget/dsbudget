@@ -207,6 +207,10 @@ public abstract class PageDialog extends DivRepDialog
 		}
 	}
 	
+	public void onCancel() {
+		close();	
+	}
+	
 	private void updatePage()
 	{
 		current_page.name = title.getValue();

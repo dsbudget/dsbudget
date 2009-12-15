@@ -2,6 +2,9 @@ package dsbudget.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +14,8 @@ import com.divrep.DivRepEventListener;
 import com.divrep.DivRepRoot;
 import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepSelectBox;
+import com.divrep.common.DivRepButton.Style;
+
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
@@ -19,9 +24,11 @@ import dsbudget.view.RemoveDialog;
 
 public class MainServlet extends ServletBase  {
 	
-	DivRepSelectBox pageselector;
+	//DivRepSelectBox pageselector;
 	DivRepButton pagesettingsbutton;
 	DivRepButton removepagebutton;
+	
+	DivRepButton newpagebutton;
 	
 	RemoveDialog removedialog;
 	PageDialog pagedialog;
@@ -66,7 +73,8 @@ public class MainServlet extends ServletBase  {
 		
 		PrintWriter out = response.getWriter();
 		renderHeader(out, request);
-		renderContent(out, request);
+		renderSide(out, request);
+		renderMain(out, request);
 		renderFooter(out, request);
 	}
 	
@@ -76,8 +84,8 @@ public class MainServlet extends ServletBase  {
 		initPageControl();
 		pagedialog = new PageDialog(pageroot, budget, page) {
 			public void onCancel() {
-				pageselector.setValue(page.getID());
-				pageselector.redraw();
+				//pageselector.setValue(page.getID());
+				//pageselector.redraw();
 				pagedialog.close();
 			}
 		};
@@ -90,6 +98,7 @@ public class MainServlet extends ServletBase  {
 	{
 		LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
 		
+		/*
 		//populate key/value for page selector and instantiate
 		for(Page page : budget.pages) {
 			pages_kv.put(page.getID(), page.name);
@@ -102,7 +111,8 @@ public class MainServlet extends ServletBase  {
 			public void handleEvent(DivRepEvent e) {
 				for(Page page : budget.pages) {
 					if(page.getID().equals(Integer.parseInt(e.value)))  {
-						pageselector.redirect("?page="+page.getID());
+						//pageselector.redirect("?page="+page.getID());
+						pageselector.open("?page="+page.getID(), "page_"+page.getID());
 						budget.save();
 						return;
 					}
@@ -112,6 +122,7 @@ public class MainServlet extends ServletBase  {
 		if(page != null) {
 			pageselector.setValue(page.getID());
 		}
+		*/
 		pagesettingsbutton = new DivRepButton(pageroot, "Settings");
 		pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
 		pagesettingsbutton.setToolTip("Edit settings for currently opened page");
@@ -129,25 +140,60 @@ public class MainServlet extends ServletBase  {
 				removedialog.open();
 			}
 		});
-        
+		
+		newpagebutton = new DivRepButton(pageroot, "New Page");
+        newpagebutton.setStyle(Style.ALINK);
+        newpagebutton.addEventListener(new DivRepEventListener() {
+			public void handleEvent(DivRepEvent e) {
+				pagedialog.open(true);
+			}});
 	}
 	
-	void renderContent(PrintWriter out, HttpServletRequest request)
-	{	
-		out.write("<table class=\"controls\"><tr>");
+	void renderSide(PrintWriter out, HttpServletRequest request)
+	{
+		out.write("<div id=\"side\">");
+		
+		out.write("<div class=\"pageselector\">");
 
-		out.write("<td class=\"pageselector\">");
+		out.write("<div class=\"newpage\">");
+		newpagebutton.render(out);
+		out.write("</div>");
 		
-		pagesettingsbutton.render(out);
-		removepagebutton.render(out);
+		out.write("<h2>Pages</h2>");
+
+		ArrayList<Page> sorted_pages = budget.pages;
+		Collections.sort(sorted_pages, new Comparator<Page>() {
+			public int compare(Page o1, Page o2) {
+				return(o2.created.compareTo(o1.created));
+			}});
 		
-		pageselector.render(out);
-		out.write("</td>");
+		for(Page p : budget.pages) {
+			if(p == page) {
+				out.write("<div class=\"currentpage\">"+p.name+"</div>");
+			} else {
+				out.write("<div class=\"link\" onclick=\"document.location='"+"?page="+p.getID()+"';\">"+p.name+"</div>");
+			}
+		}
+		out.write("<br/></div>");
 		
-		out.write("</tr></table>");
+		out.write("</div>");
 		
+	}
+	
+	void renderMain(PrintWriter out, HttpServletRequest request)
+	{					
 		out.write("<div id=\"main\">");
+		
+		out.write("<div class=\"pagecontrol\">");
+		pagesettingsbutton.render(out);
+		out.write("&nbsp;&nbsp;&nbsp;");
+		removepagebutton.render(out);
+		out.write("</div>");
+		
+		out.write("<div class=\"pagename\">" + page.name + "</div>");
+		
 		pageview.render(out);
+		
 		out.write("</div>");
 		
 		pagedialog.render(out);

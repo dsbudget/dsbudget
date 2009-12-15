@@ -3,14 +3,33 @@ padding: 0px;
 margin: 0px;
 }
 
+html {
+padding: 0px;
+margin: 0px;
+}
+
 body {
 font-family: Arial,"Lucida Sans Unicode",sans-serif;
 font-size: 10pt;
-background-color: #369;
+background-color: black;
 }
 
 h1, h2, h3 {
 font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;	
+}
+
+span.application_header {
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
+font-size:19pt;
+font-weight:bold;
+padding-left:20px;
+}
+
+span.application_subheader {
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
+font-size:11pt;
+font-weight:normal;
+padding-left:20px;
 }
 
 input[type='text'], textarea {
@@ -18,41 +37,85 @@ border: 1px solid #ccc;
 padding: 5px;
 margin-bottom: 3px;
 }
+
 input {
 margin-top: 3px;
 }
-
 
 select {
 padding: 2px;
 margin-top: 3px;
 margin-bottom: 3px;
-}
-
-select {
 border: 1px solid #ccc;
 }
 
 #header {
 background-color: #000;
-height: 60px;
+height: 37px;
 color: white;
 }
 
-#header h1 {
-font-size: 19pt;
+#side {
+float: left;
+width: 190px;
+margin-right: 10px;
+}
+
+.pageselector {
+background-color: #444;
+color: #ccc;
 font-weight: bold;
-padding-left: 20px;
+font-size: 12px;
+line-height: 150%;
+margin-bottom: 15px;
+-moz-border-radius-topright: 8px;
+-moz-border-radius-bottomright: 8px;
+-webkit-border-top-right-radius: 8px;
+-webkit-border-bottom-right-radius: 8px;
 }
 
-#header h2 {
-font-size: 11pt;
-font-weight: normal;
-padding-left: 20px;
+.pageselector h2 {
+font-size: 20px;
+padding: 10px 15px 10px;
+color: #fff;
 }
 
-#content {
-margin: 15px;
+.pageselector .currentpage {
+padding-left: 15px;
+color: white;
+background-color: #222;
+}
+
+.pageselector .link {
+padding-left: 15px;
+color: #ccc;
+cursor: pointer;
+}
+
+.pageselector .link:hover {
+background-color: #666;
+color: white;
+}
+
+.pageselector .newpage {
+float: right;
+padding-top: 12px;
+padding-right: 5px;
+color: #aaa;
+}
+
+.pageselector .divrep_button {
+color: #ccc;
+}
+
+#main {
+background-color: #369;
+margin-left: 200px;
+padding: 5px 15px 5px 15px;
+-moz-border-radius-topleft: 8px;
+-moz-border-radius-bottomleft: 8px;
+-webkit-border-top-left-radius: 8px;
+-webkit-border-bottom-left-radius: 8px;
 }
 
 #main h2 {
@@ -62,49 +125,26 @@ padding-left: 10px;
 margin-bottom: 3px;
 }
 
-.controls {
-position: absolute;
-top: 23px;
-right: 0px;
-border-collapse: collapse;
-}
-
-.controls td
-{
-padding:5px;
-padding-right: 10px;
+#main .pagename {
 color: white;
-align: bottom;
-vertical-align: bottom;
+font-size: 20px;
+font-weight: bold;
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
+padding-bottom: 5px;
 }
 
-.controls input
-{
-margin-bottom: 3px;
-}
-
-.controls .pageselector {
-padding-right: 15px;
-padding-left: 10px;
-background-color: #369;
--moz-border-radius-topleft: 8px;
--webkit-border-top-left-radius: 8px;
-}
-
-.controls a.divrep_button {
-position: relative;
+#main .pagecontrol {
+padding-top: 5px;
+float: right;
 color: white;
-padding-left: 3px;
 }
 
-.pageselector a.divrep_button
+#main .pagecontrol .divrep_button
 {
-margin-right: 10px;
-vertical-align: middle;
+color: white;
 }
 
-.inline
-{
+.inline {
 display: inline;
 }
 
@@ -262,10 +302,10 @@ border: none;
 }
 
 #footer {
+padding-top: 10px;
 color: white;
 text-align: center;
 line-height: 150%;
-padding-bottom: 10px;
 }
 
 #footer a {
