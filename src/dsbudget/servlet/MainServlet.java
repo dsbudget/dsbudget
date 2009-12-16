@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.DivRepRoot;
@@ -84,8 +86,6 @@ public class MainServlet extends ServletBase  {
 		initPageControl();
 		pagedialog = new PageDialog(pageroot, budget, page) {
 			public void onCancel() {
-				//pageselector.setValue(page.getID());
-				//pageselector.redraw();
 				pagedialog.close();
 			}
 		};
@@ -97,32 +97,7 @@ public class MainServlet extends ServletBase  {
 	protected void initPageControl()
 	{
 		LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
-		
-		/*
-		//populate key/value for page selector and instantiate
-		for(Page page : budget.pages) {
-			pages_kv.put(page.getID(), page.name);
-		}
-		pages_kv.put(-1, "(Create New Page)");
-		pageselector = new DivRepSelectBox(pageroot, pages_kv);
-		pageselector.addClass("inline");
-		pageselector.setHasNull(false);
-		pageselector.addEventListener(new DivRepEventListener() {
-			public void handleEvent(DivRepEvent e) {
-				for(Page page : budget.pages) {
-					if(page.getID().equals(Integer.parseInt(e.value)))  {
-						//pageselector.redirect("?page="+page.getID());
-						pageselector.open("?page="+page.getID(), "page_"+page.getID());
-						budget.save();
-						return;
-					}
-				}
-				pagedialog.open(true);
-			}});
-		if(page != null) {
-			pageselector.setValue(page.getID());
-		}
-		*/
+	
 		pagesettingsbutton = new DivRepButton(pageroot, "Settings");
 		pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
 		pagesettingsbutton.setToolTip("Edit settings for currently opened page");
@@ -169,14 +144,41 @@ public class MainServlet extends ServletBase  {
 		
 		for(Page p : budget.pages) {
 			if(p == page) {
-				out.write("<div class=\"currentpage\">"+p.name+"</div>");
+				out.write("<div class=\"page currentpage\">"+p.name);
 			} else {
-				out.write("<div class=\"link\" onclick=\"document.location='"+"?page="+p.getID()+"';\">"+p.name+"</div>");
+				out.write("<div class=\"page\" onclick=\"document.location='"+"?page="+p.getID()+"';\">"+p.name);				
 			}
+			/*
+			//remove button
+			out.write("<span style=\"float: right;\">");
+			RemoveButton button = new RemoveButton(pageroot);
+			button.render(out);
+			out.write("</span>");
+			*/
+			out.write("</div>");
 		}
 		out.write("<br/></div>");
 		
 		out.write("</div>");
+	}
+	
+	class RemoveButton extends DivRep
+	{
+
+		public RemoveButton(DivRep parent) {
+			super(parent);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void onEvent(DivRepEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void render(PrintWriter out) {
+			out.write("<img onclick=\"divrep('"+getNodeID()+"', event, 'whatever', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");			
+		}
 		
 	}
 	
