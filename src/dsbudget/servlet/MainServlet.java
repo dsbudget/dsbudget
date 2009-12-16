@@ -18,6 +18,7 @@ import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepButton.Style;
 
+import dsbudget.Main;
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
@@ -137,10 +138,18 @@ public class MainServlet extends ServletBase  {
 		out.write("<h2>Pages</h2>");
 
 		ArrayList<Page> sorted_pages = budget.pages;
-		Collections.sort(sorted_pages, new Comparator<Page>() {
-			public int compare(Page o1, Page o2) {
-				return(o2.created.compareTo(o1.created));
-			}});
+		if(Main.conf.getProperty("pagelist_sortorder").equals("up")) {
+			Collections.sort(sorted_pages, new Comparator<Page>() {
+				public int compare(Page o1, Page o2) {
+					return(o2.created.compareTo(o1.created));
+				}});			
+		} else {
+			Collections.sort(sorted_pages, new Comparator<Page>() {
+				public int compare(Page o1, Page o2) {
+					return(o1.created.compareTo(o2.created));
+				}});
+		}
+
 		
 		for(Page p : budget.pages) {
 			if(p == page) {
