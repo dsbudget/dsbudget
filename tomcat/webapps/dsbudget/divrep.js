@@ -61,35 +61,6 @@ function divrep(id, event, value, action) {
 
 //this is basically the same thing as jquery.load, but instead of replacing the content 
 //of the div, it replace the whole div using replaceWith().
-var divrep_replace_counter = 0;
-function divrep_replace_old(node, url) 
-{
-	//count how many requests are there
-	divrep_replace_counter++;
-	
-	if(node.length == 0) {
-		alert("couldn't find the divrep node - maybe it's not wrapped with div?\n" + url);
-	}
-	var self = node;
-	// Request the remote document
-	jQuery.ajax({
-		url: url,
-		type: "GET",
-		cache: false,
-		dataType: "html", //Returns HTML as plain text; included script tags are evaluated when inserted in the DOM. 
-		complete: function(res, status){
-			// If successful, inject the HTML into all the matched elements
-			if ( status == "success" || status == "notmodified" ) {
-				//why am I emptying the content before replacing it? because jQuery's replaceWith adds new content before removing the
-				//old content. This causes identical ID to coexist in the dom structure and causes redraw issue
-				node.empty();
-				node.replaceWith(res.responseText);
-			}
-			--divrep_replace_counter;
-		}
-	});
-	return this;
-}
 function divrep_replace(node, content) 
 {
 	if(node.length == 0) {
@@ -100,17 +71,13 @@ function divrep_replace(node, content)
 	node.empty();
 	node.replaceWith(content);
 }
-
+/*
 var divrep_jscallback = null;
 function divrep_runjs()
 {
-	if(divrep_replace_counter == 0) {
-		divrep_jscallback();
-	} else {
-		//retry later..
-		setTimeout(divrep_runjs, 100);
-	}
+	divrep_jscallback();
 }
+*/
 
 //Firefox 3.0.10 (and may be others) has a bug where windows.location based redirect directly
 //from the returned javascript causes the browser history to incorrectly enter entry and hitting
