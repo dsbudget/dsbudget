@@ -52,7 +52,7 @@ border: 1px solid #ccc;
 
 #header {
 background-color: #000;
-height: 37px;
+height: 40px;
 color: white;
 }
 
@@ -160,7 +160,8 @@ font-size: 0.9em;
 
 .budgetting, 
 .incomeview, 
-.expenseview {
+.expenseview,
+.balanceview {
 background-color: white;
 margin-bottom: 15px;
 padding-bottom: 10px;
@@ -168,13 +169,15 @@ padding-bottom: 10px;
 
 .budgetting table, 
 .incomeview table, 
-.expenseview table {
+.expenseview table,
+.balanceview table {
 border-collapse: collapse;
 }
 
 .budgetting tr.header, 
 .incomeview tr.header, 
-.expenseview tr.header {
+.expenseview tr.header,
+.balanceview tr.header {
 font-size: 10pt;
 }
 
@@ -211,14 +214,20 @@ visibility: visible;
 visibility: hidden;
 }
 
-.budgetting th, .incomeview th, .expenseview th {
+.budgetting th, 
+.incomeview th, 
+.expenseview th, 
+.balanceview th {
 padding-top: 5px;
 padding-bottom: 5px;
 padding-right: 10px;
 text-align: left;
 }
 
-.budgetting td, .incomeview td, .expenseview td {
+.budgetting td, 
+.incomeview td, 
+.expenseview td, 
+.balanceview td {
 padding-right: 10px;
 }
 
@@ -247,11 +256,22 @@ background-color: #fff;
 border-bottom: 1px solid #eee;
 }
 
+.balanceview tr.balance_header {
+background-color: #666;
+color: white;
+}
+
+.balanceview td {
+padding-top: 5px;
+}
+
 /*for IE - which doesn't honer tr border...*/
 tr.expense td,
 tr.deduction td,
+tr.income td,
 tr.expense th,
-tr.deduction th {
+tr.deduction th,
+tr.income th {
 border-bottom: 1px solid #eee;
 }
 

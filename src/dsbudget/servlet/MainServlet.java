@@ -170,7 +170,7 @@ public class MainServlet extends ServletBase  {
 		
 		out.write("</div>");
 	}
-	
+	/*
 	class RemoveButton extends DivRep
 	{
 
@@ -188,8 +188,8 @@ public class MainServlet extends ServletBase  {
 		public void render(PrintWriter out) {
 			out.write("<img onclick=\"divrep('"+getNodeID()+"', event, 'whatever', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");			
 		}
-		
 	}
+	*/
 	
 	void renderMain(PrintWriter out, HttpServletRequest request)
 	{					
@@ -205,7 +205,7 @@ public class MainServlet extends ServletBase  {
 		
 		pageview.render(out);
 		
-		out.write("</div>");
+		out.write("</div>"); //main
 		
 		pagedialog.render(out);
 		removedialog.render(out);

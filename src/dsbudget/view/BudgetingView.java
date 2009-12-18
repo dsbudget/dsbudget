@@ -32,18 +32,7 @@ public class BudgetingView extends DivRep {
 	public BudgetingView(final MainView parent) {
 		super(parent);
 		mainview = parent;
-/*
-		for(final Category category : mainview.getCategories()) {
-			DivRepSlider slider = new DivRepSlider(this);
-			slider.addEventListener(new DivRepEventListener() {
-				public void handleEvent(DivRepEvent e) {
-					category.amount = new BigDecimal(e.value);
-					redraw();
-					mainview.updateExpenseCategory(category);
-				}});
-			sliders.put(category, slider);
-		}
-*/		
+	
 		addnewcategory = new DivRepButton(this, "Add New Bucket");
 		addnewcategory.setStyle(DivRepButton.Style.ALINK);
 		addnewcategory.addEventListener(new DivRepEventListener() {
@@ -60,7 +49,8 @@ public class BudgetingView extends DivRep {
 				setTogglerIcon();
 				redraw();
 				mainview.save();
-			}});
+			}
+		});
 		
 	}
 	
@@ -191,7 +181,7 @@ public class BudgetingView extends DivRep {
 					
 					out.write("<li id=\"cat_"+category.getID()+"\" >");
 	
-					out.write("<table id=\"budgetting_table\" width=\"100%\">");
+					out.write("<table width=\"100%\">");
 					out.write("<tr class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");			
 					out.write("<td width=\"20px\"><span class=\"sort_button ui-icon ui-icon-arrowthick-2-n-s\"></span></td>");				
 					out.write("<th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
@@ -218,7 +208,7 @@ public class BudgetingView extends DivRep {
 					out.write("</th>");
 			
 					out.write("<td width=\"20px\">");
-					out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");
+					out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"', 'remove');\" class=\"remove_button\" alt=\"remove\" src=\"css/images/delete.png\"/>");
 					out.write("</td>");			
 	
 					out.write("</tr>");
