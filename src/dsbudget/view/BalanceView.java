@@ -36,9 +36,9 @@ class BalanceView extends DivRep
 		
 		out.write("<tr class=\"balance_header\">");
 		out.write("<th width=\"20px\"></th>");
-		out.write("<th style=\"text-align: left;\">Total Net Income</th>");
-		out.write("<th style=\"text-align: left;\">Total Expense</th>");
-		out.write("<th style=\"text-align: left;\">Total Balance</th>");
+		out.write("<th style=\"text-align: right;\">Total Net Income</th>");
+		out.write("<th style=\"text-align: right;\">Total Expenses</th>");
+		out.write("<th style=\"text-align: right;\">Total Balance</th>");
 		out.write("<th width=\"20px\"></th>");
 		out.write("</tr>");
 		
@@ -60,6 +60,6 @@ class BalanceView extends DivRep
 		if(amount.compareTo(BigDecimal.ZERO) < 0) {
 			negative = "negative";
 		}
-		out.write("<td class=\""+negative+"\">" + nf.format(amount) + "</td>");
+		out.write("<td style=\"text-align: right;\" class=\""+negative+"\">" + nf.format(amount) + "</td>");
 	}
 }
