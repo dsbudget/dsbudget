@@ -18,6 +18,8 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
@@ -32,7 +34,7 @@ import dsbudget.model.Page;
 
 public class Main {
 	
-	static public String version = "2.0.11";
+	static public String version = "2.0.10";
 	
     public static Embedded tomcat = null;
     private Host host = null;
@@ -68,6 +70,7 @@ public class Main {
 			main.startTomcat();
 			main.createTrayIcon();
 		} catch (LifecycleException e) {
+			//JOptionPane.showMessageDialog(null, "Failed to start server. Maybe it's already running?");	
 			System.out.println(e.toString());
 		}
 		System.out.println("Opening a browser...");
@@ -152,18 +155,12 @@ public class Main {
 		        public void actionPerformed(ActionEvent e) {
 		            System.out.println("Opening dsBudget...");
 		    		BrowserControl.displayURL(page_url);
-		    		/*
-		            trayIcon.displayMessage("Action Event", 
-		                "An Action Event Has Been Performed!",
-		                TrayIcon.MessageType.INFO);
-		                */
 		        }
 		    };
 		            
 		    trayIcon.setImageAutoSize(true);
 		    trayIcon.addActionListener(actionListener);
-		    //trayIcon.addMouseListener(mouseListener);
-
+		    
 		    try {
 		        tray.add(trayIcon);
 		    } catch (AWTException e) {

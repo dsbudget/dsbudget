@@ -12,13 +12,10 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import javax.swing.JOptionPane;
 
-import org.apache.catalina.LifecycleException;
 import org.apache.commons.lang.StringEscapeUtils;
 import com.divrep.DivRep;
-import com.divrep.common.DivRepColorPicker;
 
 import dsbudget.Main;
 import dsbudget.model.Budget;
@@ -53,6 +50,9 @@ public class ServletBase extends HttpServlet {
 				}
 				
 			} catch (Exception e) {
+				
+				JOptionPane.showMessageDialog(null, "Failed to open document.\n" + e.getMessage() + "\nCreating an empty document.");
+							
 				System.out.println("Failed to load XML " + path + " -- " + e.toString());
 				System.out.println("Creaing empty doc");
 				budget = new Budget();
