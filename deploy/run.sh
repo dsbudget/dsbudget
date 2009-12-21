@@ -1,1 +1,1 @@
-javaw -jar dsbudget.jar 
+java -jar dsbudget.jar 

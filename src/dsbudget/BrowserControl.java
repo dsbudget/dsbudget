@@ -12,9 +12,7 @@ public class BrowserControl {
     // The flag to display a url.
     private static final String WIN_FLAG = "url.dll,FileProtocolHandler";
     // The default browser under unix.
-    private static final String UNIX_PATH = "netscape";
-    // The flag to display a url.
-    private static final String UNIX_FLAG = "-remote openURL";
+    private static final String UNIX_PATH = Main.conf.getProperty("default_browser");
     
     /**
      * Display a file in the system browser.  If you want to display a
@@ -38,7 +36,7 @@ public class BrowserControl {
                 // check for an exit value.  If the exit command is 0,
                 // it worked, otherwise we need to start the browser.
                 // cmd = 'netscape -remote openURL(http://www.java-tips.org)'
-                cmd = UNIX_PATH + " " + UNIX_FLAG + "(" + url + ")";
+                cmd = UNIX_PATH + " " + url;
                 Process p = Runtime.getRuntime().exec(cmd);
                 try {
                     // wait for exit code -- if it's 0, command worked,
