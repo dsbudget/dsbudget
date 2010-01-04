@@ -113,7 +113,7 @@ public class ServletBase extends HttpServlet {
 		out.write("<body>");
 		
 		out.write("<div id=\"header\"><span class=\"application_header\">dsBudget</span>");
-		out.write("<span class=\"application_subheader\">Previously known as SimpleD Budget</span></div>");
+		out.write("<span class=\"application_subheader\">"+StringEscapeUtils.escapeHtml(Main.conf.getProperty("subheader"))+"</span></div>");
 		out.write("<div id=\"content\">");	
 	}
 	

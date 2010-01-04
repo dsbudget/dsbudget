@@ -1,4 +1,6 @@
 
+RequestExecutionLevel admin
+
 !include "MUI2.nsh"
 
 Name "dsBudget"
