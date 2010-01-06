@@ -1,5 +1,7 @@
 package dsbudget;
 
+import javax.swing.JOptionPane;
+
 import dsbudget.model.Budget;
 
 public class SaveThread extends Thread {
@@ -22,7 +24,8 @@ public class SaveThread extends Thread {
     			}
     			sleep(1000);
     		} catch (Exception e) {
-    			System.out.println("Failed to save document: " + e.toString());
+				JOptionPane.showMessageDialog(null, "Failed to save document.\n" + e.getMessage());
+    			System.out.println("Failed to save document: " + e.getMessage());
     		}
     	}
     }

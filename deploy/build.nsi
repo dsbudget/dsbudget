@@ -56,6 +56,9 @@ Section "Normal" ; (default section)
 	CopySample:
 		DetailPrint "Installing Sample Doc"
 		File "C:\tmp\dsbudget\BudgetDocument.xml"
+		
+	;I've heard that windows 7 somehow leaves the document in read-only state.. let's see if this helps
+	SetFileAttributes $INDSTDIR/BudgetDocument.xml FILE_ATTRIBUTE_NORMAL
 	
 	DoneDocInstall:
 	
@@ -63,7 +66,7 @@ Section "Normal" ; (default section)
 	CreateDirectory $SMPROGRAMS\dsBudget
 	
 	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
-	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-Ddocument="BudgetDocument.xml" -jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
+	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
 
 	createShortCut "$INSTDIR\run.lnk" "$R0" '-jar dsbudget.jar'
 	

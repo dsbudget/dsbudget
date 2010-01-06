@@ -227,132 +227,7 @@ public class ExpenseView extends DivRep {
 			out.write("</div>");
 		}
 	}
-	
-	/*
-	class BalanceView extends DivRep 
-	{
-		DivRepButton expand_detail;
 		
-		public BalanceView(DivRep parent) {
-			super(parent);
-			expand_detail = new DivRepButton(this, "");
-			expand_detail.setStyle(Style.ALINK);
-			expand_detail.addEventListener(new DivRepEventListener() {
-				public void handleEvent(DivRepEvent e) {
-					mainview.page.hide_overview = !mainview.page.hide_overview;
-					showHideDetail();
-					redraw();
-					
-					mainview.save();
-				}
-			});
-			showHideDetail();
-		}
-		
-		public void showHideDetail() {
-			if(mainview.page.hide_overview) {
-				expand_detail.setTitle("Hide Detail");
-			} else {
-				expand_detail.setTitle("Show Detail");
-			}
-		}
-
-		protected void onEvent(DivRepEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		public void render(PrintWriter out) {
-			out.write("<div id=\""+getNodeID()+"\">");
-			out.write("<table width=\"100%\">");
-			
-			BigDecimal total_budget = mainview.getTotalBudgetted();
-			out.write("<tr class=\"total_header\">");
-			out.write("<th width=\"20px\"></th><th width=\"270px\">Overview</th>");
-			
-			out.write("<td>");
-			expand_detail.render(out);
-			out.write("</td>");
-			
-			out.write("<th width=\"100px\" style=\"text-align: right;\">Budget</th>");
-			out.write("<th width=\"100px\" style=\"text-align: right;\">Expense</th>");
-			out.write("<th width=\"90px\" style=\"text-align: right;\">Balance</th><td width=\"20px\"></td>");
-			out.write("</tr>");
-			
-			BigDecimal total_balance = total_budget;
-			BigDecimal total_expense = BigDecimal.ZERO;
-			ArrayList<Category> categories = mainview.getCategories();
-			for(Category cat : categories) {
-				BigDecimal cat_budget = cat.amount;
-				BigDecimal cat_expense = cat.getTotalExpense();
-				BigDecimal cat_balance = cat_budget.subtract(cat_expense);
-		
-				total_balance = total_balance.subtract(cat_expense);
-				total_expense = total_expense.add(cat_expense);
-				
-				if(mainview.page.hide_overview) {
-					Color orig = cat.color;
-					int r = (255*5 + orig.getRed())/6;
-					int g = (255*5 + orig.getGreen())/6;
-					int b = (255*5 + orig.getBlue())/6;
-					
-					Color header_color = new Color(r,g,b);
-					
-					out.write("<tr class=\"total\" style=\"background-color2: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\">");
-		
-					out.write("<td>&nbsp;</td>"); //side
-					out.write("<td>"+StringEscapeUtils.escapeHtml(cat.name)+"&nbsp;</td>");
-					out.write("<td>"+StringEscapeUtils.escapeHtml(cat.description)+"</td>");
-					out.write("<td style=\"text-align: right;\">"+nf.format(cat_budget)+"</td>");
-					out.write("<td style=\"text-align: right;\">"+nf.format(cat_expense)+"</td>");
-					String negative = "";
-					if(cat_balance.compareTo(BigDecimal.ZERO) < 0) {
-						negative = "negative";
-					}
-					out.write("<td style=\"text-align: right;\" class=\""+negative+"\">");
-					out.write(nf.format(cat_balance)+"</td>");
-					
-					out.write("<td></td>");
-					out.write("</tr>");
-				}
-			}
-			
-			//balance
-			out.write("<tr class=\"expense_footer\">");
-			out.write("<td></td>");
-			out.write("<td class=\"newitem\"></td>");
-			out.write("<th style=\"text-align: right;\">Total</th>");
-			
-			//out.write("<td style=\"text-align: right;\">"+nf.format(mainview.getTotalBudgetted())+"</td>");
-			String negative = "";
-			if(total_budget.compareTo(BigDecimal.ZERO) < 0) {
-				negative = "negative";
-			}
-			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(total_budget)+"</th>");
-			
-			negative = "";
-			if(total_expense.compareTo(BigDecimal.ZERO) < 0) {
-				negative = "negative";
-			}
-			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(total_expense)+"</th>");
-			
-			negative = "";
-			if(total_balance.compareTo(BigDecimal.ZERO) < 0) {
-				negative = "negative";
-			}
-			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(total_balance)+"</th>");
-			out.write("<td></td>");
-			out.write("</tr>");
-			
-			out.write("</table>");
-		
-			out.write("</div>");
-			
-		}
-	
-	}
-	*/
-	
 	public ExpenseView(final MainView parent) {
 		super(parent);
 		mainview = parent;
@@ -386,7 +261,7 @@ public class ExpenseView extends DivRep {
 
 	public void render(PrintWriter out) {
 		out.write("<div class=\"expenseview round8\" id=\""+getNodeID()+"\">");
-		out.write("<h2>Expense</h2>");
+		out.write("<h2>Expenses</h2>");
 		for(CategoryView view : category_views) {
 			view.render(out);
 		}
