@@ -4,8 +4,6 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 
@@ -35,7 +33,7 @@ public class AmountView extends DivRep {
 		}
 		
 		out.write("<div class=\""+negative+"\" id=\""+getNodeID()+"\">");
-		out.write(StringEscapeUtils.escapeHtml(nf.format(amount)));
+		out.write(nf.format(amount));
 		out.write("</div>");
 	}
 

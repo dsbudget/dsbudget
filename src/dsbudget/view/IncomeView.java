@@ -146,8 +146,8 @@ public class IncomeView extends DivRep {
 				if(amount.compareTo(BigDecimal.ZERO) < 0) {
 					negative = "negative";
 				}
-				out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(amount))+"</th>");
-				out.write("<th style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(income.getTotalDeduction()))+"</th>");
+				out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(amount)+"</th>");
+				out.write("<th style=\"text-align: right;\">"+nf.format(income.getTotalDeduction())+"</th>");
 			} else {
 				out.write("<th></th>");
 				out.write("<th></th>");
@@ -157,7 +157,7 @@ public class IncomeView extends DivRep {
 			if(total.compareTo(BigDecimal.ZERO) < 0) {
 				negative = "negative";
 			}
-			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(total))+"</th>");
+			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(total)+"</th>");
 			
 			out.write("<td width=\"20px\">");
 			out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"', 'remove');\" class=\"remove_button\" alt=\"remove\" src=\"css/images/delete.png\"/>");
@@ -176,7 +176,7 @@ public class IncomeView extends DivRep {
 					if(deduction.amount.compareTo(BigDecimal.ZERO) < 0) {
 						negative = "negative";
 					}
-					out.write("<td width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml((nf.format(deduction.amount)))+"</td>");
+					out.write("<td width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(deduction.amount)+"</td>");
 					out.write("<td></td>");
 					out.write("<td>");
 					out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+deduction.toString()+"', 'deduction_remove');\" class=\"remove_button\" alt=\"remove\" src=\"css/images/delete.png\"/>");
@@ -208,7 +208,7 @@ public class IncomeView extends DivRep {
 		out.write("</td>");
 		out.write("<td></td>");
 		if(mainview.getIncomes().size() > 1) {
-			out.write("<th colspan=\"2\" style=\"text-align: right;\">Total Net Income</th><th style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml((nf.format(nettotal)))+"</th>");
+			out.write("<th colspan=\"2\" style=\"text-align: right;\">Total Net Income</th><th style=\"text-align: right;\">"+nf.format(nettotal)+"</th>");
 		} else {
 			out.write("<th></th><th></th><th></th>");
 			
