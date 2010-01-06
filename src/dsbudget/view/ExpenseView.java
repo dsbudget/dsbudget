@@ -172,7 +172,7 @@ public class ExpenseView extends DivRep {
 			out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\" class=\"expense_category\">");
 			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
-			out.write("<th width=\"100px\"></th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+nf.format(category.amount)+"</th><td width=\"20px\"></td>");
+			out.write("<th width=\"100px\"></th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(category.amount))+"</th><td width=\"20px\"></td>");
 			out.write("</tr>");
 
 			for(Expense expense : category.getExpensesSortByDate()) {
@@ -180,13 +180,13 @@ public class ExpenseView extends DivRep {
 				out.write("<th>&nbsp;</th>"); //side
 				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.where)+"&nbsp;</td>");
 				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.description)+"</td>");
-				out.write("<td style=\"text-align: right;\">"+df.format(expense.date)+"</td>");
+				out.write("<td style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(df.format(expense.date))+"</td>");
 				String negative = "";
 				if(expense.amount.compareTo(BigDecimal.ZERO) < 0) {
 					negative = "negative";
 				}
 				out.write("<td style=\"text-align: right;\" class=\""+negative+"\">");
-				out.write(nf.format(expense.amount)+"</td>");
+				out.write(StringEscapeUtils.escapeHtml(nf.format(expense.amount))+"</td>");
 				
 				out.write("<td>");
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"', 'remove');\" class=\"remove_button\" alt=\"remove\" src=\"css/images/delete.png\"/>");
@@ -214,7 +214,7 @@ public class ExpenseView extends DivRep {
 			if(remain.compareTo(BigDecimal.ZERO) < 0) {
 				negative = "negative";
 			}
-			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+nf.format(remain)+"</th>");
+			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(remain))+"</th>");
 			
 			out.write("<td></td>"); //remove button
 			

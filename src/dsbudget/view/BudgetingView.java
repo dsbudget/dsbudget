@@ -142,12 +142,12 @@ public class BudgetingView extends DivRep {
 			out.write("<table width=\"100%\">");
 			out.write("<tr class=\"header\"><td width=\"300px\"><h2>Budgeting</h2></td><th style=\"vertical-align: bottom\" class=\"note\">");
 			if(!mainview.page.hide_budget) {
-				out.write(nf.format(0));
+				out.write(StringEscapeUtils.escapeHtml(nf.format(0)));
 			}
 			out.write("</th>");
 			out.write("<th class=\"note\" style=\"vertical-align: bottom; text-align: right;\">");
 			if(!mainview.page.hide_budget) {
-				out.write(nf.format(total_free_income));
+				out.write(StringEscapeUtils.escapeHtml(nf.format(total_free_income)));
 			}
 			out.write("</th>");
 			out.write("<th width=\"90px\" style=\"text-align: right;\"></th><th width=\"20px\">");
