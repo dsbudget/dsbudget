@@ -104,6 +104,7 @@ public class ExpenseDialog extends DivRepDialog
 	}
 	
 	public void onCancel() {
+		date.close();
 		close();
 	}
 	public void onSubmit() {

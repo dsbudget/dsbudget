@@ -85,13 +85,8 @@ public class MainServlet extends ServletBase  {
 	protected void initControls()
 	{
 		initPageControl();
-		pagedialog = new PageDialog(pageroot, budget, page) {
-			public void onCancel() {
-				pagedialog.close();
-			}
-		};
+		pagedialog = new PageDialog(pageroot, budget, page);
 		removedialog = new RemoveDialog(pageroot, budget, page);
-		
 		pageview = new MainView(pageroot, budget, page);
 	}
 	

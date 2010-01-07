@@ -24,7 +24,7 @@ import dsbudget.model.Expense;
 import dsbudget.model.Income;
 import dsbudget.model.Page;
 
-public abstract class PageDialog extends DivRepDialog
+public class PageDialog extends DivRepDialog
 {
 	Budget budget;
 	Page current_page; //current page
@@ -208,6 +208,7 @@ public abstract class PageDialog extends DivRepDialog
 	}
 	
 	public void onCancel() {
+		cdate.close();
 		close();	
 	}
 	
@@ -270,20 +271,7 @@ public abstract class PageDialog extends DivRepDialog
 					category.expenses.add(balance_expense);
 				}
 			}
-			
-	/*	
-			//run budget auto-adjust
-			for(Category category : newpage.categories) {
-				if(category.auto_adjust) {
-					BigDecimal balance = category.amount;
-					balance = balance.subtract(category.getTotalExpense());
-					category.amount = category.amount.add(balance);
-				}
-			}
-			*/	
-			
-	
-			
+				
 		} else {
 			//empty page
 			newpage = new Page(budget);
