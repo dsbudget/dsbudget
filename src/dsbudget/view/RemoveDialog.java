@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import com.divrep.DivRep;
 import com.divrep.common.DivRepDialog;
+import com.divrep.common.DivRepStaticContent;
+
 import dsbudget.Main;
 import dsbudget.model.Budget;
 import dsbudget.model.Income;
@@ -21,6 +23,8 @@ public class RemoveDialog extends DivRepDialog
 		setTitle("Remove Page");
 		budget = _budget;
 		current_page = _current_page;
+		
+		new DivRepStaticContent(this, "Do you really want to remove this page?");
 	}
 	
 	public void onSubmit() {
@@ -48,10 +52,6 @@ public class RemoveDialog extends DivRepDialog
 		close();
 		redirect("?page="+openpage.getID());
 		budget.save();
-	}
-
-	public void renderDialog(PrintWriter out) {
-		out.write("Do you really want to remove this page?");
 	}
 	
 	public void onCancel() {
