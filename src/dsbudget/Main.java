@@ -1,6 +1,7 @@
 package dsbudget;
 
 import java.awt.AWTException;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -15,6 +16,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Properties;
 
@@ -73,9 +76,20 @@ public class Main {
 			//JOptionPane.showMessageDialog(null, "Failed to start server. Maybe it's already running?");	
 			System.out.println(e.toString());
 		}
-		System.out.println("Opening a browser...");
 		page_url = "http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
-		BrowserControl.displayURL(page_url);
+		//BrowserControl.displayURL(page_url);
+		if (Desktop.isDesktopSupported()) {
+			try {
+				System.out.println("Opening a browser...");
+				Desktop.getDesktop().browse(new URI(page_url));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void createTrayIcon()
@@ -122,8 +136,19 @@ public class Main {
 		    MenuItem start = new MenuItem("Open dsBudget");
 		    start.addActionListener(new ActionListener() {
 		        public void actionPerformed(ActionEvent e) {
-		            System.out.println("Opening dsBudget...");
-		    		BrowserControl.displayURL(page_url);
+		    		if (Desktop.isDesktopSupported()) {
+		    	
+		    			try {
+				            System.out.println("Opening dsBudget...");
+		    				Desktop.getDesktop().browse(new URI(page_url));
+		    			} catch (IOException e2) {
+		    				// TODO Auto-generated catch block
+		    				e2.printStackTrace();
+		    			} catch (URISyntaxException e3) {
+		    				// TODO Auto-generated catch block
+		    				e3.printStackTrace();
+		    			}
+		    		}
 		        }
 		    });
 		    popup.add(start);    
@@ -153,8 +178,19 @@ public class Main {
 		    
 		    ActionListener actionListener = new ActionListener() {
 		        public void actionPerformed(ActionEvent e) {
-		            System.out.println("Opening dsBudget...");
-		    		BrowserControl.displayURL(page_url);
+		    		if (Desktop.isDesktopSupported()) {
+				    	
+		    			try {
+				            System.out.println("Opening dsBudget...");
+		    				Desktop.getDesktop().browse(new URI(page_url));
+		    			} catch (IOException e2) {
+		    				// TODO Auto-generated catch block
+		    				e2.printStackTrace();
+		    			} catch (URISyntaxException e3) {
+		    				// TODO Auto-generated catch block
+		    				e3.printStackTrace();
+		    			}
+		    		}
 		        }
 		    };
 		            

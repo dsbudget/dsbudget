@@ -22,6 +22,7 @@ public class BrowserControl {
      * or
      * "file://").
      */
+    /*
     public static void displayURL(String url) {
         boolean windows = isWindowsPlatform();
         String cmd = null;
@@ -60,6 +61,7 @@ public class BrowserControl {
             System.err.println("Caught: " + x);
         }
     }
+    */
     /**
      * Try to determine whether this application is running under Windows
      * or some other platform by examing the "os.name" property.
