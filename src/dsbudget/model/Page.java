@@ -14,7 +14,8 @@ public class Page extends ObjectID implements XMLSerializer {
 	public String name;
 	public Date created;
 	public Boolean hide_budget;
-	public Boolean hide_overview;
+	public Boolean hide_income;
+	public Boolean hide_expense;
 	
 	public ArrayList<Income> incomes = new ArrayList<Income>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
@@ -36,14 +37,16 @@ public class Page extends ObjectID implements XMLSerializer {
 		name = "Untitled";
 		created = new Date();
 		hide_budget = false;
-		hide_overview = true;
+		hide_income = false;
+		hide_expense = false;
 	}
 	public Page clone() {
 		Page page = new Page(parent);
 		page.name = name;
 		page.created = new Date();
 		page.hide_budget = hide_budget;
-		page.hide_overview = hide_overview;
+		page.hide_income = hide_income;
+		page.hide_expense = hide_expense;
 		
 		page.incomes = new ArrayList<Income>();
 		for(Income income : incomes) {
@@ -102,14 +105,24 @@ public class Page extends ObjectID implements XMLSerializer {
 			hide_budget = false;
 		}
 		
-		if(element.hasAttribute("hide_overview")) {
-			if(element.getAttribute("hide_overview").equals("yes")) {
-				hide_overview = true;
+		if(element.hasAttribute("hide_income")) {
+			if(element.getAttribute("hide_income").equals("yes")) {
+				hide_income = true;
 			} else {
-				hide_overview = false;
+				hide_income = false;
 			}
 		} else {
-			hide_overview = false;
+			hide_income = false;
+		}
+		
+		if(element.hasAttribute("hide_expense")) {
+			if(element.getAttribute("hide_expense").equals("yes")) {
+				hide_expense = true;
+			} else {
+				hide_expense = false;
+			}
+		} else {
+			hide_expense = false;
 		}
 		
 		//income / category
@@ -135,7 +148,8 @@ public class Page extends ObjectID implements XMLSerializer {
 		elem.setAttribute("name", name);
 		elem.setAttribute("ctime", String.valueOf(created.getTime()/1000L));
 		elem.setAttribute("hide_budget", (hide_budget==true?"yes":"no"));
-		elem.setAttribute("hide_overview", (hide_overview==true?"yes":"no"));
+		elem.setAttribute("hide_income", (hide_income==true?"yes":"no"));
+		elem.setAttribute("hide_expense", (hide_expense==true?"yes":"no"));
 		for(Income income : incomes) {
 			elem.appendChild(income.toXML(doc));
 		}

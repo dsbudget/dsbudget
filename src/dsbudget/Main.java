@@ -37,7 +37,7 @@ import dsbudget.model.Page;
 
 public class Main {
 	
-	static public String version = "2.0.12";
+	static public String version = "2.0.13";
 	
     public static Embedded tomcat = null;
     private Host host = null;

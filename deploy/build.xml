@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="deploy" name="Create Runnable Jar for Project dsbudget">
+	<taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" />
+
 	<property name="deploy.dir" value="C:\tmp\dsbudget"/>
+	<property name="version" value="2.0.12"/>
     <target name="create_run_jar">
         <jar destfile="${deploy.dir}/dsbudget.jar" filesetmanifest="mergewithoutmain">
             <manifest>
@@ -49,6 +52,21 @@
 		<exec executable="C:\Program Files\NSIS\makensis.exe">
     		<arg value="build.nsi"/>
   		</exec>
+  		
+  		<jarbundler dir="C:/Documents and Settings/Soichi/Desktop/"
+            name="dsBudget"
+            mainclass="dsbudget.Main" 
+            stubfile="JavaApplicationStub"
+            version="2.0.12"
+            jvmversion="1.6+"
+            jar="${deploy.dir}/dsbudget.jar">
+            
+            <execfileset dir="${deploy.dir}">
+				<include name="**" />
+				<exclude name="dsbudget.jar" />
+			</execfileset>
+            
+        </jarbundler>
 		  
 	</target>
 	<target name="clean">

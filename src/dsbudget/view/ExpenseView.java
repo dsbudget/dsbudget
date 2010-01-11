@@ -25,8 +25,9 @@ import dsbudget.model.Expense;
 import dsbudget.model.Page;
 
 public class ExpenseView extends DivRep {
+	
 	MainView mainview;
-
+	DivRepButton toggler;
 	ArrayList<CategoryView> category_views;
 	
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -101,9 +102,11 @@ public class ExpenseView extends DivRep {
 		private void setGraphTogglerTitle()
 		{
 			if(graph.isHidden()) {
+				//graph_toggler.setTitle("css/images/chart_close.png");
 				graph_toggler.setTitle("Show Balance Graph");
 			} else {
-				graph_toggler.setTitle("Hide Balance Graph");					
+				//graph_toggler.setTitle("css/images/chart_open.png");		
+				graph_toggler.setTitle("Hide Balance Graph");	
 			}	
 		}
 		
@@ -117,6 +120,7 @@ public class ExpenseView extends DivRep {
 			setGraphTogglerTitle();
 
 			graph_toggler.setStyle(DivRepButton.Style.ALINK);
+			//graph_toggler.setStyle(DivRepButton.Style.IMAGE);
 			graph_toggler.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
 					graph.setHidden(!graph.isHidden());
@@ -232,7 +236,28 @@ public class ExpenseView extends DivRep {
 		super(parent);
 		mainview = parent;
 		
+		toggler = new DivRepButton(this, "");
+		toggler.setStyle(DivRepButton.Style.IMAGE);
+		setTogglerIcon();
+		toggler.addEventListener(new DivRepEventListener() {
+			public void handleEvent(DivRepEvent e) {
+				mainview.page.hide_expense = !mainview.page.hide_expense;
+				setTogglerIcon();
+				redraw();
+				mainview.save();
+			}
+		});
+		
 		initView();
+	}
+	
+	protected void setTogglerIcon()
+	{
+		if(mainview.page.hide_expense) {
+			toggler.setTitle("css/images/expand.gif");
+		} else {
+			toggler.setTitle("css/images/collapse.gif");	
+		}
 	}
 	
 	
@@ -261,9 +286,16 @@ public class ExpenseView extends DivRep {
 
 	public void render(PrintWriter out) {
 		out.write("<div class=\"expenseview round8\" id=\""+getNodeID()+"\">");
-		out.write("<h2>Expenses</h2>");
-		for(CategoryView view : category_views) {
-			view.render(out);
+		out.write("<table width=\"100%\"><tr>");
+		out.write("<th><h2>Expenses</h2></th>");
+		out.write("<th width=\"20px\">");
+		toggler.render(out);
+		out.write("</th>");
+		out.write("</tr></table>");
+		if(!mainview.page.hide_expense) {
+			for(CategoryView view : category_views) {
+				view.render(out);
+			}
 		}
 		out.write("</div>");
 	}

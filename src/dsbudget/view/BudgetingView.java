@@ -228,7 +228,7 @@ public class BudgetingView extends DivRep {
 			}
 			out.write("</td>");
 
-			out.write("<th class=\"note\" style=\"text-align: right;\">Total Unbudgeted</th><th width=\"90px\" style=\"text-align: right;\" class=\"note\">");
+			out.write("<th style=\"text-align: right;\">Total Unbudgeted</th><th width=\"90px\" style=\"text-align: right;\">");
 			total_unbudgetted_view.render(out);
 			out.write("</th><th width=\"20px\"></th></tr>");
 		
