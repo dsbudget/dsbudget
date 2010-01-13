@@ -180,9 +180,15 @@ public class ExpenseView extends DivRep {
 			out.write("</tr>");
 
 			for(Expense expense : category.getExpensesSortByDate()) {
-				out.write("<tr class=\"expense\" onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"')\">");
+				String expense_type = "";
+				String decoration = "";
+				if(expense.tentative) {
+					expense_type = "tentative";
+					decoration += "<b>(Scheduled)</b>";
+				}
+				out.write("<tr class=\"expense "+expense_type+"\" onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"')\">");
 				out.write("<th>&nbsp;</th>"); //side
-				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.where)+"&nbsp;</td>");
+				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.where)+"&nbsp;" + decoration + "</td>");
 				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.description)+"</td>");
 				out.write("<td style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(df.format(expense.date))+"</td>");
 				String negative = "";
@@ -223,6 +229,25 @@ public class ExpenseView extends DivRep {
 			out.write("<td></td>"); //remove button
 			
 			out.write("</tr>");
+			
+			//scheduled remaining
+			BigDecimal total_scheduled = category.getTotalScheduled();
+			if(!total_scheduled.equals(BigDecimal.ZERO)) {
+				BigDecimal scheduled_remaining = remain.subtract(total_scheduled);
+				out.write("<tr class=\"expense_footer\">");
+				
+				out.write("<td></td>");
+				out.write("<td class=\"newitem\"></td>");
+				out.write("<th colspan=\"2\" style=\"text-align: right;\">Scheduled Remaining</th>");
+				negative = "";
+				if(scheduled_remaining.compareTo(BigDecimal.ZERO) < 0) {
+					negative = "negative";
+				}
+				out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(scheduled_remaining))+"</th>");
+				out.write("<td></td>"); //remove button
+				
+				out.write("</tr>");
+			}
 			
 			out.write("</table>");
 		

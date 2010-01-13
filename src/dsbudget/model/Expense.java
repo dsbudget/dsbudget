@@ -12,6 +12,8 @@ public class Expense implements XMLSerializer {
 	public String where;
 	public Date date;
 	
+	public Boolean tentative;
+	
 	public Expense clone()
 	{
 		Expense expense = new Expense();
@@ -19,6 +21,7 @@ public class Expense implements XMLSerializer {
 		expense.description = description;
 		expense.where = where;
 		expense.date = (Date) date.clone();
+		expense.tentative = tentative;
 		return expense;
 	}
 	
@@ -27,6 +30,15 @@ public class Expense implements XMLSerializer {
 		description = element.getAttribute("desc");
 		date = new Date(Long.parseLong(element.getAttribute("time"))*1000L);
 		amount = Loader.loadAmount(element.getAttribute("amount"));
+		if(element.hasAttribute("tentative")) {
+			if(element.getAttribute("tentative").equals("yes")) {
+				tentative = true;
+			} else {
+				tentative = false;
+			}
+		} else {
+			tentative = false;
+		}
 	}
 
 	public Element toXML(Document doc) {
@@ -35,6 +47,7 @@ public class Expense implements XMLSerializer {
 		elem.setAttribute("desc", description);
 		elem.setAttribute("where", where);
 		elem.setAttribute("time", String.valueOf(date.getTime()/1000L));
+		elem.setAttribute("tentative", (tentative==true?"yes":"no"));
 		return elem;
 	}
 

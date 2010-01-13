@@ -115,7 +115,6 @@ color: #ccc;
 
 #main {
 background-color: #369;
-/*background-color: #ddddaa;*/
 margin-left: 180px;
 padding: 5px 15px 5px 15px;
 -moz-border-radius-topleft: 8px;
@@ -256,6 +255,10 @@ background-color: #fff;
 border-bottom: 1px solid #eee;
 }
 
+.tentative {
+color: gray;
+}
+
 .balanceview tr.balance_header {
 background-color: #666;
 color: white;
@@ -352,4 +355,10 @@ text-decoration: underline;
 
 .negative {
 color: red;	
+}
+
+.optional_section {
+background-color: #ddd;
+margin-top: 10px;
+padding: 10px;
 }

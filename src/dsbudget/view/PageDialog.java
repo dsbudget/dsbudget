@@ -40,12 +40,13 @@ public class PageDialog extends DivRepDialog
 		
 		public Boolean hidden = false;
 		public DivRepSelectBox copy_from;
-		//public DivRepCheckBox usebalance;
 		public DivRepSelectBox balance_handling;
 		
 		public NewPageStuff(DivRep parent) {
 			super(parent);
+			
 			for(Page page : budget.pages) {
+				//allow to select copying from the page itself
 				pages_kv.put(page.getID(), page.name);
 			}
 			copy_from = new DivRepSelectBox(this, pages_kv);
@@ -55,11 +56,7 @@ public class PageDialog extends DivRepDialog
 				public void handleEvent(DivRepEvent e) {
 					usebalanceShowHide();
 				}});
-			/*
-			usebalance = new DivRepCheckBox(this);
-			usebalance.setLabel("Add balance from this page as an income");
-			usebalance.setValue(true);
-			*/
+
 			TreeMap<Integer, String> kv = new TreeMap<Integer, String>();
 			kv.put(1, "Sum up and add as an income");
 			kv.put(2, "Add to each categories as negative expenses");
@@ -76,37 +73,11 @@ public class PageDialog extends DivRepDialog
 			if(!hidden) {
 				out.write("<br/>");
 				copy_from.render(out);
-				/*
-				if(copySourceHasAutoAdjust()) {
-					out.write("<div class=\"round4\" style=\"background-color: #ccc;padding: 5px; margin: 5px;\">");
-					out.write("Selected page contains categories that are marked as 'Rollover Category'. Page balance will be added as income in order for the adjustments to be valid.");
-					out.write("</div>");
-				} else {
-					usebalance.render(out);
-				}
-				usebalance.render(out);
-				*/
 				balance_handling.render(out);
 			}
 			out.write("</div>");
 		}
-		/*
-		public Boolean copySourceHasAutoAdjust()
-		{
-			Integer id = copy_from.getValue();
-			if(id == null) return false;
-			
-			Page copy_from = budget.findPage(id);
-			Boolean auto_adjust = false;
-			for(Category cat : copy_from.categories) {
-				if(cat.auto_adjust) {
-					auto_adjust = true;
-					break;
-				}
-			}
-			return auto_adjust;
-		}
-		 */
+
 		public void usebalanceShowHide()
 		{
 			Integer id = copy_from.getValue();
@@ -141,7 +112,6 @@ public class PageDialog extends DivRepDialog
 			
 			newpage_stuff.copy_from.setValue(current_page.getID()); //copy from current page by default
 			newpage_stuff.hidden = false;
-			//newpage_stuff.usebalanceShowHide();
 		} else {
 			//update current page settings
 			setTitle("Page Settings");	

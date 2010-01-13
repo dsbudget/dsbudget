@@ -75,7 +75,18 @@ public class Category extends ObjectID implements XMLSerializer {
 	{
 		BigDecimal total = new BigDecimal(0);
 		for(Expense expense : expenses) {
+			if(expense.tentative) continue;
 			total = total.add(expense.amount);
+		}
+		return total;
+	}
+	public BigDecimal getTotalScheduled()
+	{
+		BigDecimal total = new BigDecimal(0);
+		for(Expense expense : expenses) {
+			if(expense.tentative) {
+				total = total.add(expense.amount);
+			}
 		}
 		return total;
 	}
@@ -99,13 +110,6 @@ public class Category extends ObjectID implements XMLSerializer {
 		} else {
 			hide_graph = false;
 		}
-		/*
-		if(element.getAttribute("auto_adjust").equals("yes")) {
-			auto_adjust = true;
-		} else {
-			auto_adjust = false;
-		}
-		*/
 		name = element.getAttribute("name");
 		
 		//expense
@@ -121,17 +125,7 @@ public class Category extends ObjectID implements XMLSerializer {
 			}
 		}
 	}
-/*
-	public BigDecimal amount;
-	public Color color;
-	public String description;
-	
-	public Boolean fixed;
-	public Boolean hide_graph;
-	public String name;
-	
-	public ArrayList<Expense> expenses = new ArrayList<Expense>();
- */
+
 	public Element toXML(Document doc) {
 		Element elem = doc.createElement("Category");
 		elem.setAttribute("budget", Loader.saveAmount(amount).toString());
@@ -145,7 +139,6 @@ public class Category extends ObjectID implements XMLSerializer {
 		elem.setAttribute("fixed", (fixed==true?"yes":"no"));
 		elem.setAttribute("hide_graph", (hide_graph==true?"yes":"no"));
 		elem.setAttribute("name", name);
-		//elem.setAttribute("auto_adjust", (auto_adjust==true?"yes":"no"));
 		for(Expense expense : expenses) {
 			elem.appendChild(expense.toXML(doc));
 		}
