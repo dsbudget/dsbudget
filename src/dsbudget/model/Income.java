@@ -8,7 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class Income implements XMLSerializer {
+public class Income extends ObjectID implements XMLSerializer {
 	private String __balance_from_name; //used only temporarily to load the balance_from lateron
 	
 	public Page balance_from = null;

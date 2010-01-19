@@ -90,6 +90,49 @@ public class IncomeView extends DivRep {
 					}
 	 			}
  			}
+		} else if(e.action.equals("sortstop")) {
+			String [] tokens = e.value.split("&");
+			Integer target_id = Integer.parseInt(tokens[0].split("_")[1]);
+			
+			Integer putafter_id = null;
+			if(tokens[1].split("_").length == 2) {
+				putafter_id = Integer.parseInt(tokens[1].split("_")[1]);
+			}
+			ArrayList<Income> incomes = mainview.getIncomes();
+			ArrayList<Income> newlist = new ArrayList<Income>();
+			
+			//find target cat
+			Income target = null;
+			for(Income inc : incomes) {
+				if(inc.getID().equals(target_id)) {
+					target = inc;
+					break;
+				} 
+			}
+			//fint putafter_id = null
+			Income putafter = null;
+			for(Income inc : incomes) {
+				if(inc.getID().equals(putafter_id)) {
+					putafter = inc;
+					break;
+				} 
+			}		
+			//reorder
+			if(putafter == null) {
+				//put it at the beginning
+				newlist.add(target);
+			}
+			for(Income inc : incomes) {
+				if(inc != target) {
+					newlist.add(inc);
+				}
+				if(inc == putafter) {
+					newlist.add(target);
+				}
+			}
+			
+			mainview.changeIncomeOrder(newlist);
+			mainview.save();
 		} else {
 			//edit
  			for(Income income : mainview.getIncomes()) {
@@ -122,9 +165,14 @@ public class IncomeView extends DivRep {
 		toggler.render(out);
 		out.write("</td>");
 		out.write("</tr>");
+		out.write("</table>");
 		
+		out.write("<ul id=\"income_list\">");
 		
 		for(final Income income : mainview.getIncomes()) {	
+			out.write("<li id=\"income_"+income.getID()+"\">");
+			
+			out.write("<table width=\"100%\">");
 			
 			DivRepButton addnewdeduction = new DivRepButton(this, "Add New Deduction");
 			addnewdeduction.setStyle(DivRepButton.Style.ALINK);
@@ -140,19 +188,18 @@ public class IncomeView extends DivRep {
 			String name = income.getName();
 			
 			if(!mainview.page.hide_income) {
-			
 				//income
 				out.write("<tr class=\"income\" onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"')\">");
-				out.write("<th width=\"20px\"></th>");
+				out.write("<th width=\"20px\"><span class=\"sort_button ui-icon ui-icon-arrowthick-2-n-s\"></span></th>");
 	
-				out.write("<th width=\"270px\"");
+				out.write("<th");
 				if(income.balance_from != null) {
 					out.write(" class=\"note\"");
 				}
 				out.write(">"+StringEscapeUtils.escapeHtml(name)+"</th>");
 				
 				if(income.deductions.size() > 0) {
-					out.write("<td class=\"note\">");
+					out.write("<td width=\"110px\" class=\"note\">");
 					DivRepButton showhidedeductionbutton = new DivRepButton(this, "Show Deductions");
 					if(income.show_deductions) {
 						showhidedeductionbutton.setTitle("Hide Deductions");
@@ -167,7 +214,7 @@ public class IncomeView extends DivRep {
 					showhidedeductionbutton.render(out);
 					out.write("</td>");
 				} else {
-					out.write("<td class=\"newitem\">");
+					out.write("<td width=\"110px\" class=\"newitem\">");
 					addnewdeduction.render(out);
 					out.write("</td>");
 				}
@@ -177,18 +224,18 @@ public class IncomeView extends DivRep {
 					if(amount.compareTo(BigDecimal.ZERO) < 0) {
 						negative = "negative";
 					}
-					out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(amount))+"</th>");
-					out.write("<th style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(income.getTotalDeduction()))+"</th>");
+					out.write("<th width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(amount))+"</th>");
+					out.write("<th width=\"90px\" style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(income.getTotalDeduction()))+"</th>");
 				} else {
-					out.write("<th></th>");
-					out.write("<th></th>");
+					out.write("<th width=\"90px\"></th>");
+					out.write("<th width=\"90px\"></th>");
 				}
 				
 				negative = "";
 				if(total.compareTo(BigDecimal.ZERO) < 0) {
 					negative = "negative";
 				}
-				out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(total))+"</th>");
+				out.write("<th width=\"90px\" style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(total))+"</th>");
 				
 				out.write("<td width=\"20px\">");
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"', 'remove');\" class=\"remove_button\" alt=\"remove\" src=\"css/images/delete.png\"/>");
@@ -230,11 +277,17 @@ public class IncomeView extends DivRep {
 					out.write("<td></td>");
 					out.write("</tr>");
 				}
-			}		
+			}	
+			
+			out.write("</table>");
+			
+			out.write("</li>");
 		}
 		
+		out.write("</ul>");
+		out.write("<table width=\"100%\">");
 		out.write("<tr class=\"header\">");
-		out.write("<th></th>");
+		out.write("<th width=\"20px\"></th>");
 		out.write("<td class=\"newitem\">");
 		if(!mainview.page.hide_income) {
 			addnewincome.render(out);
@@ -242,13 +295,17 @@ public class IncomeView extends DivRep {
 		out.write("</td>");
 		out.write("<td></td>");
 		if(mainview.getIncomes().size() > 1) {
-			out.write("<th colspan=\"2\" style=\"text-align: right;\">Total Net Income</th><th style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml((nf.format(nettotal)))+"</th>");
+			out.write("<th colspan=\"2\" style=\"text-align: right;\">Total Net Income</th><th width=\"90px\" style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml((nf.format(nettotal)))+"</th>");
 		} else {
 			out.write("<th></th><th></th><th></th>");
 			
 		}
-		out.write("<th>&nbsp;</th></tr>");
+		out.write("<th width=\"20px\">&nbsp;</th></tr>");
 		out.write("</table>");
+		
+		out.write("<script type=\"text/javascript\">");
+		out.write("$('#income_list').sortable({tolerance: 'pointer', handle: 'span', containment: 'parent', stop: function(event, ui) {divrep('"+getNodeID()+"', event, ui.item.attr('id')+\"&\"+ui.item.prev().attr('id'));}, axis: 'y'}).disableSelection();");
+		out.write("</script>");
 		
 		out.write("</div>");
 	}

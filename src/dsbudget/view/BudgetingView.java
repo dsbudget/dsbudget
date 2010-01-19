@@ -128,7 +128,6 @@ public class BudgetingView extends DivRep {
 	}
 
 	public void render(PrintWriter out) {
-
 		out.write("<div class=\"budgetting round8\" id=\""+getNodeID()+"\">");
 		
 		BigDecimal total_free_income = mainview.getTotalIncome();
@@ -154,10 +153,6 @@ public class BudgetingView extends DivRep {
 			toggler.render(out);
 			out.write("</th></tr>");
 			out.write("</table>");
-			
-			out.write("<style>");
-			out.write("#budgetting_list { list-style-type: none; margin: 0; padding: 0; width: 100%; }");
-			out.write("</style>");
 			
 			if(!mainview.page.hide_budget) {
 				out.write("<ul id=\"budgetting_list\">");

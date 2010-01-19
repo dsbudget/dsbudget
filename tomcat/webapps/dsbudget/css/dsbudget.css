@@ -114,7 +114,7 @@ color: #ccc;
 }
 
 #main {
-background-color: #369;
+background:#155797 url(images/landing-back.gif) repeat-x scroll left top;
 margin-left: 180px;
 padding: 5px 15px 5px 15px;
 -moz-border-radius-topleft: 8px;
@@ -165,6 +165,10 @@ background-color: white;
 margin-bottom: 15px;
 padding-bottom: 10px;
 }
+.incomeview tr.deduction,
+.incomeview tr.info {
+background-color: white;
+}
 
 .budgetting table, 
 .incomeview table, 
@@ -181,10 +185,18 @@ font-size: 10pt;
 }
 
 #budgetting_list li, 
-.incomeview tr.income, 
+#income_list li,
 .expenseview tr.expense_category {
 background-color: #ddd;
 border-bottom: 1px solid white;
+}
+
+#budgetting_list,
+#income_list { 
+list-style-type: none;
+margin: 0;
+padding: 0;
+width: 100%;
 }
 
 .incomeview tr:hover.income,
@@ -196,6 +208,7 @@ cursor: pointer;
 }
 
 .incomeview tr:hover.income img.remove_button, 
+.incomeview tr:hover.income span.sort_button, 
 .incomeview tr:hover.deduction img.remove_button, 
 .budgetting tr:hover.category img.remove_button, 
 .budgetting tr:hover.category span.sort_button, 
@@ -205,6 +218,7 @@ visibility: visible;
 }
 
 .incomeview tr.income img.remove_button,
+.incomeview tr.income span.sort_button, 
 .incomeview tr.deduction img.remove_button,
 .budgetting tr.category img.remove_button,
 .budgetting tr.category span.sort_button, 
@@ -249,12 +263,6 @@ text-align: right;
 padding-right: 10px;
 }
 
-tr.expense,
-tr.deduction {
-background-color: #fff;
-border-bottom: 1px solid #eee;
-}
-
 .tentative {
 color: gray;
 }
@@ -271,10 +279,8 @@ padding-top: 5px;
 /*for IE - which doesn't honer tr border...*/
 tr.expense td,
 tr.deduction td,
-tr.income td,
 tr.expense th,
-tr.deduction th,
-tr.income th {
+tr.deduction th {
 border-bottom: 1px solid #eee;
 }
 

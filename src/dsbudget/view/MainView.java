@@ -116,6 +116,9 @@ public class MainView extends DivRep {
 	public ArrayList<Income> getIncomes() {
 		return page.incomes;
 	}
+	public void changeIncomeOrder(ArrayList<Income> list) {
+		page.incomes = list;
+	}
 	public ArrayList<Category> getCategories() {
 		return page.categories;
 	}
