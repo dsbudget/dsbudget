@@ -33,8 +33,8 @@ Section "Normal" ; (default section)
 	SetOutPath "$INSTDIR"
 	File /r "C:\tmp\dsbudget\tomcat"
 	File "C:\tmp\dsbudget\dsbudget.jar"
-	File "C:\tmp\dsbudget\dsbudget.ico"
-	File "C:\tmp\dsbudget\dsbudget.png"
+	File "C:\tmp\dsbudget\shortcut.ico"
+	File "C:\tmp\dsbudget\trayicon.png"
 	File "C:\tmp\dsbudget\dsbudget.conf"
 		
 	IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
@@ -65,8 +65,8 @@ Section "Normal" ; (default section)
 	; Create Start Menu shortcuts
 	CreateDirectory $SMPROGRAMS\dsBudget
 	
-	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
-	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\dsbudget.ico'
+	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\shortcut.ico'
+	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\shortcut.ico'
 
 	createShortCut "$INSTDIR\run.lnk" "$R0" '-jar dsbudget.jar'
 	
@@ -95,8 +95,8 @@ Section Uninstall
 	
 	RMDir /r "$INSTDIR\tomcat"
 	Delete "$INSTDIR\dsbudget.jar"
-	Delete "$INSTDIR\dsbudget.ico"
-	Delete "$INSTDIR\dsbudget.png"
+	Delete "$INSTDIR\shortcut.ico"
+	Delete "$INSTDIR\trayicon.png"
 	Delete "$INSTDIR\dsbudget.conf"
 	Delete "$INSTDIR\uninstall.exe"
 	Delete "$INSTDIR\run.lnk"

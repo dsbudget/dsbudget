@@ -5,10 +5,11 @@
 	<property name="deploy.dir" value="C:\tmp\dsbudget"/>
 	<property name="version" value="2.0.12"/>
     <target name="create_run_jar">
-        <jar destfile="${deploy.dir}/dsbudget.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${deploy.dir}/dsbudget.jar">
             <manifest>
             	<attribute name="Built-By" value="Soichi Hayashi"/>
                 <attribute name="Main-Class" value="dsbudget.Main"/>
+                <attribute name="SplashScreen-Image" value="splash.png"/>
             </manifest>
             <fileset dir="../bin"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina-optional.jar"/>
@@ -44,8 +45,8 @@
 		<copy file="BudgetDocument.xml" todir="${deploy.dir}"/>
 		<copy file="run.sh" todir="${deploy.dir}"/>
 		<copy file="dsbudget.conf" todir="${deploy.dir}"/>
-		<copy file="dsbudget.ico" todir="${deploy.dir}"/>
-		<copy file="dsbudget.png" todir="${deploy.dir}"/>
+		<copy file="shortcut.ico" todir="${deploy.dir}"/>
+		<copy file="trayicon.png" todir="${deploy.dir}"/>
 		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget_2.0.X.zip"
 		       basedir="${deploy.dir}"
 		  />

@@ -5,6 +5,7 @@ import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.SplashScreen;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
@@ -54,42 +55,43 @@ public class Main {
 		conf = new Properties();
 		try {
 			conf.load(new FileInputStream("dsbudget.conf"));
+			
+			//configuration overrides
+			String document_override = System.getProperty("document");
+			if(document_override != null) {
+				System.out.println("Overriding document path: " + document_override);
+				Main.conf.setProperty("document", document_override);
+			}
+			
+			main.startTomcat();
+			main.createTrayIcon();
+
+			page_url = "http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
+			if (Desktop.isDesktopSupported()) {
+				System.out.println("Opening a browser...");
+				Desktop.getDesktop().browse(new URI(page_url));
+				
+				//close splash screen
+				SplashScreen splash = SplashScreen.getSplashScreen();
+				if(splash != null) {
+					splash.close();
+				}
+			}
+			
 		} catch (FileNotFoundException e1) {
 			System.out.println(e1.toString());
 			System.exit(1);
 		} catch (IOException e1) {
 			System.out.println(e1.toString());
 			System.exit(1);
-		}
-		
-		//configuration overrides
-		String document_override = System.getProperty("document");
-		if(document_override != null) {
-			System.out.println("Overriding document path: " + document_override);
-			Main.conf.setProperty("document", document_override);
-		}
-		
-		try {
-			main.startTomcat();
-			main.createTrayIcon();
 		} catch (LifecycleException e) {
 			//JOptionPane.showMessageDialog(null, "Failed to start server. Maybe it's already running?");	
 			System.out.println(e.toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		page_url = "http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
-		//BrowserControl.displayURL(page_url);
-		if (Desktop.isDesktopSupported()) {
-			try {
-				System.out.println("Opening a browser...");
-				Desktop.getDesktop().browse(new URI(page_url));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+
 	}
 	
 	public void createTrayIcon()
@@ -97,7 +99,7 @@ public class Main {
 		if (SystemTray.isSupported()) {
 
 		    SystemTray tray = SystemTray.getSystemTray();
-		    Image image = Toolkit.getDefaultToolkit().getImage("dsbudget.png");
+		    Image image = Toolkit.getDefaultToolkit().getImage("trayicon.png");
 
 		    /*
 		    MouseListener mouseListener = new MouseListener() {
