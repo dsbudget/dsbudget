@@ -54,8 +54,9 @@ public class Main {
 		
 		conf = new Properties();
 		try {
+			//load configu
 			conf.load(new FileInputStream("dsbudget.conf"));
-			
+
 			//configuration overrides
 			String document_override = System.getProperty("document");
 			if(document_override != null) {
@@ -63,13 +64,28 @@ public class Main {
 				Main.conf.setProperty("document", document_override);
 			}
 			
-			main.startTomcat();
-			main.createTrayIcon();
-
+			//start server
+			try {					
+				main.startTomcat();
+				main.createTrayIcon();
+			} catch (LifecycleException e) {
+				//JOptionPane.showMessageDialog(null, "Failed to start server. Maybe it's already running?");	
+				System.out.println(e.toString());
+			} 
+	
+			//open browser
 			page_url = "http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
 			if (Desktop.isDesktopSupported()) {
 				System.out.println("Opening a browser...");
-				Desktop.getDesktop().browse(new URI(page_url));
+				try {
+					Desktop.getDesktop().browse(new URI(page_url));
+				} catch (URISyntaxException e) {
+					JOptionPane.showMessageDialog(null, "Failed to open browser: " + e);	
+					e.printStackTrace();
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Failed to open browser: " + e);	
+					e.printStackTrace();
+				}
 				
 				//close splash screen
 				SplashScreen splash = SplashScreen.getSplashScreen();
@@ -77,21 +93,15 @@ public class Main {
 					splash.close();
 				}
 			}
-			
 		} catch (FileNotFoundException e1) {
+			JOptionPane.showMessageDialog(null, "Failed to load dsbudget.conf: " + e1);	
 			System.out.println(e1.toString());
 			System.exit(1);
 		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(null, "Failed to load dsbudget.conf: " + e1);	
 			System.out.println(e1.toString());
 			System.exit(1);
-		} catch (LifecycleException e) {
-			//JOptionPane.showMessageDialog(null, "Failed to start server. Maybe it's already running?");	
-			System.out.println(e.toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
 	}
 	
 	public void createTrayIcon()
