@@ -43,7 +43,11 @@
 		    <fileset dir="../tomcat/webapps"/>
 		</copy>
 		<copy file="BudgetDocument.xml" todir="${deploy.dir}"/>
+		
 		<copy file="run.sh" todir="${deploy.dir}"/>
+		<chmod file="${deploy.dir}/run.sh" perm="ugo+x"/>
+		
+		
 		<copy file="dsbudget.conf" todir="${deploy.dir}"/>
 		<copy file="shortcut.ico" todir="${deploy.dir}"/>
 		<copy file="trayicon.png" todir="${deploy.dir}"/>
