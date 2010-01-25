@@ -72,10 +72,10 @@ public class MainServlet extends ServletBase  {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		decidePageToOpen(request);
-	
+		
 		//Initialize DivRep components
 		new DivRepContainer(request, response) {
-			public void init(DivRepPage pageroot, PrintWriter out) {
+			public void initPage(DivRepPage pageroot) {
 				pagedialog = new PageDialog(pageroot, budget, page);
 				removedialog = new RemoveDialog(pageroot, budget, page);
 				pageview = new MainView(pageroot, budget, page);
