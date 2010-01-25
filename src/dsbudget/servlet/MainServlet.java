@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.divrep.DivRep;
+import com.divrep.DivRepContainer;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
+import com.divrep.DivRepPage;
 import com.divrep.DivRepRoot;
 import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepSelectBox;
@@ -70,54 +72,48 @@ public class MainServlet extends ServletBase  {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		decidePageToOpen(request);
-		
-		pageroot = DivRepRoot.initPageRoot(request);
-		initControls();
-		
+	
+		//Initialize DivRep components
+		new DivRepContainer(request, response) {
+			public void init(DivRepPage pageroot, PrintWriter out) {
+				pagedialog = new PageDialog(pageroot, budget, page);
+				removedialog = new RemoveDialog(pageroot, budget, page);
+				pageview = new MainView(pageroot, budget, page);
+				
+				LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
+				
+				pagesettingsbutton = new DivRepButton(pageroot, "Settings");
+				pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
+				pagesettingsbutton.setToolTip("Edit settings for currently opened page");
+				pagesettingsbutton.addEventListener(new DivRepEventListener(){
+					public void handleEvent(DivRepEvent e) {
+						pagedialog.open(false);
+					}
+				});
+				
+				removepagebutton = new DivRepButton(pageroot, "Remove");
+				removepagebutton.setStyle(DivRepButton.Style.ALINK);
+				removepagebutton.setToolTip("Remove currently opened page");
+				removepagebutton.addEventListener(new DivRepEventListener(){
+					public void handleEvent(DivRepEvent e) {
+						removedialog.open();
+					}
+				});
+				
+				newpagebutton = new DivRepButton(pageroot, "New Page");
+		        newpagebutton.setStyle(Style.ALINK);
+		        newpagebutton.addEventListener(new DivRepEventListener() {
+					public void handleEvent(DivRepEvent e) {
+						pagedialog.open(true);
+					}});
+			}
+		};
+	
 		PrintWriter out = response.getWriter();
 		renderHeader(out, request);
 		renderSide(out, request);
 		renderMain(out, request);
 		renderFooter(out, request);
-	}
-	
-	//setup all DivRep controls
-	protected void initControls()
-	{
-		initPageControl();
-		pagedialog = new PageDialog(pageroot, budget, page);
-		removedialog = new RemoveDialog(pageroot, budget, page);
-		pageview = new MainView(pageroot, budget, page);
-	}
-	
-	protected void initPageControl()
-	{
-		LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
-	
-		pagesettingsbutton = new DivRepButton(pageroot, "Settings");
-		pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
-		pagesettingsbutton.setToolTip("Edit settings for currently opened page");
-		pagesettingsbutton.addEventListener(new DivRepEventListener(){
-			public void handleEvent(DivRepEvent e) {
-				pagedialog.open(false);
-			}
-		});
-		
-		removepagebutton = new DivRepButton(pageroot, "Remove");
-		removepagebutton.setStyle(DivRepButton.Style.ALINK);
-		removepagebutton.setToolTip("Remove currently opened page");
-		removepagebutton.addEventListener(new DivRepEventListener(){
-			public void handleEvent(DivRepEvent e) {
-				removedialog.open();
-			}
-		});
-		
-		newpagebutton = new DivRepButton(pageroot, "New Page");
-        newpagebutton.setStyle(Style.ALINK);
-        newpagebutton.addEventListener(new DivRepEventListener() {
-			public void handleEvent(DivRepEvent e) {
-				pagedialog.open(true);
-			}});
 	}
 	
 	void renderSide(PrintWriter out, HttpServletRequest request)
@@ -152,39 +148,12 @@ public class MainServlet extends ServletBase  {
 			} else {
 				out.write("<div class=\"page\" onclick=\"document.location='"+"?page="+p.getID()+"';\">"+p.name);				
 			}
-			/*
-			//remove button
-			out.write("<span style=\"float: right;\">");
-			RemoveButton button = new RemoveButton(pageroot);
-			button.render(out);
-			out.write("</span>");
-			*/
 			out.write("</div>");
 		}
 		out.write("<br/></div>");
 		
 		out.write("</div>");
 	}
-	/*
-	class RemoveButton extends DivRep
-	{
-
-		public RemoveButton(DivRep parent) {
-			super(parent);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected void onEvent(DivRepEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void render(PrintWriter out) {
-			out.write("<img onclick=\"divrep('"+getNodeID()+"', event, 'whatever', 'remove');\" class=\"remove_button\" src=\"css/images/delete.png\"/>");			
-		}
-	}
-	*/
 	
 	void renderMain(PrintWriter out, HttpServletRequest request)
 	{					
