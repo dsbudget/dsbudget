@@ -74,7 +74,7 @@ public class MainServlet extends ServletBase  {
 		decidePageToOpen(request);
 		
 		//Initialize DivRep components
-		new DivRepContainer(request, response) {
+		new DivRepContainer(request) {
 			public void initPage(DivRepPage pageroot) {
 				pagedialog = new PageDialog(pageroot, budget, page);
 				removedialog = new RemoveDialog(pageroot, budget, page);
