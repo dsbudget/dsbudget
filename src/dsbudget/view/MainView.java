@@ -3,12 +3,8 @@ package dsbudget.view;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
-
 import dsbudget.model.Budget;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;

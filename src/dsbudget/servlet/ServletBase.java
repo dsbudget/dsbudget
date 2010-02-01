@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
+
 import com.divrep.DivRep;
 
 import dsbudget.Main;
@@ -22,6 +24,8 @@ import dsbudget.model.Budget;
 import dsbudget.model.Page;
 
 public class ServletBase extends HttpServlet {
+	static Logger logger = Logger.getLogger(ServletBase.class);
+	
 	DivRep pageroot;
 	Budget budget;
 	Page page; //current page
@@ -43,18 +47,19 @@ public class ServletBase extends HttpServlet {
 				try {
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd.HH-mm-ss");
 					String backup_path = path + ".backup." + format.format(today);
-					System.out.println("Backing up the current document to " + backup_path);
+					logger.info("Backing up the current document to " + backup_path);
 					copy(path, backup_path);
 				} catch (Exception e) {
-					System.out.println("Failed to create a backup: " + e.toString());
+					logger.error("Failed to create a backup: " + e.toString());
 				}
 				
 			} catch (Exception e) {
 				
 				JOptionPane.showMessageDialog(null, "Failed to open document.\n" + e.getMessage() + "\nCreating an empty document.");
 							
-				System.out.println("Failed to load XML " + path + " -- " + e.toString());
-				System.out.println("Creaing empty doc");
+				logger.error("Failed to load XML " + path + " -- " + e.toString());
+				logger.error("Creaing empty doc");
+				
 				budget = new Budget();
 				Page page = Main.createEmptyPage(budget);
 				budget.pages.add(page);
@@ -68,14 +73,14 @@ public class ServletBase extends HttpServlet {
 				if(file.startsWith(path+".backup.")) {
 					File bfile = new File(file);
 					if(today.getTime() - bfile.lastModified() > keep_backup_for) {
-						System.out.println("Removing old backup file: " + bfile.toString());
+						logger.info("Removing old backup file: " + bfile.toString());
 						bfile.delete();
 					}
 				}
 			}
 			
 			config.getServletContext().setAttribute("budget", budget);
-			log("Loaded " + budget.pages.size() + " pages");
+			logger.info("Loaded " + budget.pages.size() + " pages");
 		}
 	}
 
@@ -94,47 +99,47 @@ public class ServletBase extends HttpServlet {
 
 	protected void renderHeader(PrintWriter out, HttpServletRequest request) 
 	{	
-		out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-		out.write("<html><head>");
-		out.write("<title>"+StringEscapeUtils.escapeHtml(page.name)+"</title>");
+		out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
+		out.println("<html><head>");
+		out.println("<title>"+StringEscapeUtils.escapeHtml(page.name)+"</title>");
 
-		out.write("<link href=\"css/smoothness/jquery-ui-1.7.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
-		out.write("<link href=\"css/divrep.css\" rel=\"stylesheet\" type=\"text/css\"/>");
-		out.write("<link href=\"css/dsbudget.css\" rel=\"stylesheet\" type=\"text/css\"/>");
-		out.write("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"css/dsbudget.print.css\" />");
+		out.println("<link href=\"css/smoothness/jquery-ui-1.7.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
+		out.println("<link href=\"css/divrep.css\" rel=\"stylesheet\" type=\"text/css\"/>");
+		out.println("<link href=\"css/dsbudget.css\" rel=\"stylesheet\" type=\"text/css\"/>");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"css/dsbudget.print.css\" />");
 		
-		out.write("<script type=\"text/javascript\" src=\"jquery-1.3.2.min.js\"></script>");
-		out.write("<script type=\"text/javascript\" src=\"jquery-ui-1.7.2.custom.min.js\"></script>");
-		out.write("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"jquery-1.3.2.min.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"jquery-ui-1.7.2.custom.min.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
 		
-		out.write("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");
 		
-		out.write("</head>");
-		out.write("<body>");
+		out.println("</head>");
+		out.println("<body>");
 		
-		out.write("<div id=\"header\"><span class=\"application_header\">dsBudget</span>");
-		out.write("<span class=\"application_subheader\">"+StringEscapeUtils.escapeHtml(Main.conf.getProperty("subheader"))+"</span></div>");
-		out.write("<div id=\"content\">");	
+		out.println("<div id=\"header\"><span class=\"application_header\">dsBudget</span>");
+		out.println("<span class=\"application_subheader\">"+StringEscapeUtils.escapeHtml(Main.conf.getProperty("subheader"))+"</span></div>");
+		out.println("<div id=\"content\">");	
 	}
 	
 	protected void renderFooter(PrintWriter out, HttpServletRequest request) 
 	{
-		out.write("</div>"); //end of content
+		out.println("</div>"); //end of content
 
-		out.write("<div id=\"footer\">");
-		out.write("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
-		out.write("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\" target=\"_blank\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\" target=\"_blank\">Soichi Hayashi</a></span>");
-		out.write("<br/>");
-		out.write("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");
-		out.write(" | ");
-		out.write("<a href=\"http://dsbudget.blogspot.com/\" target=\"_blank\">Blog</a>");
-		out.write(" | ");
-		out.write("<a href=\"http://code.google.com/p/dsbudget/issues/list\" target=\"_blank\">Report Bugs</a>");
-		out.write(" | ");
-		out.write("<a href=\"http://groups.google.com/group/dsbudget/topics\" target=\"_blank\">Discussion Forum</a>");
+		out.println("<div id=\"footer\">");
+		out.println("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
+		out.println("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\" target=\"_blank\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\" target=\"_blank\">Soichi Hayashi</a></span>");
+		out.println("<br/>");
+		out.println("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");
+		out.println(" | ");
+		out.println("<a href=\"http://dsbudget.blogspot.com/\" target=\"_blank\">Blog</a>");
+		out.println(" | ");
+		out.println("<a href=\"http://code.google.com/p/dsbudget/issues/list\" target=\"_blank\">Report Bugs</a>");
+		out.println(" | ");
+		out.println("<a href=\"http://groups.google.com/group/dsbudget/topics\" target=\"_blank\">Discussion Forum</a>");
 
-		out.write("</div>");
-		out.write("</body></html>");
+		out.println("</div>");
+		out.println("</body></html>");
 	}
 
 }

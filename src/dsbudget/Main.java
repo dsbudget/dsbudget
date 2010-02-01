@@ -29,14 +29,15 @@ import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.connector.Connector;
-import org.apache.catalina.realm.MemoryRealm;
 import org.apache.catalina.startup.Embedded;
+import org.apache.log4j.Logger;
 import org.apache.tomcat.util.IntrospectionUtils;
 
 import dsbudget.model.Budget;
 import dsbudget.model.Page;
 
 public class Main {
+	static Logger logger = Logger.getLogger(Main.class);
 	
 	static public String version = "2.0.14";
 	
@@ -50,17 +51,17 @@ public class Main {
 
 	public static void main(String[] args) {
 		Main main = new Main();
-		System.out.println("Starting dsBudget server " + Main.version);
+		logger.info("Starting dsBudget server " + Main.version);
 		
 		conf = new Properties();
 		try {
-			//load configu
+			//load configuration
 			conf.load(new FileInputStream("dsbudget.conf"));
 
 			//configuration overrides
 			String document_override = System.getProperty("document");
 			if(document_override != null) {
-				System.out.println("Overriding document path: " + document_override);
+				logger.info("Overriding document path: " + document_override);
 				Main.conf.setProperty("document", document_override);
 			}
 			
@@ -69,14 +70,13 @@ public class Main {
 				main.startTomcat();
 				main.createTrayIcon();
 			} catch (LifecycleException e) {
-				//JOptionPane.showMessageDialog(null, "Failed to start server. Maybe it's already running?");	
-				System.out.println(e.toString());
+				logger.error(e);
 			} 
 	
 			//open browser
 			page_url = "http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
 			if (Desktop.isDesktopSupported()) {
-				System.out.println("Opening a browser...");
+				logger.info("Opening a browser...");
 				try {
 					Desktop.getDesktop().browse(new URI(page_url));
 				} catch (URISyntaxException e) {
@@ -95,11 +95,11 @@ public class Main {
 			}
 		} catch (FileNotFoundException e1) {
 			JOptionPane.showMessageDialog(null, "Failed to load dsbudget.conf: " + e1);	
-			System.out.println(e1.toString());
+			logger.error(e1);
 			System.exit(1);
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(null, "Failed to load dsbudget.conf: " + e1);	
-			System.out.println(e1.toString());
+			logger.error(e1);
 			System.exit(1);
 		}
 	}
@@ -110,38 +110,6 @@ public class Main {
 
 		    SystemTray tray = SystemTray.getSystemTray();
 		    Image image = Toolkit.getDefaultToolkit().getImage("trayicon.png");
-
-		    /*
-		    MouseListener mouseListener = new MouseListener() {
-		        public void mouseClicked(MouseEvent e) {
-		    		BrowserControl.displayURL(page_url);
-		        }
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-		    };
-			*/
 		            
 		    PopupMenu popup = new PopupMenu();
 		    
@@ -151,14 +119,12 @@ public class Main {
 		    		if (Desktop.isDesktopSupported()) {
 		    	
 		    			try {
-				            System.out.println("Opening dsBudget...");
+				            logger.info("Opening dsBudget...");
 		    				Desktop.getDesktop().browse(new URI(page_url));
 		    			} catch (IOException e2) {
-		    				// TODO Auto-generated catch block
-		    				e2.printStackTrace();
+		    				logger.error(e2);
 		    			} catch (URISyntaxException e3) {
-		    				// TODO Auto-generated catch block
-		    				e3.printStackTrace();
+		    				logger.error(e3);
 		    			}
 		    		}
 		        }
@@ -174,11 +140,9 @@ public class Main {
 						Budget.savethread.requestStop();
 						Budget.savethread.join();
 					} catch (LifecycleException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+	    				logger.error(e1);
 					} catch (InterruptedException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
+	    				logger.error(e2);
 					}
 		            System.out.println("Exiting...");
 		            System.exit(0);
@@ -196,11 +160,9 @@ public class Main {
 				            System.out.println("Opening dsBudget...");
 		    				Desktop.getDesktop().browse(new URI(page_url));
 		    			} catch (IOException e2) {
-		    				// TODO Auto-generated catch block
-		    				e2.printStackTrace();
+		    				logger.error(e2);
 		    			} catch (URISyntaxException e3) {
-		    				// TODO Auto-generated catch block
-		    				e3.printStackTrace();
+		    				logger.error(e3);
 		    			}
 		    		}
 		        }
@@ -212,11 +174,11 @@ public class Main {
 		    try {
 		        tray.add(trayIcon);
 		    } catch (AWTException e) {
-		        System.err.println("TrayIcon could not be added.");
+		        logger.error("TrayIcon could not be added : " + e);
 		    }
 
 		} else {
-			//tray icon not supported... what can I do?
+			logger.error("Tray icon is not supported..");
 		}
 	}
 	
@@ -250,7 +212,7 @@ public class Main {
             IntrospectionUtils.setProperty(connector, "address", "127.0.0.1");
             IntrospectionUtils.setProperty(connector, "port", conf.getProperty("tomcat_port"));     
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         connector.setEnableLookups(false);
 
