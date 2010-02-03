@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="deploy" name="Create Runnable Jar for Project dsbudget">
-	<taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" />
+	<property name="build.dir" value="build"/>
+	<property name="linux-landing.dir" value="/home/soichih/Desktop"/>
+    <target name="compile">
+	<mkdir dir="../bin"/>
+	<javac srcdir="../src" destdir="../bin">
+		<classpath>
+			<fileset dir="../tomcat">
+				<include name="**/*.jar"/>
+			</fileset>
+		</classpath>
+	</javac>
+    </target>
 
-	<property name="deploy.dir" value="C:\tmp\dsbudget"/>
-	<property name="version" value="2.0.12"/>
     <target name="create_run_jar">
-        <jar destfile="${deploy.dir}/dsbudget.jar">
+        <jar destfile="${build.dir}/dsbudget/dsbudget.jar">
             <manifest>
             	<attribute name="Built-By" value="Soichi Hayashi"/>
                 <attribute name="Main-Class" value="dsbudget.Main"/>
                 <attribute name="SplashScreen-Image" value="splash.png"/>
             </manifest>
             <fileset dir="../bin"/>
+            <fileset dir="../src">
+		<include name="log4j.properties"/>
+		<include name="**/*.png"/>
+            </fileset>	
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina-optional.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/commons-el.jar"/>
@@ -35,48 +48,37 @@
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/jfreechart-1.0.13.jar"/>
         </jar>
     </target>
-	<target name="deploy" depends="clean, create_run_jar">
-		<copy todir="${deploy.dir}/tomcat/conf">
+	<target name="package" depends="clean, create_run_jar">
+		<copy todir="${build.dir}/dsbudget/tomcat/conf">
 		    <fileset dir="../tomcat/conf"/>
 		</copy>
-		<copy todir="${deploy.dir}/tomcat/webapps">
+		<copy todir="${build.dir}/dsbudget/tomcat/webapps">
 		    <fileset dir="../tomcat/webapps"/>
 		</copy>
-		<copy file="BudgetDocument.xml" todir="${deploy.dir}"/>
-		
-		<copy file="run.sh" todir="${deploy.dir}"/>
-		
-		<!--this only works on Unix -- according to ant documentation 
-			<chmod file="${deploy.dir}/run.sh" perm="700"/>
-		-->
-		
-		<copy file="dsbudget.conf" todir="${deploy.dir}"/>
-		<copy file="shortcut.ico" todir="${deploy.dir}"/>
-		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget_2.0.X.pre.zip"
-		       basedir="${deploy.dir}"
-		  />
+		<copy file="run.sh" todir="${build.dir}/dsbudget"/>
+		<copy file="dsbudget.conf" todir="${build.dir}/dsbudget"/>
+	</target>
+	<target name="deploy" depends="package">
+		<copy file="shortcut.ico" todir="${build.dir}/dsbudget"/>
 		<exec executable="C:\Program Files\NSIS\makensis.exe">
-    		<arg value="build.nsi"/>
+			<arg value="build.nsi"/>
   		</exec>
-  		
-  		<!--jarbundler dir="C:/Documents and Settings/Soichi/Desktop/"
-            name="dsBudget"
-            mainclass="dsbudget.Main" 
-            stubfile="JavaApplicationStub"
-            version="2.0.12"
-            jvmversion="1.6+"
-            jar="${deploy.dir}/dsbudget.jar">
-            
-            <execfileset dir="${deploy.dir}">
-				<include name="**" />
-				<exclude name="dsbudget.jar" />
-			</execfileset>
-            
-        </jarbundler-->
-		  
+	</target>
+	<target name="linux" depends="compile, package">
+		<copy file="BudgetDocument.xml" todir="${build.dir}/dsbudget"/>
+		<tar longfile="gnu" destfile="${build.dir}/dsbudget.tar">
+			<tarfileset dir="${build.dir}/dsbudget/.." filemode="777">
+				<include name="**/*.sh"/>
+			</tarfileset>
+			<tarfileset dir="${build.dir}/dsbudget/..">
+				<include name="**/*"/>
+				<exclude name="**/*.sh"/>
+			</tarfileset>
+		</tar>
+		<gzip destfile="${linux-landing.dir}/dsbudget.tar.gz" src="${build.dir}/dsbudget.tar"/>
 	</target>
 	<target name="clean">
-		<delete dir="${deploy.dir}"/>
-		<mkdir dir="${deploy.dir}"/>
+		<delete dir="${build.dir}"/>
+		<mkdir dir="${build.dir}/dsbudget"/>
 	</target>
 </project>
