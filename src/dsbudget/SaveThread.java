@@ -28,7 +28,7 @@ public class SaveThread extends Thread {
     			sleep(1000);
     		} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "Failed to save document.\n" + e.getMessage());
-    			logger.error("Failed to save document: " + e.getMessage());
+    			logger.error("Failed to save document: ",e);
     		}
     	}
     }

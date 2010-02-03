@@ -34,7 +34,6 @@ Section "Normal" ; (default section)
 	File /r "C:\tmp\dsbudget\tomcat"
 	File "C:\tmp\dsbudget\dsbudget.jar"
 	File "C:\tmp\dsbudget\shortcut.ico"
-	File "C:\tmp\dsbudget\trayicon.png"
 	File "C:\tmp\dsbudget\dsbudget.conf"
 		
 	IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
@@ -43,7 +42,7 @@ Section "Normal" ; (default section)
 		
 		;if we don't have BudgetDocument.xml in the install dir yet, and SimpleD Budget doc exists, copy it
 		ReadRegStr $0 HKEY_CURRENT_USER "Software\SimpleD Software\SimpleD Budget\Settings" "PrevDoc"
-		DetailPrint "SimpleD Budget PrevDoc is set at $0"
+		DetailPrint "SimpleD Budget PrevDoc is set at $0 - trying to copy"
 		StrCmp $0 "" CopySample
 		
 		IfFileExists $0 CopyOld CopySample
@@ -96,7 +95,6 @@ Section Uninstall
 	RMDir /r "$INSTDIR\tomcat"
 	Delete "$INSTDIR\dsbudget.jar"
 	Delete "$INSTDIR\shortcut.ico"
-	Delete "$INSTDIR\trayicon.png"
 	Delete "$INSTDIR\dsbudget.conf"
 	Delete "$INSTDIR\uninstall.exe"
 	Delete "$INSTDIR\run.lnk"

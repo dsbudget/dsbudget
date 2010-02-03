@@ -50,15 +50,15 @@ public class ServletBase extends HttpServlet {
 					logger.info("Backing up the current document to " + backup_path);
 					copy(path, backup_path);
 				} catch (Exception e) {
-					logger.error("Failed to create a backup: " + e.toString());
+					logger.error("Failed to create a backup: ",e);
 				}
 				
 			} catch (Exception e) {
 				
 				JOptionPane.showMessageDialog(null, "Failed to open document.\n" + e.getMessage() + "\nCreating an empty document.");
 							
-				logger.error("Failed to load XML " + path + " -- " + e.toString());
-				logger.error("Creaing empty doc");
+				logger.error("Failed to load XML " + path + " -- " , e);
+				logger.info("Creaing empty doc");
 				
 				budget = new Budget();
 				Page page = Main.createEmptyPage(budget);

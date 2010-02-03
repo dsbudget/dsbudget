@@ -23,6 +23,6 @@
 	<classpathentry kind="lib" path="tomcat/lib/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/jasper-compiler-jdt.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/jasper-compiler.jar"/>
-	<classpathentry kind="lib" path="tomcat/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="tomcat/webapps/dsbudget/WEB-INF/lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

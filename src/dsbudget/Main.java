@@ -11,19 +11,13 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.Properties;
-
 import javax.swing.JOptionPane;
-
 import org.apache.catalina.Context;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
@@ -109,7 +103,7 @@ public class Main {
 		if (SystemTray.isSupported()) {
 
 		    SystemTray tray = SystemTray.getSystemTray();
-		    Image image = Toolkit.getDefaultToolkit().getImage("trayicon.png");
+		    Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("trayicon.png"));
 		            
 		    PopupMenu popup = new PopupMenu();
 		    
@@ -174,7 +168,7 @@ public class Main {
 		    try {
 		        tray.add(trayIcon);
 		    } catch (AWTException e) {
-		        logger.error("TrayIcon could not be added : " + e);
+		        logger.error("TrayIcon could not be added : ", e);
 		    }
 
 		} else {
@@ -212,7 +206,7 @@ public class Main {
             IntrospectionUtils.setProperty(connector, "address", "127.0.0.1");
             IntrospectionUtils.setProperty(connector, "port", conf.getProperty("tomcat_port"));     
         } catch (Exception ex) {
-            logger.error(ex);
+            logger.error("Couldn't create connector", ex);
         }
         connector.setEnableLookups(false);
 

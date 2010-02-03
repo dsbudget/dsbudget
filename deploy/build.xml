@@ -28,7 +28,7 @@
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/tomcat-coyote.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/tomcat-http.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/tomcat-util.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/divrep.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/log4j-1.2.15.jar"/>             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/divrep.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/commons-lang-2.4.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/commons-validator-1.3.1.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/jcommon-1.0.16.jar"/>
@@ -45,20 +45,21 @@
 		<copy file="BudgetDocument.xml" todir="${deploy.dir}"/>
 		
 		<copy file="run.sh" todir="${deploy.dir}"/>
-		<chmod file="${deploy.dir}/run.sh" perm="ugo+x"/>
 		
+		<!--this only works on Unix -- according to ant documentation 
+			<chmod file="${deploy.dir}/run.sh" perm="700"/>
+		-->
 		
 		<copy file="dsbudget.conf" todir="${deploy.dir}"/>
 		<copy file="shortcut.ico" todir="${deploy.dir}"/>
-		<copy file="trayicon.png" todir="${deploy.dir}"/>
-		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget_2.0.X.zip"
+		<zip destfile="C:/Documents and Settings/Soichi/Desktop/dsbudget_2.0.X.pre.zip"
 		       basedir="${deploy.dir}"
 		  />
 		<exec executable="C:\Program Files\NSIS\makensis.exe">
     		<arg value="build.nsi"/>
   		</exec>
   		
-  		<jarbundler dir="C:/Documents and Settings/Soichi/Desktop/"
+  		<!--jarbundler dir="C:/Documents and Settings/Soichi/Desktop/"
             name="dsBudget"
             mainclass="dsbudget.Main" 
             stubfile="JavaApplicationStub"
@@ -71,7 +72,7 @@
 				<exclude name="dsbudget.jar" />
 			</execfileset>
             
-        </jarbundler>
+        </jarbundler-->
 		  
 	</target>
 	<target name="clean">
