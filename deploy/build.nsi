@@ -31,10 +31,10 @@ Section "Normal" ; (default section)
 	
 	; main installation
 	SetOutPath "$INSTDIR"
-	File /r "C:\tmp\dsbudget\tomcat"
-	File "C:\tmp\dsbudget\dsbudget.jar"
-	File "C:\tmp\dsbudget\shortcut.ico"
-	File "C:\tmp\dsbudget\dsbudget.conf"
+	File /r "build\dsbudget\tomcat"
+	File "build\dsbudget\dsbudget.jar"
+	File "build\dsbudget\shortcut.ico"
+	File "build\dsbudget\dsbudget.conf"
 		
 	IfFileExists "$INSTDIR/BudgetDocument.xml" DoneDocInstall DocNotExists
 	DocNotExists:
@@ -54,7 +54,7 @@ Section "Normal" ; (default section)
 		
 	CopySample:
 		DetailPrint "Installing Sample Doc"
-		File "C:\tmp\dsbudget\BudgetDocument.xml"
+		File "BudgetDocument.xml"
 		
 	;I've heard that windows 7 somehow leaves the document in read-only state.. let's see if this helps
 	SetFileAttributes $INDSTDIR/BudgetDocument.xml FILE_ATTRIBUTE_NORMAL

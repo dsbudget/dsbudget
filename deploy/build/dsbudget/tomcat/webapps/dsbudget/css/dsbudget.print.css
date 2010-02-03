@@ -1,0 +1,10 @@
+#header, #footer, .divrep_button {
+display: none;
+}
+
+#main {
+margin: 0px;
+}
+#side {
+display: none;
+}
