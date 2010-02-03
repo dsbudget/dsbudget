@@ -4,7 +4,7 @@
 	<property name="linux-landing.dir" value="/home/soichih/Desktop"/>
     <target name="compile">
 	<mkdir dir="../bin"/>
-	<javac srcdir="../src" destdir="../bin">
+	<javac srcdir="../src" destdir="../bin" includes="log4j.properties;**/*.png">
 		<classpath>
 			<fileset dir="../tomcat">
 				<include name="**/*.jar"/>
@@ -21,10 +21,6 @@
                 <attribute name="SplashScreen-Image" value="splash.png"/>
             </manifest>
             <fileset dir="../bin"/>
-            <fileset dir="../src">
-		<include name="log4j.properties"/>
-		<include name="**/*.png"/>
-            </fileset>	
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina-optional.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/commons-el.jar"/>
