@@ -128,7 +128,7 @@ public class Main {
 		    MenuItem exit = new MenuItem("Exit");
 		    exit.addActionListener(new ActionListener() {
 		        public void actionPerformed(ActionEvent e) {
-		            System.out.println("Stopping...");
+		            logger.info("Stopping...");
 		            try {
 						tomcat.stop();
 						Budget.savethread.requestStop();
@@ -138,7 +138,7 @@ public class Main {
 					} catch (InterruptedException e2) {
 	    				logger.error(e2);
 					}
-		            System.out.println("Exiting...");
+		            logger.info("Exiting...");
 		            System.exit(0);
 		        }
 		    });
@@ -151,12 +151,12 @@ public class Main {
 		    		if (Desktop.isDesktopSupported()) {
 				    	
 		    			try {
-				            System.out.println("Opening dsBudget...");
+				            logger.info("Opening dsBudget... at " + page_url);
 		    				Desktop.getDesktop().browse(new URI(page_url));
 		    			} catch (IOException e2) {
-		    				logger.error(e2);
+		    				logger.error("Failed to opne browser: ", e2);
 		    			} catch (URISyntaxException e3) {
-		    				logger.error(e3);
+		    				logger.error("Failed to opne browser: ", e3);
 		    			}
 		    		}
 		        }
