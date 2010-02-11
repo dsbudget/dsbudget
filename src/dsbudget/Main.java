@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
@@ -68,7 +69,7 @@ public class Main {
 			} 
 	
 			//open browser
-			page_url = "http://localhost:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
+			page_url = "http://127.0.0.1:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
 			if (Desktop.isDesktopSupported()) {
 				logger.info("Opening a browser...");
 				try {
