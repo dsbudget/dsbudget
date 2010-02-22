@@ -4,8 +4,8 @@
 	<property name="linux-landing.dir" value="/home/soichih/Desktop"/>
     <target name="compile">
 	<mkdir dir="../bin"/>
-	<javac srcdir="../src" destdir="../bin" includes="log4j.properties;**/*.png">
-		<include name="**/*.java"/>
+	<javac srcdir="../src" destdir="../bin">
+		<include name="**/*"/>
 		<classpath>
 			<fileset dir="../tomcat">
 				<include name="**/*.jar"/>
@@ -21,6 +21,10 @@
                 <attribute name="Main-Class" value="dsbudget.Main"/>
                 <attribute name="SplashScreen-Image" value="splash.png"/>
             </manifest>
+            <fileset dir="../src">
+		<include name="**/*.png"/>
+		<include name="log4j.properties"/>
+	    </fileset>
             <fileset dir="../bin"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina-optional.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina.jar"/>
@@ -45,7 +49,7 @@
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/jfreechart-1.0.13.jar"/>
         </jar>
     </target>
-	<target name="package" depends="clean, create_run_jar">
+	<target name="package" depends="create_run_jar">
 		<copy todir="${build.dir}/dsbudget/tomcat/conf">
 		    <fileset dir="../tomcat/conf"/>
 		</copy>
@@ -61,7 +65,7 @@
 			<arg value="build.nsi"/>
   		</exec>
 	</target>
-	<target name="linux" depends="compile, package">
+	<target name="linux" depends="clean, compile, package">
 		<copy file="BudgetDocument.xml" todir="${build.dir}/dsbudget"/>
 		<tar longfile="gnu" destfile="${build.dir}/dsbudget.tar">
 			<tarfileset dir="${build.dir}/dsbudget/.." filemode="777">
@@ -77,5 +81,7 @@
 	<target name="clean">
 		<delete dir="${build.dir}"/>
 		<mkdir dir="${build.dir}/dsbudget"/>
+		<delete dir="../bin"/>
+		<mkdir dir="../bin"/>
 	</target>
 </project>
