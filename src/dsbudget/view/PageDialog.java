@@ -228,6 +228,7 @@ public class PageDialog extends DivRepDialog
 					category.expenses = new ArrayList<Expense>();
 				}
 			} else if(action.equals(2)) {
+				//as negative income
 				for(Category category : newpage.categories) {
 					BigDecimal balance = category.amount;
 					balance = balance.subtract(category.getTotalExpense());
@@ -238,6 +239,7 @@ public class PageDialog extends DivRepDialog
 					balance_expense.date = newpage.created;
 					balance_expense.where = "(Balance from " + original.name + ")";
 					balance_expense.description = "";
+					balance_expense.tentative = false;
 					category.expenses.add(balance_expense);
 				}
 			}
