@@ -5,6 +5,7 @@
     <target name="compile">
 	<mkdir dir="../bin"/>
 	<javac srcdir="../src" destdir="../bin" includes="log4j.properties;**/*.png">
+		<include name="**/*.java"/>
 		<classpath>
 			<fileset dir="../tomcat">
 				<include name="**/*.jar"/>
