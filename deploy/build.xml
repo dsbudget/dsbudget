@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="deploy" name="Create Runnable Jar for Project dsbudget">
+<project default="package" name="Create Runnable Jar for Project dsbudget">
 	<property name="build.dir" value="build"/>
 	<property name="linux-landing.dir" value="/home/soichih/Desktop"/>
     <target name="compile">
@@ -49,7 +49,9 @@
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/jfreechart-1.0.13.jar"/>
         </jar>
     </target>
-	<target name="package" depends="create_run_jar">
+	<target name="package" depends="clean, compile, create_run_jar, linux-package, win-package">
+	</target>
+	<target name="linux-package">
 		<copy todir="${build.dir}/dsbudget/tomcat/conf">
 		    <fileset dir="../tomcat/conf"/>
 		</copy>
@@ -58,14 +60,7 @@
 		</copy>
 		<copy file="run.sh" todir="${build.dir}/dsbudget"/>
 		<copy file="dsbudget.conf" todir="${build.dir}/dsbudget"/>
-	</target>
-	<target name="deploy" depends="package">
-		<copy file="shortcut.ico" todir="${build.dir}/dsbudget"/>
-		<exec executable="C:\Program Files\NSIS\makensis.exe">
-			<arg value="build.nsi"/>
-  		</exec>
-	</target>
-	<target name="linux" depends="clean, compile, package">
+
 		<copy file="BudgetDocument.xml" todir="${build.dir}/dsbudget"/>
 		<tar longfile="gnu" destfile="${build.dir}/dsbudget.tar">
 			<tarfileset dir="${build.dir}/dsbudget/.." filemode="777">
@@ -77,6 +72,13 @@
 			</tarfileset>
 		</tar>
 		<gzip destfile="${linux-landing.dir}/dsbudget.tar.gz" src="${build.dir}/dsbudget.tar"/>
+	</target>
+	<target name="win-package">
+		<copy file="shortcut.ico" todir="${build.dir}/dsbudget"/>
+		<exec executable="wine">
+			<arg value="C:\Program Files\NSIS\makensis.exe"/>
+			<arg value="build.nsi"/>
+  		</exec>
 	</target>
 	<target name="clean">
 		<delete dir="${build.dir}"/>

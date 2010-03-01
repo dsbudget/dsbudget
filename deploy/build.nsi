@@ -4,7 +4,7 @@ RequestExecutionLevel admin
 !include "MUI2.nsh"
 
 Name "dsBudget"
-OutFile "C:/Documents and Settings/Soichi/Desktop/dsbudget_2.0.X.exe"
+OutFile "/home/soichih/Desktop/dsbudget_2.0.X.exe"
 
 ; Some default compiler settings (uncomment and change at will):
 ; SetCompress auto ; (can be off or force)
