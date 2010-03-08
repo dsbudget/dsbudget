@@ -128,7 +128,7 @@ public class ServletBase extends HttpServlet {
 
 		out.println("<div id=\"footer\">");
 		out.println("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
-		out.println("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\" target=\"_blank\">DivRep Framework</a> by <a href=\"http://sites.google.com/site/soichih/\" target=\"_blank\">Soichi Hayashi</a></span>");
+		out.println("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\" target=\"_blank\">DivRep Library</a> by <a href=\"http://sites.google.com/site/soichih/\" target=\"_blank\">Soichi Hayashi</a></span>");
 		out.println("<br/>");
 		out.println("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");
 		out.println(" | ");
