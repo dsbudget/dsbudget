@@ -43,20 +43,22 @@ public class CategoryDialog extends DivRepDialog
 		name.setRequired(true);
 		name.setSampleValue("Mortgage");
 		
-		amount = new DivRepTextBox(this);
+		amount = new DivRepMoneyAmount(this);
 		amount.setLabel("Budget");
 		amount.setWidth(200);
 		amount.setSampleValue(nf.format(700));
 		amount.setRequired(true);
+		/*
 		amount.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
+				String value =  e.value.trim();
 				amount.setValue("");
 				try {
-					BigDecimal b = new BigDecimal(e.value);
+					BigDecimal b = new BigDecimal(value);
 					amount.setValue(nf.format(b));
 				} catch(NumberFormatException ne) {
 					try {
-						Number n = nf.parse(e.value);
+						Number n = nf.parse(value);
 						amount.setValue(nf.format(n));
 					} catch (ParseException e1) {
 						//any other idea?
@@ -65,6 +67,7 @@ public class CategoryDialog extends DivRepDialog
 				amount.redraw();
 			}
 		});
+		*/
 		amount.addValidator(new DivRepIValidator<String>(){
 			public String getErrorMessage() {
 				return "Please use a positive amount.";

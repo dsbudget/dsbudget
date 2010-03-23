@@ -70,20 +70,22 @@ public class IncomeDialog extends DivRepDialog
 			}
 		});
 		
-		amount = new DivRepTextBox(this);
+		amount = new DivRepMoneyAmount(this);
 		amount.setLabel("Amount");
 		amount.setWidth(200);
 		amount.setSampleValue(nf.format(10));
 		amount.setRequired(true);
+		/*
 		amount.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
+				String value = e.value.trim();
 				amount.setValue("");
 				try {
-					BigDecimal b = new BigDecimal(e.value);
+					BigDecimal b = new BigDecimal(value);
 					amount.setValue(nf.format(b));
 				} catch(NumberFormatException ne) {
 					try {
-						Number n = nf.parse(e.value);
+						Number n = nf.parse(value);
 						amount.setValue(nf.format(n));
 					} catch (ParseException e1) {
 						//any other idea?
@@ -92,6 +94,7 @@ public class IncomeDialog extends DivRepDialog
 				amount.redraw();
 			}
 		});
+		*/
 		
 		description = new DivRepTextBox(this);
 		description.setLabel("Name");
