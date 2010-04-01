@@ -64,10 +64,9 @@ Section "Normal" ; (default section)
 	; Create Start Menu shortcuts
 	CreateDirectory $SMPROGRAMS\dsBudget
 	
-	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\shortcut.ico'
-	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-jar dsbudget.jar' '$INSTDIR\shortcut.ico'
-
-	createShortCut "$INSTDIR\run.lnk" "$R0" '-jar dsbudget.jar'
+	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-Ddivrep_invalidate_samepagekey -jar dsbudget.jar' '$INSTDIR\shortcut.ico'
+	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-Ddivrep_invalidate_samepagekey -jar dsbudget.jar' '$INSTDIR\shortcut.ico'
+	createShortCut "$INSTDIR\run.lnk" "$R0" '-Ddivrep_invalidate_samepagekey -jar dsbudget.jar'
 	
 	createShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
 	

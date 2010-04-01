@@ -5,4 +5,4 @@ if [ ! $JAVA_HOME ]; then
 	exit
 fi
 
-$JAVA_HOME/bin/java -jar dsbudget.jar &
+$JAVA_HOME/bin/java -Ddivrep_invalidate_samepagekey -jar dsbudget.jar &
