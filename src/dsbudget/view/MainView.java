@@ -3,8 +3,15 @@ package dsbudget.view;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+
+import sun.util.logging.resources.logging;
+
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
+
+import dsbudget.Main;
 import dsbudget.model.Budget;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
@@ -12,6 +19,9 @@ import dsbudget.model.Income;
 import dsbudget.model.Page;
 
 public class MainView extends DivRep {
+
+	static Logger logger = Logger.getLogger(MainView.class);
+	
 	public Budget budget;
 	public Page page;
 	
@@ -53,11 +63,24 @@ public class MainView extends DivRep {
 
 	public void render(PrintWriter out) {
 		out.write("<div id=\""+getNodeID()+"\">");
-	
-		incomeview.render(out);
-		budgettingview.render(out);
-		expenseview.render(out);
-		balanceview.render(out);
+		
+		//display each section in the order specified in the configuration
+		String section_order = Main.conf.getProperty("section_order");
+		String[] items = section_order.split(",");
+		for(String item : items) {
+			item = item.trim();
+			if(item.equals("income")) {
+				incomeview.render(out);
+			} else if(item.equals("budget")) {
+				budgettingview.render(out);
+			} else if(item.equals("expense")) {
+				expenseview.render(out);
+			} else if(item.equals("balance")) {
+				balanceview.render(out);
+			} else {
+				logger.error("Unknown section_order token in the configuration: " + item);
+			}
+		}
 		
 		income_dialog.render(out);
 		category_dialog.render(out);
