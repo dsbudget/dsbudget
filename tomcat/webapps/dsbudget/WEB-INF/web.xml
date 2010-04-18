@@ -40,4 +40,14 @@
          <url-pattern>/chart</url-pattern>
 </servlet-mapping>
 
+<servlet>
+         <display-name>StopServlet</display-name>
+         <servlet-name>StopServlet</servlet-name>
+         <servlet-class>dsbudget.servlet.StopServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+         <servlet-name>StopServlet</servlet-name>
+         <url-pattern>/stop</url-pattern>
+</servlet-mapping>
+
 </web-app>

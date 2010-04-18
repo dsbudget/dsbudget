@@ -128,18 +128,7 @@ public class Main {
 		    MenuItem exit = new MenuItem("Exit");
 		    exit.addActionListener(new ActionListener() {
 		        public void actionPerformed(ActionEvent e) {
-		            logger.info("Stopping...");
-		            try {
-						tomcat.stop();
-						Budget.savethread.requestStop();
-						Budget.savethread.join();
-					} catch (LifecycleException e1) {
-	    				logger.error(e1);
-					} catch (InterruptedException e2) {
-	    				logger.error(e2);
-					}
-		            logger.info("Exiting...");
-		            System.exit(0);
+		        	stop();
 		        }
 		    });
 		    popup.add(exit);
@@ -221,5 +210,20 @@ public class Main {
     static public Page createEmptyPage(Budget budget) {
 		Page page = new Page(budget);
 		return page;
+    }
+    
+    static public void stop() {
+        logger.info("Stopping...");
+        try {
+			tomcat.stop();
+			Budget.savethread.requestStop();
+			Budget.savethread.join();
+		} catch (LifecycleException e1) {
+			logger.error(e1);
+		} catch (InterruptedException e2) {
+			logger.error(e2);
+		}
+        logger.info("Exiting...");
+        System.exit(0);
     }
 }

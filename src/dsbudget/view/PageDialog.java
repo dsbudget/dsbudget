@@ -11,7 +11,6 @@ import java.util.TreeMap;
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
-import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepSelectBox;

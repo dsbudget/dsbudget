@@ -6,8 +6,6 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import sun.util.logging.resources.logging;
-
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 
@@ -55,7 +53,7 @@ public class MainView extends DivRep {
 		expenseview = new ExpenseView(this);
 		balanceview = new BalanceView(this);
 	}
-	@Override
+
 	protected void onEvent(DivRepEvent e) {
 		// TODO Auto-generated method stub
 		

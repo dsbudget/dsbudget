@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -46,10 +44,10 @@ public class Category extends ObjectID implements XMLSerializer {
 	
 	public ArrayList<Expense> getExpensesSortByDate()
 	{
-		  Collections.sort(expenses, new Comparator(){
-	            public int compare(Object o1, Object o2) {
-	            	Expense p1 = (Expense) o1;
-	            	Expense p2 = (Expense) o2;
+		  Collections.sort(expenses, new Comparator<Expense>(){
+	            public int compare(Expense o1, Expense o2) {
+	            	Expense p1 = o1;
+	            	Expense p2 = o2;
 	               return p1.date.compareTo(p2.date);
 	            }
 	      });
