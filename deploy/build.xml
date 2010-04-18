@@ -10,13 +10,13 @@
 	<target name="clean">
 		<delete dir="${build.dir}"/>
 		<mkdir dir="${build.dir}/dsbudget"/>
-		<delete dir="../bin"/>
-		<mkdir dir="../bin"/>
+		<delete dir="bin"/>
+		<mkdir dir="bin"/>
 	</target>
 			
     <target name="compile">
-		<mkdir dir="../bin"/>
-		<javac srcdir="../src" destdir="../bin">
+		<mkdir dir="bin"/>
+		<javac srcdir="../src" destdir="bin">
 			<include name="**/*"/>
 			<classpath>
 				<fileset dir="../tomcat">
@@ -37,7 +37,7 @@
 				<include name="**/*.png"/>
 				<include name="log4j.properties"/>
 		    </fileset>
-            <fileset dir="../bin"/>
+            <fileset dir="bin"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina-optional.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/commons-el.jar"/>
