@@ -58,7 +58,7 @@ UAC_Success:
   MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
   "dsBudget is already installed. $\n$\nClick `OK` to remove the \
   previous version or `Cancel` to cancel this upgrade. \
-  (Your document will NOT be removed)" \
+  (Your document will be kept)" \
   IDOK uninst
   Abort
  
