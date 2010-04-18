@@ -2,7 +2,7 @@
 <project default="windows" name="Create Runnable Jar for Project dsbudget">
 
 	<property name="build.dir" value="build"/>
-	<property name="linux-landing.dir" value="/home/soichi/"/>
+	<property name="linux-landing.dir" value="/home/soichi/Desktop"/>
 	
 	<target name="windows" depends="clean, compile, jar, win-package"></target>
 	<target name="linux" depends="clean, compile, jar, linux-package"></target>
