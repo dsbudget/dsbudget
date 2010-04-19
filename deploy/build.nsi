@@ -123,9 +123,9 @@ Section "Normal" ; (default section)
 			
 			IfFileExists $0 CopyOld CopySample
 			CopyOld:
-				messageBox MB_OK "You have SimpleD Budget document in $0. Creating a copy for dsBudget at $APPDIR\dsBudget."
+				messageBox MB_OK "You have SimpleD Budget document in $0. Creating a copy for dsBudget at $APPDATA\dsBudget."
 				DetailPrint "Copying SimpleD Budget doc from program files location"
-				CopyFiles $0 $APPDIR/BudgetDocument.xml
+				CopyFiles $0 $APPDATA/BudgetDocument.xml
 				Goto DoneDocInstall
 				
 			CopySample:
@@ -133,7 +133,7 @@ Section "Normal" ; (default section)
 				File "BudgetDocument.xml"
 			
 		;I've heard that windows 7 somehow leaves the document in read-only state.. let's see if this helps
-		SetFileAttributes $INDSTDIR/BudgetDocument.xml FILE_ATTRIBUTE_NORMAL
+		SetFileAttributes $INSTDIR/BudgetDocument.xml FILE_ATTRIBUTE_NORMAL
 	
 	DoneDocInstall:
 	
