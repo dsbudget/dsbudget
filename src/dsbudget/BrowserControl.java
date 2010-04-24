@@ -1,5 +1,4 @@
 package dsbudget;
-import java.io.IOException;
 
 //source -- http://www.java-tips.org/java-se-tips/java.util/opening-default-browser-58.html
 
