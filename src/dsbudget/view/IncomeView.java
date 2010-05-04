@@ -196,11 +196,6 @@ public class IncomeView extends DivRep {
 			nettotal = nettotal.add(total);
 			String name = income.getName();
 			
-			if (income.balance_from != null)
-			{
-				name = Labels.getString(INV_LABEL_BALANCE_FROM, income.balance_from.name);
-			}
-			
 			if(!mainview.page.hide_income) {
 				//income
 				out.write("<tr class=\"income\" onclick=\"divrep('"+getNodeID()+"', event, '"+income.toString()+"')\">");
