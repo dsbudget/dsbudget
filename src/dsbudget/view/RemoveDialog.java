@@ -7,6 +7,7 @@ import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepStaticContent;
 
 import dsbudget.Main;
+import dsbudget.i18n.Labels;
 import dsbudget.model.Budget;
 import dsbudget.model.Income;
 import dsbudget.model.Page;
@@ -20,11 +21,11 @@ public class RemoveDialog extends DivRepDialog
 	public RemoveDialog(DivRep parent, Budget _budget, Page _current_page) {
 		super(parent, true);
 		
-		setTitle("Remove Page");
+		setTitle(Labels.getString(RED_LABEL_REMOVE_PAGE));
 		budget = _budget;
 		current_page = _current_page;
 		
-		new DivRepStaticContent(this, "Do you really want to remove this page?");
+		new DivRepStaticContent(this, Labels.getString(RED_LABEL_REMOVE_PAGE_VALIDATION));
 	}
 	
 	public void onSubmit() {
@@ -57,4 +58,8 @@ public class RemoveDialog extends DivRepDialog
 	public void onCancel() {
 		close();	
 	}
+	
+	public static final String RED_LABEL_REMOVE_PAGE = "RemoveDialog.LABEL_REMOVE_PAGE";
+	public static final String RED_LABEL_REMOVE_PAGE_VALIDATION = "RemoveDialog.LABEL_REMOVE_PAGE_VALIDATION";
+
 }

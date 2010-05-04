@@ -10,6 +10,7 @@ import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 
 import dsbudget.Main;
+import dsbudget.i18n.Labels;
 import dsbudget.model.Budget;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
@@ -76,7 +77,7 @@ public class MainView extends DivRep {
 			} else if(item.equals("balance")) {
 				balanceview.render(out);
 			} else {
-				logger.error("Unknown section_order token in the configuration: " + item);
+				logger.error(Labels.getHtmlEscapedString(MAV_MESSAGE_UNKNOWN_SECTION_ORDER, item));
 			}
 		}
 		
@@ -187,4 +188,7 @@ public class MainView extends DivRep {
 	public void save() {
 		budget.save();
 	}
+	
+	public static final String MAV_MESSAGE_UNKNOWN_SECTION_ORDER = "MainView.MESSAGE_UNKNOWN_SECTION_ORDER";
+
 }

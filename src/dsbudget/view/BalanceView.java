@@ -8,6 +8,8 @@ import java.text.NumberFormat;
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 
+import dsbudget.i18n.Labels;
+
 class BalanceView extends DivRep 
 {
 	MainView mainview;
@@ -30,15 +32,23 @@ class BalanceView extends DivRep
 	@Override
 	public void render(PrintWriter out) {
 		out.write("<div class=\"balanceview round8\" id=\""+getNodeID()+"\">");
-		out.write("<h2>Overview</h2>");
+		out.write("<h2>");
+		out.write(Labels.getHtmlEscapedString(BAV_LABEL_HEADER));
+		out.write("</h2>");
 		
 		out.write("<table class=\"balancetable\" width=\"100%\">");
 		
 		out.write("<tr class=\"balance_header\">");
 		out.write("<th width=\"20px\"></th>");
-		out.write("<th style=\"text-align: right;\">Total Net Income</th>");
-		out.write("<th style=\"text-align: right;\">Total Expenses</th>");
-		out.write("<th style=\"text-align: right;\">Total Balance</th>");
+		out.write("<th style=\"text-align: right;\">");
+		out.write(Labels.getHtmlEscapedString(BAV_LABEL_TOTAL_NET_INCOME));
+		out.write("</th>");
+		out.write("<th style=\"text-align: right;\">");
+		out.write(Labels.getHtmlEscapedString(BAV_LABEL_TOTAL_EXPENSES));
+		out.write("</th>");
+		out.write("<th style=\"text-align: right;\">");
+		out.write(Labels.getHtmlEscapedString(BAV_LABEL_TOTAL_BALANCE));
+		out.write("</th>");
 		out.write("<th width=\"20px\"></th>");
 		out.write("</tr>");
 		
@@ -62,4 +72,10 @@ class BalanceView extends DivRep
 		}
 		out.write("<td style=\"text-align: right;\" class=\""+negative+"\">" + nf.format(amount) + "</td>");
 	}
+	
+	public static final String BAV_LABEL_HEADER = "BalanceView.LABEL_HEADER";;
+	public static final String BAV_LABEL_TOTAL_NET_INCOME = "BalanceView.LABEL_TOTAL_NET_INCOME";
+	public static final String BAV_LABEL_TOTAL_EXPENSES = "BalanceView.LABEL_TOTAL_EXPENSES";
+	public static final String BAV_LABEL_TOTAL_BALANCE = "BalanceView.LABEL_TOTAL_BALANCE";
+
 }

@@ -14,6 +14,7 @@ import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepButton.Style;
 
+import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Deduction;
 import dsbudget.model.Expense;
@@ -31,7 +32,7 @@ public class IncomeView extends DivRep {
 		super(parent);
 		mainview = parent;
 		
-		addnewincome = new DivRepButton(this, "Add New Income");
+		addnewincome = new DivRepButton(this, Labels.getString(INV_LABEL_ADD_NEW_INCOME));
 		addnewincome.setStyle(DivRepButton.Style.ALINK);
 		addnewincome.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
@@ -152,12 +153,20 @@ public class IncomeView extends DivRep {
 		
 		out.write("<tr>");
 		out.write("<td colspan=\"3\">");
-		out.write("<h2>Income &amp; Deductions</h2>");
+		out.write("<h2>");
+		out.write(Labels.getHtmlEscapedString(INV_LABEL_HEADER));
+		out.write("</h2>");
 		out.write("</td>");
 		if(!mainview.page.hide_income) {
-			out.write("<th style=\"vertical-align: bottom; text-align: right\">Amount</th>");
-			out.write("<th width=\"90px\" style=\"vertical-align: bottom; text-align: right\">Deductions</th>");
-			out.write("<th width=\"90px\" style=\"vertical-align: bottom; text-align: right\">Net Income</th>");
+			out.write("<th style=\"vertical-align: bottom; text-align: right\">");
+			out.write(Labels.getHtmlEscapedString(INV_LABEL_AMOUNT));
+			out.write("</th>");
+			out.write("<th width=\"90px\" style=\"vertical-align: bottom; text-align: right\">");
+			out.write(Labels.getHtmlEscapedString(INV_LABEL_DEDUCTIONS));
+			out.write("</th>");
+			out.write("<th width=\"90px\" style=\"vertical-align: bottom; text-align: right\">");
+			out.write(Labels.getHtmlEscapedString(INV_LABEL_NET_INCOME));
+			out.write("</th>");
 		} else {
 			out.write("<th colspan=\"3\"></th>");
 		}
@@ -174,7 +183,7 @@ public class IncomeView extends DivRep {
 			
 			out.write("<table width=\"100%\">");
 			
-			DivRepButton addnewdeduction = new DivRepButton(this, "Add New Deduction");
+			DivRepButton addnewdeduction = new DivRepButton(this, Labels.getString(INV_LABEL_ADD_NEW_DEDUCTION));
 			addnewdeduction.setStyle(DivRepButton.Style.ALINK);
 			addnewdeduction.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
@@ -186,6 +195,11 @@ public class IncomeView extends DivRep {
 			BigDecimal total = amount.subtract(total_deduction);
 			nettotal = nettotal.add(total);
 			String name = income.getName();
+			
+			if (income.balance_from != null)
+			{
+				name = Labels.getString(INV_LABEL_BALANCE_FROM, income.balance_from.name);
+			}
 			
 			if(!mainview.page.hide_income) {
 				//income
@@ -200,9 +214,9 @@ public class IncomeView extends DivRep {
 				
 				if(income.deductions.size() > 0) {
 					out.write("<td width=\"120px\" class=\"note\">");
-					DivRepButton showhidedeductionbutton = new DivRepButton(this, "Show Deductions");
+					DivRepButton showhidedeductionbutton = new DivRepButton(this, Labels.getString(INV_LABEL_SHOW_DEDUCTIONS));
 					if(income.show_deductions) {
-						showhidedeductionbutton.setTitle("Hide Deductions");
+						showhidedeductionbutton.setTitle(Labels.getString(INV_LABEL_HIDE_DEDUCTIONS));
 					}
 					showhidedeductionbutton.setStyle(Style.ALINK);
 					showhidedeductionbutton.addEventListener(new DivRepEventListener() {
@@ -295,7 +309,9 @@ public class IncomeView extends DivRep {
 		out.write("</td>");
 		out.write("<td></td>");
 		if(mainview.getIncomes().size() > 1) {
-			out.write("<th colspan=\"2\" style=\"text-align: right;\">Total Net Income</th><th width=\"90px\" style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml((nf.format(nettotal)))+"</th>");
+			out.write("<th colspan=\"2\" style=\"text-align: right;\">");
+			out.write(Labels.getHtmlEscapedString(INV_LABEL_TOTAL_NET_INCOME));
+			out.write("</th><th width=\"90px\" style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml((nf.format(nettotal)))+"</th>");
 		} else {
 			out.write("<th></th><th></th><th></th>");
 			
@@ -309,6 +325,17 @@ public class IncomeView extends DivRep {
 		
 		out.write("</div>");
 	}
+
+	public static final String INV_LABEL_HEADER = "IncomeView.LABEL_HEADER";
+	public static final String INV_LABEL_ADD_NEW_INCOME = "IncomeView.LABEL_ADD_NEW_INCOME";
+	public static final String INV_LABEL_ADD_NEW_DEDUCTION = "IncomeView.LABEL_ADD_NEW_DEDUCTION";
+	public static final String INV_LABEL_AMOUNT = "IncomeView.LABEL_AMOUNT";
+	public static final String INV_LABEL_DEDUCTIONS = "IncomeView.LABEL_DEDUCTIONS";
+	public static final String INV_LABEL_NET_INCOME = "IncomeView.LABEL_NET_INCOME";
+	public static final String INV_LABEL_SHOW_DEDUCTIONS = "IncomeView.LABEL_SHOW_DEDUCTIONS";
+	public static final String INV_LABEL_HIDE_DEDUCTIONS = "IncomeView.LABEL_HIDE_DEDUCTIONS";
+	public static final String INV_LABEL_TOTAL_NET_INCOME = "IncomeView.LABEL_TOTAL_NET_INCOME";
+	public static final String INV_LABEL_BALANCE_FROM = "IncomeView.LABEL_BALANCE_FROM";
 
 }
 

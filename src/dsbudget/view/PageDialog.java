@@ -17,6 +17,7 @@ import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
 
+import dsbudget.i18n.Labels;
 import dsbudget.model.Budget;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
@@ -49,19 +50,19 @@ public class PageDialog extends DivRepDialog
 				pages_kv.put(page.getID(), page.name);
 			}
 			copy_from = new DivRepSelectBox(this, pages_kv);
-			copy_from.setNullLabel("(Create an Empty Page)");
-			copy_from.setLabel("Copy Income & Budgetting from");
+			copy_from.setNullLabel(Labels.getString(PAD_LABEL_CREATE_EMPTY_PAGE));
+			copy_from.setLabel(Labels.getString(PAD_LABEL_COPY_INCOME_BUDGETTING));
 			copy_from.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
 					usebalanceShowHide();
 				}});
 
 			TreeMap<Integer, String> kv = new TreeMap<Integer, String>();
-			kv.put(1, "Sum up and add as an income");
-			kv.put(2, "Add to each categories as negative expenses");
+			kv.put(1, Labels.getString(PAD_LABEL_SUM_UP_AND_ADD_AS_INCOME));
+			kv.put(2, Labels.getString(PAD_LABEL_ADD_TO_EACH_CATEGORY_AS_NEGATIVE_EXPENSE));
 			balance_handling = new DivRepSelectBox(this, kv);
-			balance_handling.setNullLabel("(Do Nothing)");
-			balance_handling.setLabel("What do you want to do with the balance?");
+			balance_handling.setNullLabel(Labels.getString(PAD_LABEL_DO_NOTHING));
+			balance_handling.setLabel(Labels.getString(PAD_LABEL_WHAT_DO_YOU_DO_WITH_BALANCE));
 		}
 		protected void onEvent(DivRepEvent e) {
 			// TODO Auto-generated method stub
@@ -92,14 +93,14 @@ public class PageDialog extends DivRepDialog
 	};
 	
 	public void open() {
-		throw new RuntimeException("please use open() with boolean");
+		throw new RuntimeException(Labels.getString(PAD_MESSAGE_DONT_USE_OPEN));
 	}
 	
 	public void open(Boolean _newpage) {
 		newpage = _newpage;
 		
 		if(newpage) {
-			setTitle("Create New Page");
+			setTitle(Labels.getString(PAD_LABEL_CREATE_NEW_PAGE));
 			
 			//set new name
 			Date today = new Date();     
@@ -113,7 +114,7 @@ public class PageDialog extends DivRepDialog
 			newpage_stuff.hidden = false;
 		} else {
 			//update current page settings
-			setTitle("Page Settings");	
+			setTitle(Labels.getString(PAD_LABEL_PAGE_SETTINGS));	
 			
 			title.setValue(current_page.name);
 			cdate.setValue(current_page.created);
@@ -137,13 +138,13 @@ public class PageDialog extends DivRepDialog
 		current_page = _current_page;
 
 		title = new DivRepTextBox(this);
-		title.setLabel("Title");
+		title.setLabel(Labels.getString(PAD_LABEL_TITLE));
 		title.setWidth(220);
 				
 		title.setRequired(true);
 		title.addValidator(new DivRepIValidator<String>() {
 			public String getErrorMessage() {
-				return "A page with the same title already exists";
+				return Labels.getString(PAD_MESSAGE_PAGE_TITLE_ALREADY_EXISTS);
 			}
 
 			public Boolean isValid(String value) {
@@ -159,7 +160,7 @@ public class PageDialog extends DivRepDialog
 		});
 		
 		cdate = new DivRepDate(this);
-		cdate.setLabel("Graph Beginning Date");
+		cdate.setLabel(Labels.getString(PAD_LABEL_GRAPH_BEGINNING_DATE));
 		cdate.setRequired(true);
 
 		newpage_stuff = new NewPageStuff(this);
@@ -236,7 +237,7 @@ public class PageDialog extends DivRepDialog
 					Expense balance_expense = new Expense();
 					balance_expense.amount = balance.negate();
 					balance_expense.date = newpage.created;
-					balance_expense.where = "(Balance from " + original.name + ")";
+					balance_expense.where = Labels.getString(PAD_LABEL_BALANCE_FROM, original.name);
 					balance_expense.description = "";
 					balance_expense.tentative = false;
 					category.expenses.add(balance_expense);
@@ -266,4 +267,22 @@ public class PageDialog extends DivRepDialog
 		cdate.render(out);
 		newpage_stuff.render(out);
 	}
+	
+	/**
+	 * Labels
+	 */
+	public static final String PAD_LABEL_CREATE_EMPTY_PAGE = "PageDialog.LABEL_CREATE_EMPTY_PAGE";
+	public static final String PAD_LABEL_COPY_INCOME_BUDGETTING = "PageDialog.LABEL_COPY_INCOME_BUDGETTING";
+	public static final String PAD_LABEL_SUM_UP_AND_ADD_AS_INCOME = "PageDialog.LABEL_SUM_UP_AND_ADD_AS_INCOME";
+	public static final String PAD_LABEL_ADD_TO_EACH_CATEGORY_AS_NEGATIVE_EXPENSE = "PageDialog.LABEL_ADD_TO_EACH_CATEGORY_AS_NEGATIVE_EXPENSE";
+	public static final String PAD_LABEL_DO_NOTHING = "PageDialog.LABEL_DO_NOTHING";
+	public static final String PAD_LABEL_WHAT_DO_YOU_DO_WITH_BALANCE = "PageDialog.LABEL_WHAT_DO_YOU_DO_WITH_BALANCE";
+	public static final String PAD_LABEL_CREATE_NEW_PAGE = "PageDialog.LABEL_CREATE_NEW_PAGE";
+	public static final String PAD_LABEL_PAGE_SETTINGS = "PageDialog.LABEL_PAGE_SETTINGS";
+	public static final String PAD_LABEL_TITLE = "PageDialog.LABEL_TITLE";
+	public static final String PAD_MESSAGE_PAGE_TITLE_ALREADY_EXISTS = "PageDialog.MESSAGE_PAGE_TITLE_ALREADY_EXISTS";
+	public static final String PAD_LABEL_GRAPH_BEGINNING_DATE = "PageDialog.LABEL_GRAPH_BEGINNING_DATE";
+	public static final String PAD_LABEL_BALANCE_FROM = "PageDialog.LABEL_BALANCE_FROM";
+	public static final String PAD_MESSAGE_DONT_USE_OPEN = "PageDialog.MESSAGE_DONT_USE_OPEN";
+
 }

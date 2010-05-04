@@ -15,6 +15,7 @@ import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepStaticContent;
 import com.divrep.common.DivRepTextBox;
 
+import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
 
@@ -39,50 +40,30 @@ public class ExpenseDialog extends DivRepDialog
 		public ExpenseDialogContent(DivRep parent) {
 			super(parent);
 			where = new DivRepTextBox(this);
-			where.setLabel("Where");
+			where.setLabel(Labels.getString(EXD_LABEL_WHERE));
 			where.setWidth(200);
 			where.setRequired(true);
 			
 			note = new DivRepTextBox(this);
-			note.setLabel("Note");
+			note.setLabel(Labels.getString(EXD_LABEL_NOTE));
 			note.setWidth(300);
 			
 			date = new DivRepDate(this);
-			date.setLabel("Date");
+			date.setLabel(Labels.getString(EXD_LABEL_DATE));
 			date.setRequired(true);
 			
 			amount = new DivRepMoneyAmount(this);
-			amount.setLabel("Amount");
+			amount.setLabel(Labels.getString(EXD_LABEL_AMOUNT));
 			amount.setWidth(200);
-			amount.setSampleValue(nf.format(10));
+			amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(EXD_LABEL_AMOUNT_SAMPLE))));
 			amount.setRequired(true);
-			/*
-			amount.addEventListener(new DivRepEventListener() {
-				public void handleEvent(DivRepEvent e) {
-					String value = e.value.trim();
-					amount.setValue("");
-					try {
-						BigDecimal b = new BigDecimal(value);
-						amount.setValue(nf.format(b));
-					} catch(NumberFormatException ne) {
-						try {
-							Number n = nf.parse(value);
-							amount.setValue(nf.format(n));
-						} catch (ParseException e1) {
-							//any other idea?
-						}
-					}
-					amount.redraw();
-				}
-			});
-			*/
 			
 			/////////////////////////////////////////////////////////////
 			//
 			// Following are some optional stuff (that should probably hidden)
 			//
 			tentative = new DivRepCheckBox(this);
-			tentative.setLabel("This is a scheduled (tentative) expense. Don't subtract it from the remaining.");	
+			tentative.setLabel(Labels.getString(EXD_LABEL_TENTATIVE));	
 		}
 
 		protected void onEvent(DivRepEvent e) {
@@ -121,14 +102,14 @@ public class ExpenseDialog extends DivRepDialog
 		category = _category;
 		expense = _expense;
 		if(expense == null) {
-			setTitle("New Expense - " + category.name);
+			setTitle(Labels.getString(EXD_LABEL_NEW_EXPENSE, category.name));
 			where.setValue("");
 			amount.setValue("");
 			note.setValue("");
 			date.setValue(new Date());
 			tentative.setValue(false);
 		} else {
-			setTitle("Update Expense - " + category.name);
+			setTitle(Labels.getString(EXD_LABEL_UPDATE_EXPENSE, category.name));
 			where.setValue(expense.where);
 			amount.setValue(nf.format(expense.amount));
 			note.setValue(expense.description);
@@ -191,4 +172,14 @@ public class ExpenseDialog extends DivRepDialog
 		valid &= tentative.isValid();
 		return valid;
 	}
+	
+	public static final String EXD_LABEL_WHERE = "ExpenseDialog.LABEL_WHERE";
+	public static final String EXD_LABEL_NOTE = "ExpenseDialog.LABEL_NOTE";
+	public static final String EXD_LABEL_DATE = "ExpenseDialog.LABEL_DATE";
+	public static final String EXD_LABEL_AMOUNT = "ExpenseDialog.LABEL_AMOUNT";
+	public static final String EXD_LABEL_AMOUNT_SAMPLE = "ExpenseDialog.LABEL_AMOUNT_SAMPLE";
+	public static final String EXD_LABEL_TENTATIVE = "ExpenseDialog.LABEL_TENTATIVE";
+	public static final String EXD_LABEL_NEW_EXPENSE = "ExpenseDialog.LABEL_NEW_EXPENSE";
+	public static final String EXD_LABEL_UPDATE_EXPENSE = "ExpenseDialog.LABEL_UPDATE_EXPENSE";
+
 };

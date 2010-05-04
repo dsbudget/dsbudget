@@ -20,6 +20,7 @@ import com.divrep.common.DivRepTextBox;
 import com.divrep.common.DivRepToggler;
 import com.divrep.common.DivRepButton.Style;
 
+import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
 import dsbudget.model.Page;
@@ -32,7 +33,7 @@ public class ExpenseView extends DivRep {
 	
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
 	DateFormat df = DateFormat.getDateInstance();
-	
+
 	class PageBalanceGraphView extends DivRep
 	{
 		Page page;
@@ -103,10 +104,10 @@ public class ExpenseView extends DivRep {
 		{
 			if(graph.isHidden()) {
 				//graph_toggler.setTitle("css/images/chart_close.png");
-				graph_toggler.setTitle("Show Balance Graph");
+				graph_toggler.setTitle(Labels.getString(EXV_LABEL_SHOW_BALANCE_GRAPH));
 			} else {
 				//graph_toggler.setTitle("css/images/chart_open.png");		
-				graph_toggler.setTitle("Hide Balance Graph");	
+				graph_toggler.setTitle(Labels.getString(EXV_LABEL_HIDE_BALANCE_GRAPH));	
 			}	
 		}
 		
@@ -132,7 +133,7 @@ public class ExpenseView extends DivRep {
 				}
 			});
 			
-			addnewexpense = new DivRepButton(this, "Add New Expense");
+			addnewexpense = new DivRepButton(this, Labels.getString(EXV_LABEL_ADD_NEW_EXPENSE));
 			addnewexpense.setStyle(DivRepButton.Style.ALINK);
 			addnewexpense.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
@@ -184,7 +185,7 @@ public class ExpenseView extends DivRep {
 				String decoration = "";
 				if(expense.tentative) {
 					expense_type = "tentative";
-					decoration += "<b>(Scheduled)</b>";
+					decoration += "<b>" + Labels.getHtmlEscapedString(EXV_LABEL_EXPENSE_SCHEDULED) + "</b>";
 				}
 				out.write("<tr class=\"expense "+expense_type+"\" onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"')\">");
 				out.write("<th>&nbsp;</th>"); //side
@@ -219,7 +220,9 @@ public class ExpenseView extends DivRep {
 			graph_toggler.render(out);
 			out.write("</td>"); //desc
 			
-			out.write("<th style=\"text-align: right;\">Remaining</th>");
+			out.write("<th style=\"text-align: right;\">");
+			out.write(Labels.getHtmlEscapedString(EXV_LABEL_REMAINING));
+			out.write("</th>");
 			String negative = "";
 			if(remain.compareTo(BigDecimal.ZERO) < 0) {
 				negative = "negative";
@@ -238,7 +241,9 @@ public class ExpenseView extends DivRep {
 				
 				out.write("<td></td>");
 				out.write("<td class=\"newitem\"></td>");
-				out.write("<th colspan=\"2\" style=\"text-align: right;\">Scheduled Remaining</th>");
+				out.write("<th colspan=\"2\" style=\"text-align: right;\">");
+				out.write(Labels.getHtmlEscapedString(EXV_LABEL_SCHEDULED_REMAINING));
+				out.write("</th>");
 				negative = "";
 				if(scheduled_remaining.compareTo(BigDecimal.ZERO) < 0) {
 					negative = "negative";
@@ -272,7 +277,7 @@ public class ExpenseView extends DivRep {
 				mainview.save();
 			}
 		});
-		
+
 		initView();
 	}
 	
@@ -291,7 +296,7 @@ public class ExpenseView extends DivRep {
 		category_views = new ArrayList<CategoryView>();
 		for(Category category : mainview.getCategories()) {	
 			category_views.add(new CategoryView(this, category));
-		}		
+		}
 	}
 	
 
@@ -312,7 +317,9 @@ public class ExpenseView extends DivRep {
 	public void render(PrintWriter out) {
 		out.write("<div class=\"expenseview round8\" id=\""+getNodeID()+"\">");
 		out.write("<table width=\"100%\"><tr>");
-		out.write("<th><h2>Expenses</h2></th>");
+		out.write("<th><h2>");
+		out.write(Labels.getHtmlEscapedString(EXV_LABEL_HEADER));
+		out.write("</h2></th>");
 		out.write("<th width=\"20px\">");
 		toggler.render(out);
 		out.write("</th>");
@@ -324,5 +331,14 @@ public class ExpenseView extends DivRep {
 		}
 		out.write("</div>");
 	}
+
+	public static final String EXV_LABEL_HEADER = "ExpenseView.LABEL_HEADER";
+	public static final String EXV_LABEL_SHOW_BALANCE_GRAPH = "ExpenseView.LABEL_SHOW_BALANCE_GRAPH";
+	public static final String EXV_LABEL_HIDE_BALANCE_GRAPH = "ExpenseView.LABEL_HIDE_BALANCE_GRAPH";
+	public static final String EXV_LABEL_ADD_NEW_EXPENSE = "ExpenseView.LABEL_ADD_NEW_EXPENSE";
+	public static final String EXV_LABEL_IMPORT_EXPENSES = "ExpenseView.LABEL_ADD_NEW_EXPENSES";
+	public static final String EXV_LABEL_EXPENSE_SCHEDULED = "ExpenseView.LABEL_EXPENSE_SCHEDULED";
+	public static final String EXV_LABEL_REMAINING = "ExpenseView.LABEL_REMAINING";
+	public static final String EXV_LABEL_SCHEDULED_REMAINING = "ExpenseView.LABEL_SCHEDULED_REMAINING";
 
 }

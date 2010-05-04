@@ -16,6 +16,7 @@ import com.divrep.validator.DivRepIValidator;
 
 import dsbudget.model.Income;
 import dsbudget.model.Page;
+import dsbudget.i18n.Labels;
 
 public class IncomeDialog extends DivRepDialog
 {
@@ -37,7 +38,7 @@ public class IncomeDialog extends DivRepDialog
 		setWidth(350);
 		
 		balance_from = new DivRepCheckBox(this);
-		balance_from.setLabel("Use balance from another page");
+		balance_from.setLabel(Labels.getString(IND_LABEL_USE_BALANCE_FROM_ANOTHER_PAGE));
 		balance_from.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
 				showHideBalance();
@@ -48,7 +49,7 @@ public class IncomeDialog extends DivRepDialog
 			pages_kv.put(page.getID(), page.name);
 		}
 		balance_from_name = new DivRepSelectBox(this, pages_kv);
-		balance_from_name.setLabel("Balance From");
+		balance_from_name.setLabel(Labels.getString(IND_LABEL_BALANCE_FROM));
 		balance_from_name.setRequired(true);
 		balance_from_name.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
@@ -56,7 +57,7 @@ public class IncomeDialog extends DivRepDialog
 		});
 		balance_from_name.addValidator(new DivRepIValidator<Integer>() {
 			public String getErrorMessage() {
-				return "Circular depencency detected.";
+				return Labels.getString(IND_MESSAGE_CIRCULAR_DEPENDENCY_DETECTED);
 			}
 
 			public Boolean isValid(Integer value) {
@@ -71,7 +72,7 @@ public class IncomeDialog extends DivRepDialog
 		});
 		
 		amount = new DivRepMoneyAmount(this);
-		amount.setLabel("Amount");
+		amount.setLabel(Labels.getString(IND_LABEL_AMOUNT));
 		amount.setWidth(200);
 		amount.setSampleValue(nf.format(10));
 		amount.setRequired(true);
@@ -97,7 +98,7 @@ public class IncomeDialog extends DivRepDialog
 		*/
 		
 		description = new DivRepTextBox(this);
-		description.setLabel("Name");
+		description.setLabel(Labels.getString(IND_LABEL_NAME));
 		description.setWidth(200);
 		description.setRequired(true);		
 	}
@@ -106,12 +107,12 @@ public class IncomeDialog extends DivRepDialog
 	{
 		income = _income;
 		if(income == null) {
-			setTitle("New Income");
+			setTitle(Labels.getString(IND_LABEL_NEW_INCOME));
 			balance_from.setValue(false);
 			description.setValue("");
-			amount.setValue("");				
+			amount.setValue("");
 		} else {
-			setTitle("Update Income");
+			setTitle(Labels.getString(IND_LABEL_UPDATE_INCOME));
 			if(income.balance_from != null) {
 				balance_from.setValue(true);
 				balance_from_name.setValue(income.balance_from.getID());
@@ -195,4 +196,13 @@ public class IncomeDialog extends DivRepDialog
 		//valid &= deductionview.isValid();
 		return valid;
 	}
+	
+	public static final String IND_LABEL_AMOUNT = "IncomeDialog.LABEL_AMOUNT";
+	public static final String IND_LABEL_USE_BALANCE_FROM_ANOTHER_PAGE = "IncomeDialog.LABEL_USE_BALANCE_FROM_ANOTHER_PAGE";
+	public static final String IND_LABEL_BALANCE_FROM = "IncomeDialog.LABEL_BALANCE_FROM";
+	public static final String IND_LABEL_NAME = "IncomeDialog.LABEL_NAME";
+	public static final String IND_LABEL_NEW_INCOME = "IncomeDialog.LABEL_NEW_INCOME";
+	public static final String IND_LABEL_UPDATE_INCOME = "IncomeDialog.LABEL_UPDATE_INCOME";
+	public static final String IND_MESSAGE_CIRCULAR_DEPENDENCY_DETECTED = "IncomeDialog.MESSAGE_CIRCULAR_DEPENDENCY_DETECTED";;
+
 };

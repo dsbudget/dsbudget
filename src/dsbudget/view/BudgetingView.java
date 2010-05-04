@@ -1,12 +1,9 @@
 package dsbudget.view;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -14,13 +11,10 @@ import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
-import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepSlider;
-import com.divrep.common.DivRepTextBox;
 
+import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
-import dsbudget.model.Expense;
-import dsbudget.model.Page;
 
 public class BudgetingView extends DivRep {
 	MainView mainview;
@@ -33,7 +27,7 @@ public class BudgetingView extends DivRep {
 		super(parent);
 		mainview = parent;
 	
-		addnewcategory = new DivRepButton(this, "Add New Bucket");
+		addnewcategory = new DivRepButton(this, Labels.getString(BUV_LABEL_ADD_BUCKET));
 		addnewcategory.setStyle(DivRepButton.Style.ALINK);
 		addnewcategory.addEventListener(new DivRepEventListener() {
 			public void handleEvent(DivRepEvent e) {
@@ -139,7 +133,10 @@ public class BudgetingView extends DivRep {
 		Long max = total_free_income.longValue();
 		if(max > 0) {
 			out.write("<table width=\"100%\">");
-			out.write("<tr class=\"header\"><td width=\"300px\"><h2>Budgeting</h2></td><th style=\"vertical-align: bottom\" class=\"note\">");
+			out.write("<tr class=\"header\"><td width=\"300px\">");
+			out.write("<h2>");
+			out.write(Labels.getHtmlEscapedString(BUV_LABEL_HEADER));
+			out.write("</h2></td><th style=\"vertical-align: bottom\" class=\"note\">");
 			if(!mainview.page.hide_budget) {
 				out.write(StringEscapeUtils.escapeHtml(nf.format(0)));
 			}
@@ -223,7 +220,9 @@ public class BudgetingView extends DivRep {
 			}
 			out.write("</td>");
 
-			out.write("<th style=\"text-align: right;\">Total Unbudgeted</th><th width=\"90px\" style=\"text-align: right;\">");
+			out.write("<th style=\"text-align: right;\">");
+			out.write(Labels.getHtmlEscapedString(BUV_LABEL_TOTAL_UNBUDGETED));
+			out.write("</th><th width=\"90px\" style=\"text-align: right;\">");
 			total_unbudgetted_view.render(out);
 			out.write("</th><th width=\"20px\"></th></tr>");
 		
@@ -234,15 +233,26 @@ public class BudgetingView extends DivRep {
 			out.write("</script>");
 			
 			if(mainview.getTotalUnBudgetted().compareTo(BigDecimal.ZERO) < 0) {
-				out.write("<p class=\"divrep_elementerror\">Total budgeted is more than the total income. Please reduce the amount of budgets.</p>");
+				out.write("<p class=\"divrep_elementerror\">");
+				out.write(Labels.getHtmlEscapedString(BUV_LABEL_EXCESSIVE_TOTAL_BUDGET));
+				out.write("/p>");
 			}
 		} else {
-			out.write("<h2>Budgeting</h2>");
-			out.write("<p class=\"divrep_elementerror\">Please add income.</p>");
+			out.write("<h2>");
+			out.write(Labels.getHtmlEscapedString(BUV_LABEL_HEADER));
+			out.write("</h2>");
+			out.write("<p class=\"divrep_elementerror\">");
+			out.write(Labels.getHtmlEscapedString(BUV_LABEL_PLEASE_ADD_INCOME));
+			out.write("</p>");
 		}
 			
 		out.write("</div>");
 	
 	}
+	public static final String BUV_LABEL_ADD_BUCKET = "BudgetingView.LABEL_ADD_BUCKET";
+	public static final String BUV_LABEL_HEADER = "BudgetingView.LABEL_HEADER";
+	public static final String BUV_LABEL_TOTAL_UNBUDGETED = "BudgetingView.LABEL_TOTAL_UNBUDGETED";
+	public static final String BUV_LABEL_EXCESSIVE_TOTAL_BUDGET = "BudgetingView.LABEL_EXCESSIVE_TOTAL_BUDGET";
+	public static final String BUV_LABEL_PLEASE_ADD_INCOME = "BudgetingView.LABEL_PLEASE_ADD_INCOME";
 
 }

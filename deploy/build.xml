@@ -36,6 +36,7 @@
             <fileset dir="../src">
 				<include name="**/*.png"/>
 				<include name="log4j.properties"/>
+				<include name="**/labels*.properties"/>
 		    </fileset>
             <fileset dir="bin"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/lib/catalina-optional.jar"/>

@@ -1,12 +1,15 @@
 package dsbudget.model;
 
 import java.math.BigDecimal;
+
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import dsbudget.i18n.Labels;
 
 public class Income extends ObjectID implements XMLSerializer {
 	private String __balance_from_name; //used only temporarily to load the balance_from lateron
@@ -69,14 +72,14 @@ public class Income extends ObjectID implements XMLSerializer {
 		}
 		return balance_from.hasBalanceCircle(origin);
 	}
-	
-	public String getName() {
-		String name = description;
-		if(balance_from != null) {
-			name = "Balance from " + balance_from.name;
-		}
-		return name;
-	}
+		
+ 	public String getName() {
+ 		String name = description;
+ 		if(balance_from != null) {
+ 			name = Labels.getString("IncomeView.LABEL_BALANCE_FROM", balance_from.name);
+ 		}
+ 		return name;
+  	}
 	
 	public BigDecimal getTotalDeduction() {
 		BigDecimal total = new BigDecimal(0);

@@ -19,6 +19,7 @@ import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepButton.Style;
 
 import dsbudget.Main;
+import dsbudget.i18n.Labels;
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
@@ -60,7 +61,7 @@ public class MainServlet extends ServletBase  {
 			} else {
 				//we have no page whatsoever - create one
 				page = new Page(budget);
-				page.name = "Untitled";
+				page.name = Labels.getString(M_LABEL_UNTITLED);
 				budget.pages.add(page);
 			}
 		}
@@ -80,25 +81,25 @@ public class MainServlet extends ServletBase  {
 				
 				LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
 				
-				pagesettingsbutton = new DivRepButton(pageroot, "Settings");
+				pagesettingsbutton = new DivRepButton(pageroot, Labels.getString(M_LABEL_SETTINGS));
 				pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
-				pagesettingsbutton.setToolTip("Edit settings for currently opened page");
+				pagesettingsbutton.setToolTip(Labels.getString(M_LABEL_EDIT_CURRENT_PAGE_SETTINGS));
 				pagesettingsbutton.addEventListener(new DivRepEventListener(){
 					public void handleEvent(DivRepEvent e) {
 						pagedialog.open(false);
 					}
 				});
 				
-				removepagebutton = new DivRepButton(pageroot, "Remove");
+				removepagebutton = new DivRepButton(pageroot, Labels.getString(M_LABEL_REMOVE));
 				removepagebutton.setStyle(DivRepButton.Style.ALINK);
-				removepagebutton.setToolTip("Remove currently opened page");
+				removepagebutton.setToolTip(Labels.getString(M_LABEL_REMOVE_OPENED_PAGE));
 				removepagebutton.addEventListener(new DivRepEventListener(){
 					public void handleEvent(DivRepEvent e) {
 						removedialog.open();
 					}
 				});
 				
-				newpagebutton = new DivRepButton(pageroot, "New Page");
+				newpagebutton = new DivRepButton(pageroot, Labels.getString(M_LABEL_NEW_PAGE));
 		        newpagebutton.setStyle(Style.ALINK);
 		        newpagebutton.addEventListener(new DivRepEventListener() {
 					public void handleEvent(DivRepEvent e) {
@@ -172,4 +173,12 @@ public class MainServlet extends ServletBase  {
 		pagedialog.render(out);
 		removedialog.render(out);
 	}
+	
+	public static final String M_LABEL_SETTINGS = "Main.LABEL_SETTINGS";
+	public static final String M_LABEL_EDIT_CURRENT_PAGE_SETTINGS = "Main.LABEL_EDIT_CURRENT_PAGE_SETTINGS";
+	public static final String M_LABEL_REMOVE = "Main.LABEL_REMOVE";
+	public static final String M_LABEL_REMOVE_OPENED_PAGE = "Main.LABEL_REMOVE_OPENED_PAGE";
+	public static final String M_LABEL_NEW_PAGE = "Main.LABEL_NEW_PAGE";
+	public static final String M_LABEL_UNTITLED = "Main.LABEL_UNTITLED";
+
 }

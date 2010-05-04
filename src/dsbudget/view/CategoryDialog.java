@@ -6,15 +6,12 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
-import com.divrep.DivRep;
-import com.divrep.DivRepEvent;
-import com.divrep.DivRepEventListener;
-import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepColorPicker;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
 
+import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Page;
 
@@ -38,15 +35,15 @@ public class CategoryDialog extends DivRepDialog
 		setWidth(450);
 	
 		name = new DivRepTextBox(this);
-		name.setLabel("Name");
+		name.setLabel(Labels.getString(CAD_LABEL_NAME));
 		name.setWidth(200);
 		name.setRequired(true);
-		name.setSampleValue("Mortgage");
+		name.setSampleValue(Labels.getString(CAD_LABEL_NAME_SAMPLE));
 		
 		amount = new DivRepMoneyAmount(this);
-		amount.setLabel("Budget");
+		amount.setLabel(Labels.getString(CAD_BUDGET_NAME));
 		amount.setWidth(200);
-		amount.setSampleValue(nf.format(700));
+		amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(CAD_BUDGET_SAMPLE))));
 		amount.setRequired(true);
 		/*
 		amount.addEventListener(new DivRepEventListener() {
@@ -70,7 +67,7 @@ public class CategoryDialog extends DivRepDialog
 		*/
 		amount.addValidator(new DivRepIValidator<String>(){
 			public String getErrorMessage() {
-				return "Please use a positive amount.";
+				return Labels.getString(CAD_MESSAGE_USE_POSITIVE_AMOUNT);
 			}
 
 			public Boolean isValid(String value) {
@@ -88,11 +85,11 @@ public class CategoryDialog extends DivRepDialog
 			}});
 		
 		description = new DivRepTextBox(this);
-		description.setLabel("Note");
+		description.setLabel(Labels.getString(CAD_LABEL_NOTE));
 		description.setWidth(290);
 		
 		color = new DivRepColorPicker(this);
-		color.setLabel("Color");
+		color.setLabel(Labels.getString(CAD_LABEL_COLOR));
 
 		for(Page page : mainview.getPages()) {
 			for(Category category : page.categories) {
@@ -108,14 +105,14 @@ public class CategoryDialog extends DivRepDialog
 	{
 		category = _category;
 		if(category == null) {
-			setTitle("New Category");
+			setTitle(Labels.getString(CAD_LABEL_NEW_CATEGORY));
 			name.setValue("");
 			description.setValue("");
 			amount.setValue("");	
 			color.setValue(Color.blue);
 			//auto_adjust.setValue(false);
 		} else {
-			setTitle("Update Category");
+			setTitle(Labels.getString(CAD_LABEL_UPDATE_CATEGORY));
 			name.setValue(category.name);
 			description.setValue(category.description);
 			amount.setValue(nf.format(category.amount));
@@ -188,4 +185,15 @@ public class CategoryDialog extends DivRepDialog
 		//valid &= auto_adjust.isValid();
 		return valid;
 	}
+	
+	public static final String CAD_LABEL_NAME = "CategoryDialog.LABEL_NAME";
+	public static final String CAD_LABEL_NAME_SAMPLE = "CategoryDialog.LABEL_NAME_SAMPLE";
+	public static final String CAD_BUDGET_NAME = "CategoryDialog.LABEL_BUDGET";
+	public static final String CAD_BUDGET_SAMPLE = "CategoryDialog.LABEL_BUDGET_SAMPLE";
+	public static final String CAD_LABEL_NOTE = "CategoryDialog.LABEL_NOTE";
+	public static final String CAD_LABEL_COLOR = "CategoryDialog.LABEL_COLOR";
+	public static final String CAD_LABEL_NEW_CATEGORY = "CategoryDialog.LABEL_NEW_CATEGORY";
+	public static final String CAD_LABEL_UPDATE_CATEGORY = "CategoryDialog.LABEL_UPDATE_CATEGORY";
+	public static final String CAD_MESSAGE_USE_POSITIVE_AMOUNT = "CategoryDialog.MESSAGE_PLEASE_USE_POSITIVE_AMOUNT";
+
 };
