@@ -64,8 +64,15 @@ public class Budget implements XMLSerializer {
 		}
 	}
 	
-	public static Budget loadXML(File xmlpath) throws ParserConfigurationException, SAXException, IOException {
-		Budget budget = new Budget();
+	public static Budget loadXML(File xmlpath, Budget budget) throws ParserConfigurationException, SAXException, IOException {
+		
+		//why am I re using budget? Because each servlet only initializes budet reference once
+		//during init().. it's very hard to reset all of them
+		if(budget == null) {
+			budget = new Budget();
+		} else {
+			budget.pages.clear();
+		}
 		
 		//Load as DOM
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

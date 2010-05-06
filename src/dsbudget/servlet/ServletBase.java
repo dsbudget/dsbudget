@@ -13,9 +13,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import com.divrep.DivRep;
 
@@ -26,45 +28,51 @@ import dsbudget.model.Page;
 public class ServletBase extends HttpServlet {
 	static Logger logger = Logger.getLogger(ServletBase.class);
 	
-	DivRep pageroot;
-	Budget budget;
-	Page page; //current page
+	//DivRep pageroot;
+	Budget budget = null;
+	Page current_page; 
+
+	protected void loadBudgetDocument() {
+		String path = Main.conf.getProperty("document");
+		log("Loading Budget Document at: " + path);
+		try {
+			//load the document
+			budget = Budget.loadXML(new File(path), budget);	
+		} catch (Exception e) {
+			
+			JOptionPane.showMessageDialog(null, "Failed to open document.\n" + e.getMessage() + "\nCreating an empty document.");
+						
+			logger.error("Failed to load XML " + path + " -- " , e);
+			logger.info("Creaing empty doc");
+			
+			budget = new Budget();
+			Page page = Main.createEmptyPage(budget);
+			budget.pages.add(page);
+		}
+			
+		logger.info("Loaded " + budget.pages.size() + " pages");
+	}
 	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		
-		Date today = new Date();
-		
+			
 		budget = (Budget)config.getServletContext().getAttribute("budget");
 		if(budget == null) {
+			loadBudgetDocument();
+			
 			String path = Main.conf.getProperty("document");
-			log("Loading Budget Document at: " + path);
+			Date today = new Date();
+			
+			//create backup
 			try {
-				//load the document
-				budget = Budget.loadXML(new File(path));
-				
-				//create a backup
-				try {
-					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd.HH-mm-ss");
-					String backup_path = path + ".backup." + format.format(today);
-					logger.info("Backing up the current document to " + backup_path);
-					copy(path, backup_path);
-				} catch (Exception e) {
-					logger.error("Failed to create a backup: ",e);
-				}
-				
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd.HH-mm-ss");
+				String backup_path = path + ".backup." + format.format(today);
+				logger.info("Backing up the current document to " + backup_path);
+				copy(path, backup_path);
 			} catch (Exception e) {
-				
-				JOptionPane.showMessageDialog(null, "Failed to open document.\n" + e.getMessage() + "\nCreating an empty document.");
-							
-				logger.error("Failed to load XML " + path + " -- " , e);
-				logger.info("Creaing empty doc");
-				
-				budget = new Budget();
-				Page page = Main.createEmptyPage(budget);
-				budget.pages.add(page);
+				logger.error("Failed to create a backup: ",e);
 			}
-		
+			
 			//remove old backups
 			long keep_backup_for = 1000*3600*24*Long.parseLong(Main.conf.getProperty("keep_backup_for").trim());
 			File parent = new File(".");
@@ -80,7 +88,6 @@ public class ServletBase extends HttpServlet {
 			}
 			
 			config.getServletContext().setAttribute("budget", budget);
-			logger.info("Loaded " + budget.pages.size() + " pages");
 		}
 	}
 
@@ -101,7 +108,7 @@ public class ServletBase extends HttpServlet {
 	{	
 		out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 		out.println("<html><head>");
-		out.println("<title>"+StringEscapeUtils.escapeHtml(page.name)+"</title>");
+		out.println("<title>"+StringEscapeUtils.escapeHtml(current_page.name)+"</title>");
 
 		out.println("<link href=\"css/smoothness/jquery-ui-1.7.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.println("<link href=\"css/divrep.css\" rel=\"stylesheet\" type=\"text/css\"/>");

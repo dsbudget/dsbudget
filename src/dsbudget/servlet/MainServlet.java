@@ -19,6 +19,7 @@ import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepButton.Style;
 
 import dsbudget.Main;
+import dsbudget.SaveThread.FileUpdateCallBack;
 import dsbudget.i18n.Labels;
 import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
@@ -48,24 +49,24 @@ public class MainServlet extends ServletBase  {
 		//decide which page to display
 		//URL page parameter takes precedence
 		if(request.getParameter("page") != null) {
-			page = budget.findPage(Integer.parseInt(request.getParameter("page")));
+			current_page = budget.findPage(Integer.parseInt(request.getParameter("page")));
 		} else {
 			//then use document's openpage
-			page = budget.findPage(budget.openpage);
+			current_page = budget.findPage(budget.openpage);
 		}
 		
 		//if we can't find, let's use the first page
-		if(page == null) {
+		if(current_page == null) {
 			if(budget.pages.size() > 0) {
-				page = budget.pages.get(0);
+				current_page = budget.pages.get(0);
 			} else {
 				//we have no page whatsoever - create one
-				page = new Page(budget);
-				page.name = Labels.getString(M_LABEL_UNTITLED);
-				budget.pages.add(page);
+				current_page = new Page(budget);
+				current_page.name = Labels.getString(M_LABEL_UNTITLED);
+				budget.pages.add(current_page);
 			}
 		}
-		budget.openpage = page.name;
+		budget.openpage = current_page.name;
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
@@ -74,10 +75,10 @@ public class MainServlet extends ServletBase  {
 		
 		//Initialize DivRep components
 		new DivRepContainer(request) {
-			public void initPage(DivRepPage pageroot) {
-				pagedialog = new PageDialog(pageroot, budget, page);
-				removedialog = new RemoveDialog(pageroot, budget, page);
-				pageview = new MainView(pageroot, budget, page);
+			public void initPage(final DivRepPage pageroot) {
+				pagedialog = new PageDialog(pageroot, budget, current_page);
+				removedialog = new RemoveDialog(pageroot, budget, current_page);
+				pageview = new MainView(pageroot, budget, current_page);
 				
 				LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
 				
@@ -105,6 +106,14 @@ public class MainServlet extends ServletBase  {
 					public void handleEvent(DivRepEvent e) {
 						pagedialog.open(true);
 					}});
+		        
+		    	budget.savethread.setFileUpdateCallBack(new FileUpdateCallBack() {
+		    		public void alert() {
+		    			pageroot.alert("Document has been updated externally - reloading document");
+		    			loadBudgetDocument();
+		    			pageroot.js("window.location.reload();");
+		    		}
+		    	});
 			}
 		};
 	
@@ -142,7 +151,7 @@ public class MainServlet extends ServletBase  {
 
 		
 		for(Page p : budget.pages) {
-			if(p == page) {
+			if(p == current_page) {
 				out.write("<div class=\"page currentpage\">"+p.name);
 			} else {
 				out.write("<div class=\"page\" onclick=\"document.location='"+"?page="+p.getID()+"';\">"+p.name);				
@@ -164,7 +173,7 @@ public class MainServlet extends ServletBase  {
 		removepagebutton.render(out);
 		out.write("</div>");
 		
-		out.write("<div class=\"pagename\">" + page.name + "</div>");
+		out.write("<div class=\"pagename\">" + current_page.name + "</div>");
 		
 		pageview.render(out);
 		

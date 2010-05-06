@@ -59,9 +59,13 @@ public class ChartServlet extends ServletBase {
 	protected void drawBalance(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Integer pageid = Integer.parseInt(request.getParameter("pageid"));
 		Page page = budget.findPage(pageid);
-		Integer catid = Integer.parseInt(request.getParameter("catid"));
-		Category category = page.findCategory(catid);
-		renderBalanceChart(response.getOutputStream(), page, category);
+		if(page != null) {
+			Integer catid = Integer.parseInt(request.getParameter("catid"));
+			Category category = page.findCategory(catid);
+			renderBalanceChart(response.getOutputStream(), page, category);
+		} else {
+			logger.error("Can't find page ID: " + pageid);
+		}
 	}
 
 	public void renderBalanceChart(OutputStream out, Page page, Category category) {
