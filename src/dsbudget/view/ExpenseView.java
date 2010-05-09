@@ -24,6 +24,7 @@ import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
 import dsbudget.model.Page;
+import dsbudget.model.Category.GraphType;
 
 public class ExpenseView extends DivRep {
 	
@@ -63,25 +64,30 @@ public class ExpenseView extends DivRep {
 		}	
 	}
 	
-	class CategoryBalanceGraphView extends DivRep
-	{
+	abstract class CategoryGraphView extends DivRep {
 		Category category;
 		Boolean hidden = false;
 		
-		public CategoryBalanceGraphView(DivRep parent, Category _category) {
+		public Boolean isHidden() { return hidden; }
+		public void setHidden(Boolean flag) { hidden = flag; }
+		
+		public CategoryGraphView(DivRep parent, Category category) {
 			super(parent);
-			category = _category;
+			this.category = category;
 		}
-
+		
 		@Override
 		protected void onEvent(DivRepEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
-
-		public Boolean isHidden() { return hidden; }
-		public void setHidden(Boolean flag) { hidden = flag; }
-		
+	}
+	
+	class CategoryBalanceGraphView extends CategoryGraphView
+	{
+		public CategoryBalanceGraphView(DivRep parent, Category category) {
+			super(parent, category);
+		}
 		public void render(PrintWriter out) {
 			out.write("<div class=\"graph\" id=\""+getNodeID()+"\">");
 			if(!hidden) {
@@ -93,11 +99,28 @@ public class ExpenseView extends DivRep {
 		}	
 	}
 
+	class CategoryPieGraphView extends CategoryGraphView
+	{	
+		public CategoryPieGraphView(DivRep parent, Category category) {
+			super(parent, category);
+		}
+		
+		public void render(PrintWriter out) {
+			out.write("<div class=\"graph\" id=\""+getNodeID()+"\">");
+			if(!hidden) {
+				Date current = new Date();
+				//time is to force reload when this divrep is refreshed
+				out.write("<img src=\"chart?type=pie&pageid="+mainview.getPageID()+"&catid="+category.getID()+"&time="+current.getTime()+"\"/>");
+			}
+			out.write("</div>");
+		}	
+	}
+	
 	class CategoryView extends DivRep 
 	{
 		Category category;
 		DivRepButton graph_toggler;
-		CategoryBalanceGraphView graph;
+		CategoryGraphView graph;
 		DivRepButton addnewexpense;
 		
 		private void setGraphTogglerTitle()
@@ -115,7 +138,12 @@ public class ExpenseView extends DivRep {
 			super(parent);
 			category = _category;
 			
-			graph = new CategoryBalanceGraphView(this, category);
+			switch(category.graph_type) {
+			case BALANCE:
+				graph = new CategoryBalanceGraphView(this, category);break;
+			case PIE:
+				graph = new CategoryPieGraphView(this, category);break;
+			}
 			graph.setHidden(category.hide_graph);
 			graph_toggler = new DivRepButton(this, "");
 			setGraphTogglerTitle();
@@ -145,16 +173,23 @@ public class ExpenseView extends DivRep {
 		protected void onEvent(DivRepEvent e) {
 			if(e.action.equals("remove")) {
 				//remove
-	 			for(Expense expense : category.getExpensesSortByDate()) {
+	 			for(Expense expense : category.getExpenses()) {
 					if(expense.toString().equals(e.value)) {
 						mainview.removeExpense(category, expense);
 						mainview.save();
 			 			return;
 					}
 	 			}
+			} if(e.action.equals("cat_edit")) {
+	 			for(Category category : mainview.getCategories()) {
+					if(category.toString().equals(e.value)) {
+						mainview.category_dialog.open(category);
+			 			return;
+					}
+	 			}
 			} else {
-				//edit
-	 			for(Expense expense : category.getExpensesSortByDate()) {
+				//edit expense
+	 			for(Expense expense : category.getExpenses()) {
 					if(expense.toString().equals(e.value)) {
 						mainview.expense_dialog.open(category, expense);
 						return;
@@ -162,7 +197,7 @@ public class ExpenseView extends DivRep {
 	 			}
 			}
 		}
-
+	
 		public void render(PrintWriter out) {
 			out.write("<div id=\""+getNodeID()+"\" class=\"expense_category_container\">");
 			out.write("<table width=\"100%\">");
@@ -174,13 +209,14 @@ public class ExpenseView extends DivRep {
 			
 			Color header_color = new Color(r,g,b);
 			
-			out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\" class=\"expense_category\">");
+			out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\"");
+			out.write(" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"', 'cat_edit')\" class=\"expense_category\">");
 			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
 			out.write("<th width=\"100px\"></th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(category.amount))+"</th><td width=\"20px\"></td>");
 			out.write("</tr>");
-
-			for(Expense expense : category.getExpensesSortByDate()) {
+			
+			for(Expense expense : category.getExpensesSorted()) {
 				String expense_type = "";
 				String decoration = "";
 				if(expense.tentative) {

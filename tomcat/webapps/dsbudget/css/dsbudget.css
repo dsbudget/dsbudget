@@ -202,7 +202,8 @@ width: 100%;
 .incomeview tr:hover.income,
 .incomeview tr:hover.deduction,
 .budgetting tr:hover.category, 
-.expenseview tr:hover.expense {
+.expenseview tr:hover.expense,
+.expenseview tr:hover.expense_category {
 background-color: #ccc;
 cursor: pointer;
 }

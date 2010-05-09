@@ -20,7 +20,13 @@ public class Category extends ObjectID implements XMLSerializer {
 	public Boolean fixed;
 	public Boolean hide_graph;
 	public String name;
-	//public Boolean auto_adjust;
+	
+	public enum SortBy {WHERE, DATE, AMOUNT};
+	public SortBy sort_by;
+	public Boolean sort_reverse;
+	
+	public enum GraphType {BALANCE, PIE}
+	public GraphType graph_type;
 	
 	public ArrayList<Expense> expenses = new ArrayList<Expense>();
 	
@@ -33,7 +39,9 @@ public class Category extends ObjectID implements XMLSerializer {
 		category.fixed = fixed;
 		category.hide_graph = hide_graph;
 		category.name = name;
-		//category.auto_adjust = auto_adjust;
+		category.sort_by = sort_by;
+		category.sort_reverse = sort_reverse;
+		category.graph_type = graph_type;
 		
 		category.expenses = new ArrayList<Expense>();
 		for(Expense expense : expenses) {
@@ -42,6 +50,41 @@ public class Category extends ObjectID implements XMLSerializer {
 		return category;
 	}
 	
+	public ArrayList<Expense> getExpenses()
+	{
+		  return expenses;
+	}
+	
+	public ArrayList<Expense> getExpensesSortedBy(final SortBy by, final boolean reverse) {
+		  Collections.sort(expenses, new Comparator<Expense>(){
+	            public int compare(Expense o1, Expense o2) {
+	            	Expense p1, p2;
+	            	if(reverse) {
+	            		p1 = o2;
+	            		p2 = o1;
+	            	} else {
+	            		p1 = o1;
+	            		p2 = o2;
+	            	}
+	            	
+	            	switch(by) {
+	            	case AMOUNT:
+	            		return p1.amount.compareTo(p2.amount);
+	            	case DATE:
+	            		return p1.date.compareTo(p2.date);
+	            	case WHERE:
+	            		return p1.where.toLowerCase().compareTo(p2.where.toLowerCase());
+	            	}
+	            	return 0;
+	            }
+	      });
+		  return expenses;	
+	}
+	
+	public ArrayList<Expense> getExpensesSorted() {
+		return getExpensesSortedBy(sort_by, sort_reverse);
+	}
+	/*
 	public ArrayList<Expense> getExpensesSortByDate()
 	{
 		  Collections.sort(expenses, new Comparator<Expense>(){
@@ -53,6 +96,7 @@ public class Category extends ObjectID implements XMLSerializer {
 	      });
 		  return expenses;
 	}
+	*/
 	
 	public void removeExpense(Expense e)
 	{
@@ -110,6 +154,28 @@ public class Category extends ObjectID implements XMLSerializer {
 		}
 		name = element.getAttribute("name");
 		
+		if(element.hasAttribute("sort_by")) {
+			sort_by = SortBy.valueOf(element.getAttribute("sort_by"));
+		} else {
+			sort_by = SortBy.DATE;
+		}
+		
+		if(element.hasAttribute("sort_reverse")) {
+	 		if(element.getAttribute("sort_reverse").equals("yes")) {
+				sort_reverse = true;
+			} else {
+				sort_reverse = false;
+			}
+		} else {
+			sort_reverse = false;
+		}
+		
+		if(element.hasAttribute("graph_type")) {
+			graph_type = GraphType.valueOf(element.getAttribute("graph_type"));
+		} else {
+			graph_type = GraphType.BALANCE;
+		}
+		
 		//expense
 		NodeList nl = element.getChildNodes();
 		if(nl != null && nl.getLength() > 0) {
@@ -137,6 +203,10 @@ public class Category extends ObjectID implements XMLSerializer {
 		elem.setAttribute("fixed", (fixed==true?"yes":"no"));
 		elem.setAttribute("hide_graph", (hide_graph==true?"yes":"no"));
 		elem.setAttribute("name", name);
+		elem.setAttribute("sort_by", sort_by.toString());
+		elem.setAttribute("sort_reverse", (sort_reverse==true?"yes":"no"));
+		elem.setAttribute("graph_type", graph_type.toString());
+		
 		for(Expense expense : expenses) {
 			elem.appendChild(expense.toXML(doc));
 		}

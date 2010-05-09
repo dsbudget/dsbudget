@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,6 +52,18 @@ public class Main {
 		try {
 			//load configuration
 			conf.load(new FileInputStream("dsbudget.conf"));
+			
+			//override it with user configuration
+			File user_conf_file = new File("dsbudget.user.conf");
+			if(user_conf_file.exists()) {
+				Properties user_conf = new Properties();
+				user_conf.load(new FileInputStream(user_conf_file));
+				for(Object key_obj : user_conf.keySet()) {
+					String key = (String)key_obj;
+					String value = (String)user_conf.get(key);
+					conf.setProperty(key, value);
+				}
+			}
 
 			//configuration overrides
 			String document_override = System.getProperty("document");
