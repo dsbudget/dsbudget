@@ -69,6 +69,7 @@
 		    <fileset dir="../tomcat/webapps"/>
 		</copy>
     	<copy file="dsbudget.conf" todir="${build.dir}/dsbudget"/>
+     	<copy file="dsbudget.user.conf" todir="${build.dir}/dsbudget"/>
     </target>   	
 
 	<target name="win-package">
@@ -87,6 +88,7 @@
 	<target name="linux-package">
 		<copy file="run.sh" todir="${build.dir}/dsbudget"/>
 		<copy file="dsbudget.conf" todir="${build.dir}/dsbudget"/>
+		<copy file="dsbudget.user.conf" todir="${build.dir}/dsbudget"/>
 
 		<copy file="BudgetDocument.xml" todir="${build.dir}/dsbudget"/>
 		<tar longfile="gnu" destfile="${build.dir}/dsbudget.tar">

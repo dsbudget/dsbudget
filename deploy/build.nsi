@@ -2,7 +2,7 @@
 
 !include "MUI2.nsh"
 
-!define VERSION "2.0.17"
+!define VERSION "2.0.18"
 
 Name "dsBudget"
 
@@ -91,23 +91,19 @@ Section "Normal" ; (default section)
 	SetOutPath "$INSTDIR"
 	File "build\dsbudget\dsbudget.jar"
 	File "build\dsbudget\shortcut.ico"
-	;File "build\dsbudget\dsbudget.conf"
 	
 	; install appdata
 	CreateDirectory $APPDATA\dsBudget
 	SetOutPath $APPDATA\dsBudget
-	
 	File /r "build\dsbudget\tomcat"
-	
-	;IfFileExists "$APPDATA\dsBudget\dsbudget.conf" AskConfOverwrite InstallConf
-	;AskConfOverwrite:
-	;	MessageBox MB_YESNO|MB_ICONQUESTION "Do you want to override your existing dsBudget configuration file (recommended)?" IDNO DoneConfInstall
-	;InstallConf:	
-	;	File "build\dsbudget\dsbudget.conf"
-	;	Goto DoneConfInstall
-	;DoneConfInstall:
 	File "build\dsbudget\dsbudget.conf"
-		
+
+	; install user conf if it doesn't exist yet
+	IfFileExists "$APPDATA\dsBudget\dsbudget.user.conf" DoneUserConfInstall UserConfNotExists
+	UserConfNotExists:
+		File "build\dsbudget\dsbudget.user.conf"
+	DoneUserConfInstall:
+
 	IfFileExists "$APPDATA\dsBudget\BudgetDocument.xml" DoneDocInstall DocNotExists
 	DocNotExists:
 		DetailPrint "BudgetDocument.xml is not installed"
@@ -173,6 +169,7 @@ Section Uninstall
 		
 	RMDir /r "$INSTDIR"
 	RMDir /r "$SMPROGRAMS\dsBudget"
+	RMDir /r "$APPDATA\dsBudget\tomcat"
 	Delete "$DESKTOP\dsBudget.lnk"
 	
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\dsBudget"
