@@ -235,7 +235,7 @@ public class BudgetingView extends DivRep {
 			if(mainview.getTotalUnBudgetted().compareTo(BigDecimal.ZERO) < 0) {
 				out.write("<p class=\"divrep_elementerror\">");
 				out.write(Labels.getHtmlEscapedString(BUV_LABEL_EXCESSIVE_TOTAL_BUDGET));
-				out.write("/p>");
+				out.write("</p>");
 			}
 		} else {
 			out.write("<h2>");

@@ -13,17 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.encoders.KeypointPNGEncoderAdapter;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.general.DefaultKeyedValuesDataset;
-import org.jfree.data.general.PieDataset;
 
 import dsbudget.Main;
 import dsbudget.model.Category;
@@ -158,27 +154,6 @@ public class ChartServlet extends ServletBase {
 		DefaultKeyedValuesDataset dataset = new DefaultKeyedValuesDataset();
 	
 		///////////////////////////////////////////////////////////////////////////////////////////
-		/*
-		TimeSeries pop = new TimeSeries("Balance");
-		BigDecimal balance = category.amount;
-		Boolean bfirst = true;
-		Date last = page.created;
-		Date first = page.created;
-		for (Expense expense : category.getExpensesSortByDate()) {
-			if(bfirst && expense.date.compareTo(page.created) > 0) {
-				pop.addOrUpdate(new Day(page.created), category.amount);
-			}
-			bfirst = false;
-			balance = balance.subtract(expense.amount);
-			pop.addOrUpdate(new Day(expense.date), balance);
-			if(last == null || last.compareTo(expense.date) < 0) {
-				last = expense.date;
-			}
-			if(first == null || first.compareTo(expense.date) > 0) {
-				first = expense.date;
-			}
-		}
-		*/
 		//group by where
 		TreeMap<String, Double> groups = new TreeMap<String, Double>();
 		for (Expense expense : category.getExpenses()) {
@@ -202,6 +177,7 @@ public class ChartServlet extends ServletBase {
 		Plot plot = chart.getPlot();
 		plot.setBackgroundPaint(Color.white);
 		plot.setOutlineVisible(false);
+        //plot.setForegroundAlpha(0.6f);
 
 		try {
 			ChartUtilities.writeChartAsPNG(out, chart, 

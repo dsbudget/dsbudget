@@ -18,15 +18,16 @@ public class Category extends ObjectID implements XMLSerializer {
 	public String description;
 	
 	public Boolean fixed;
-	public Boolean hide_graph;
+	public Boolean hide_balance_graph;
+	public Boolean hide_pie_graph;
 	public String name;
 	
 	public enum SortBy {WHERE, DATE, AMOUNT};
 	public SortBy sort_by;
 	public Boolean sort_reverse;
 	
-	public enum GraphType {BALANCE, PIE}
-	public GraphType graph_type;
+	//public enum GraphType {BALANCE, PIE}
+	//public GraphType graph_type;
 	
 	public ArrayList<Expense> expenses = new ArrayList<Expense>();
 	
@@ -37,11 +38,12 @@ public class Category extends ObjectID implements XMLSerializer {
 		category.color = color;
 		category.description = description;
 		category.fixed = fixed;
-		category.hide_graph = hide_graph;
+		category.hide_balance_graph = hide_balance_graph;
+		category.hide_pie_graph = hide_pie_graph;
 		category.name = name;
 		category.sort_by = sort_by;
 		category.sort_reverse = sort_reverse;
-		category.graph_type = graph_type;
+		//category.graph_type = graph_type;
 		
 		category.expenses = new ArrayList<Expense>();
 		for(Expense expense : expenses) {
@@ -147,11 +149,27 @@ public class Category extends ObjectID implements XMLSerializer {
 		} else {
 			fixed = false;
 		}
-		if(element.getAttribute("hide_graph").equals("yes")) {
-			hide_graph = true;
-		} else {
-			hide_graph = false;
+
+		hide_balance_graph = false;
+		if(element.hasAttribute("hide_graph")) {
+			//depricated value
+			if(element.getAttribute("hide_graph").equals("yes")) {
+				hide_balance_graph = true;
+			} 
 		}
+		if(element.hasAttribute("hide_balance_graph")) {
+			if(element.getAttribute("hide_balance_graph").equals("yes")) {
+				hide_balance_graph = true;
+			} 
+		}
+		
+		hide_pie_graph = true;
+		if(element.hasAttribute("hide_pie_graph")) {
+			if(element.getAttribute("hide_pie_graph").equals("no")) {
+				hide_pie_graph = false;
+			}
+		}
+		
 		name = element.getAttribute("name");
 		
 		if(element.hasAttribute("sort_by")) {
@@ -169,12 +187,13 @@ public class Category extends ObjectID implements XMLSerializer {
 		} else {
 			sort_reverse = false;
 		}
-		
+		/*
 		if(element.hasAttribute("graph_type")) {
 			graph_type = GraphType.valueOf(element.getAttribute("graph_type"));
 		} else {
 			graph_type = GraphType.BALANCE;
 		}
+		*/
 		
 		//expense
 		NodeList nl = element.getChildNodes();
@@ -201,11 +220,12 @@ public class Category extends ObjectID implements XMLSerializer {
 		elem.setAttribute("color", String.valueOf(c));
 		elem.setAttribute("desc", description);
 		elem.setAttribute("fixed", (fixed==true?"yes":"no"));
-		elem.setAttribute("hide_graph", (hide_graph==true?"yes":"no"));
+		elem.setAttribute("hide_balance_graph", (hide_balance_graph==true?"yes":"no"));
+		elem.setAttribute("hide_pie_graph", (hide_pie_graph==true?"yes":"no"));
 		elem.setAttribute("name", name);
 		elem.setAttribute("sort_by", sort_by.toString());
 		elem.setAttribute("sort_reverse", (sort_reverse==true?"yes":"no"));
-		elem.setAttribute("graph_type", graph_type.toString());
+		//elem.setAttribute("graph_type", graph_type.toString());
 		
 		for(Expense expense : expenses) {
 			elem.appendChild(expense.toXML(doc));

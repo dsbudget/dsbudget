@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,16 +14,10 @@ import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
-import com.divrep.common.DivRepDate;
-import com.divrep.common.DivRepTextBox;
-import com.divrep.common.DivRepToggler;
-import com.divrep.common.DivRepButton.Style;
-
 import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
 import dsbudget.model.Page;
-import dsbudget.model.Category.GraphType;
 
 public class ExpenseView extends DivRep {
 	
@@ -119,47 +112,69 @@ public class ExpenseView extends DivRep {
 	class CategoryView extends DivRep 
 	{
 		Category category;
-		DivRepButton graph_toggler;
-		CategoryGraphView graph;
+		
+		DivRepButton balance_graph_toggler;
+		CategoryGraphView balance_graph;
+		
+		DivRepButton pie_graph_toggler;
+		CategoryGraphView pie_graph;
+		
 		DivRepButton addnewexpense;
 		
-		private void setGraphTogglerTitle()
+		private void setBalanceGraphTogglerTitle()
 		{
-			if(graph.isHidden()) {
-				//graph_toggler.setTitle("css/images/chart_close.png");
-				graph_toggler.setTitle(Labels.getString(EXV_LABEL_SHOW_BALANCE_GRAPH));
-			} else {
-				//graph_toggler.setTitle("css/images/chart_open.png");		
-				graph_toggler.setTitle(Labels.getString(EXV_LABEL_HIDE_BALANCE_GRAPH));	
+			if(balance_graph.isHidden()) {
+				balance_graph_toggler.setTitle(Labels.getString(EXV_LABEL_SHOW_BALANCE_GRAPH));
+			} else {	
+				balance_graph_toggler.setTitle(Labels.getString(EXV_LABEL_HIDE_BALANCE_GRAPH));	
 			}	
 		}
 		
+		private void setPieGraphTogglerTitle()
+		{
+			if(pie_graph.isHidden()) {
+				pie_graph_toggler.setTitle(Labels.getString("ExpenseView.LABEL_SHOW_PIE_GRAPH"));
+			} else {	
+				pie_graph_toggler.setTitle(Labels.getString("ExpenseView.LABEL_HIDE_PIE_GRAPH"));	
+			}	
+		}
+	
 		public CategoryView(DivRep parent, Category _category) {
 			super(parent);
 			category = _category;
 			
-			switch(category.graph_type) {
-			case BALANCE:
-				graph = new CategoryBalanceGraphView(this, category);break;
-			case PIE:
-				graph = new CategoryPieGraphView(this, category);break;
-			}
-			graph.setHidden(category.hide_graph);
-			graph_toggler = new DivRepButton(this, "");
-			setGraphTogglerTitle();
-
-			graph_toggler.setStyle(DivRepButton.Style.ALINK);
-			//graph_toggler.setStyle(DivRepButton.Style.IMAGE);
-			graph_toggler.addEventListener(new DivRepEventListener() {
+			balance_graph = new CategoryBalanceGraphView(this, category);
+			balance_graph.setHidden(category.hide_balance_graph);
+			balance_graph_toggler = new DivRepButton(this, "");
+			setBalanceGraphTogglerTitle();
+			balance_graph_toggler.setStyle(DivRepButton.Style.ALINK);
+			balance_graph_toggler.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
-					graph.setHidden(!graph.isHidden());
-					category.hide_graph = graph.isHidden();
-					graph.redraw();
-					setGraphTogglerTitle();
-					graph_toggler.redraw();
+					balance_graph.setHidden(!balance_graph.isHidden());
+					category.hide_balance_graph = balance_graph.isHidden();
+					balance_graph.redraw();
+					setBalanceGraphTogglerTitle();
+					balance_graph_toggler.redraw();
 					mainview.save();
 				}
 			});
+			
+			pie_graph = new CategoryPieGraphView(this, category);
+			pie_graph.setHidden(category.hide_pie_graph);
+			pie_graph_toggler = new DivRepButton(this, "");
+			setPieGraphTogglerTitle();
+			pie_graph_toggler.setStyle(DivRepButton.Style.ALINK);
+			pie_graph_toggler.addEventListener(new DivRepEventListener() {
+				public void handleEvent(DivRepEvent e) {
+					pie_graph.setHidden(!pie_graph.isHidden());
+					category.hide_pie_graph = pie_graph.isHidden();
+					pie_graph.redraw();
+					setPieGraphTogglerTitle();
+					pie_graph_toggler.redraw();
+					mainview.save();
+				}
+			});
+
 			
 			addnewexpense = new DivRepButton(this, Labels.getString(EXV_LABEL_ADD_NEW_EXPENSE));
 			addnewexpense.setStyle(DivRepButton.Style.ALINK);
@@ -253,7 +268,9 @@ public class ExpenseView extends DivRep {
 			out.write("</td>");
 			
 			out.write("<td style=\"text-align: right;\">");
-			graph_toggler.render(out);
+			pie_graph_toggler.render(out);
+			out.write("&nbsp;&nbsp;&nbsp;");
+			balance_graph_toggler.render(out);
 			out.write("</td>"); //desc
 			
 			out.write("<th style=\"text-align: right;\">");
@@ -292,7 +309,8 @@ public class ExpenseView extends DivRep {
 			
 			out.write("</table>");
 		
-			graph.render(out);
+			pie_graph.render(out);
+			balance_graph.render(out);
 		
 			out.write("</div>");
 		}
