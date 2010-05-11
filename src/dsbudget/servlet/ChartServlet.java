@@ -26,6 +26,7 @@ import dsbudget.model.Category;
 import dsbudget.model.Expense;
 import dsbudget.model.Page;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -152,6 +153,7 @@ public class ChartServlet extends ServletBase {
 	public void renderPieChart(OutputStream out, Page page, Category category) {
 		
 		DefaultKeyedValuesDataset dataset = new DefaultKeyedValuesDataset();
+		NumberFormat nf = NumberFormat.getCurrencyInstance();
 	
 		///////////////////////////////////////////////////////////////////////////////////////////
 		//group by where
@@ -168,7 +170,9 @@ public class ChartServlet extends ServletBase {
 		}
 		Map<String, Double> groups_sorted = sortByValue(groups);
 		for(String key : groups_sorted.keySet()) {
-			dataset.setValue(key, groups_sorted.get(key));	
+			Double value = groups_sorted.get(key);
+			String amount = nf.format(value);
+			dataset.setValue(key + " " + amount, value);	
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////////////

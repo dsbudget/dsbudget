@@ -14,6 +14,8 @@ import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
+import com.divrep.common.DivRepButton.Style;
+
 import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
@@ -124,18 +126,22 @@ public class ExpenseView extends DivRep {
 		private void setBalanceGraphTogglerTitle()
 		{
 			if(balance_graph.isHidden()) {
-				balance_graph_toggler.setTitle(Labels.getString(EXV_LABEL_SHOW_BALANCE_GRAPH));
+				//balance_graph_toggler.setTitle(Labels.getString(EXV_LABEL_SHOW_BALANCE_GRAPH));
+				balance_graph_toggler.setTitle("css/images/chart_balance_off.png");
 			} else {	
-				balance_graph_toggler.setTitle(Labels.getString(EXV_LABEL_HIDE_BALANCE_GRAPH));	
+				//balance_graph_toggler.setTitle(Labels.getString(EXV_LABEL_HIDE_BALANCE_GRAPH));	
+				balance_graph_toggler.setTitle("css/images/chart_balance.png");
 			}	
 		}
 		
 		private void setPieGraphTogglerTitle()
 		{
 			if(pie_graph.isHidden()) {
-				pie_graph_toggler.setTitle(Labels.getString("ExpenseView.LABEL_SHOW_PIE_GRAPH"));
+				//pie_graph_toggler.setTitle(Labels.getString("ExpenseView.LABEL_SHOW_PIE_GRAPH"));
+				pie_graph_toggler.setTitle("css/images/chart_pie_off.png");
 			} else {	
-				pie_graph_toggler.setTitle(Labels.getString("ExpenseView.LABEL_HIDE_PIE_GRAPH"));	
+				//pie_graph_toggler.setTitle(Labels.getString("ExpenseView.LABEL_HIDE_PIE_GRAPH"));	
+				pie_graph_toggler.setTitle("css/images/chart_pie.png");
 			}	
 		}
 	
@@ -146,8 +152,9 @@ public class ExpenseView extends DivRep {
 			balance_graph = new CategoryBalanceGraphView(this, category);
 			balance_graph.setHidden(category.hide_balance_graph);
 			balance_graph_toggler = new DivRepButton(this, "");
+			balance_graph_toggler.setStyle(Style.IMAGE);
+			balance_graph_toggler.setToolTip(Labels.getString("ExpenseView.LABEL_TIP_BALANCE_GRAPH"));
 			setBalanceGraphTogglerTitle();
-			balance_graph_toggler.setStyle(DivRepButton.Style.ALINK);
 			balance_graph_toggler.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
 					balance_graph.setHidden(!balance_graph.isHidden());
@@ -163,7 +170,8 @@ public class ExpenseView extends DivRep {
 			pie_graph.setHidden(category.hide_pie_graph);
 			pie_graph_toggler = new DivRepButton(this, "");
 			setPieGraphTogglerTitle();
-			pie_graph_toggler.setStyle(DivRepButton.Style.ALINK);
+			pie_graph_toggler.setStyle(Style.IMAGE);
+			pie_graph_toggler.setToolTip(Labels.getString("ExpenseView.LABEL_TIP_PIE_GRAPH"));
 			pie_graph_toggler.addEventListener(new DivRepEventListener() {
 				public void handleEvent(DivRepEvent e) {
 					pie_graph.setHidden(!pie_graph.isHidden());
@@ -387,8 +395,6 @@ public class ExpenseView extends DivRep {
 	}
 
 	public static final String EXV_LABEL_HEADER = "ExpenseView.LABEL_HEADER";
-	public static final String EXV_LABEL_SHOW_BALANCE_GRAPH = "ExpenseView.LABEL_SHOW_BALANCE_GRAPH";
-	public static final String EXV_LABEL_HIDE_BALANCE_GRAPH = "ExpenseView.LABEL_HIDE_BALANCE_GRAPH";
 	public static final String EXV_LABEL_ADD_NEW_EXPENSE = "ExpenseView.LABEL_ADD_NEW_EXPENSE";
 	public static final String EXV_LABEL_IMPORT_EXPENSES = "ExpenseView.LABEL_ADD_NEW_EXPENSES";
 	public static final String EXV_LABEL_EXPENSE_SCHEDULED = "ExpenseView.LABEL_EXPENSE_SCHEDULED";
