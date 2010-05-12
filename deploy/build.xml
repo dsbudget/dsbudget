@@ -3,13 +3,14 @@
 
 	<property name="build.dir" value="build"/>
 	<property name="linux-landing.dir" value="/home/hayashis/Desktop"/>
+	<property name="win-landing.dir" value="C:\Users\soichi\Desktop"/>
 	
-	<target name="windows" depends="clean, compile, jar, win-package"></target>
-	<target name="linux" depends="clean, compile, jar, linux-package"></target>
+	<target name="windows" depends="clean, win-installer, win-standalone"></target>
+	<target name="linux" depends="clean, linux-package"></target>
 			
 	<target name="clean">
 		<delete dir="${build.dir}"/>
-		<mkdir dir="${build.dir}/dsbudget"/>
+		<mkdir dir="${build.dir}"/>
 		<delete dir="bin"/>
 		<mkdir dir="bin"/>
 	</target>
@@ -26,8 +27,8 @@
 		</javac>
     </target>
 
-    <target name="jar">
-        <jar destfile="${build.dir}/dsbudget/dsbudget.jar">
+    <target name="jar"  depends="compile">
+        <jar destfile="${build.dir}/dsbudget.jar">
             <manifest>
             	<attribute name="Built-By" value="Soichi Hayashi"/>
                 <attribute name="Main-Class" value="dsbudget.Main"/>
@@ -62,18 +63,26 @@
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/jcommon-1.0.16.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../tomcat/webapps/dsbudget/WEB-INF/lib/jfreechart-1.0.13.jar"/>
         </jar>
-		<copy todir="${build.dir}/dsbudget/tomcat/conf">
+    </target>   	
+    
+    <target name="dsbudget.exe" depends="jar">
+    	<exec executable="C:\Program Files\Launch4j\launch4jc.exe">
+			<arg value="dsbudget.launch4j.xml"/>
+		</exec>
+    </target>
+    
+    <target name="win-installer" depends="dsbudget.exe">
+    	<mkdir dir="${build.dir}/win-installer"/>
+    	
+    	<copy todir="${build.dir}/win-installer/tomcat/conf">
 		    <fileset dir="../tomcat/conf"/>
 		</copy>
-		<copy todir="${build.dir}/dsbudget/tomcat/webapps">
+		<copy todir="${build.dir}/win-installer/tomcat/webapps">
 		    <fileset dir="../tomcat/webapps"/>
 		</copy>
-    	<copy file="dsbudget.conf" todir="${build.dir}/dsbudget"/>
-     	<copy file="dsbudget.user.conf" todir="${build.dir}/dsbudget"/>
-    </target>   	
-
-	<target name="win-package">
-		<copy file="shortcut.ico" todir="${build.dir}/dsbudget"/>
+        		
+	    <copy file="dsbudget.conf" todir="${build.dir}/win-installer"/>
+     	<copy file="dsbudget.user.conf" todir="${build.dir}/win-installer"/>
 		<exec executable="C:\Program Files\NSIS\makensis.exe">
 			<arg value="build.nsi"/>
 		</exec>
@@ -85,22 +94,52 @@
   		-->
 	</target>
 
-	<target name="linux-package">
-		<copy file="run.sh" todir="${build.dir}/dsbudget"/>
-		<copy file="dsbudget.conf" todir="${build.dir}/dsbudget"/>
-		<copy file="dsbudget.user.conf" todir="${build.dir}/dsbudget"/>
+	<target name="win-standalone" depends="dsbudget.exe">
+	   	<mkdir dir="${build.dir}/win-standalone"/>
+        <mkdir dir="${build.dir}/win-standalone/dsbudget"/>
+        
+        <copy todir="${build.dir}/win-standalone/dsbudget/tomcat/conf">
+		    <fileset dir="../tomcat/conf"/>
+		</copy>
+		<copy todir="${build.dir}/win-standalone/dsbudget/tomcat/webapps">
+		    <fileset dir="../tomcat/webapps"/>
+		</copy>
+      		
+		<copy file="dsbudget.exe" todir="${build.dir}/win-standalone/dsbudget"/>
+		<copy file="dsbudget.conf" todir="${build.dir}/win-standalone/dsbudget"/>
+		<copy file="dsbudget.user.conf" todir="${build.dir}/win-standalone/dsbudget"/>
+		<copy file="BudgetDocument.xml" todir="${build.dir}/win-standalone/dsbudget"/>
+				
+		<zip destfile="${win-landing.dir}/dsbudget.zip" basedir="${build.dir}/win-standalone" update="true"/>
+	</target>
 
-		<copy file="BudgetDocument.xml" todir="${build.dir}/dsbudget"/>
-		<tar longfile="gnu" destfile="${build.dir}/dsbudget.tar">
-			<tarfileset dir="${build.dir}/dsbudget/.." filemode="777">
+
+	<target name="linux-package" depends="jar">
+	  	<mkdir dir="${build.dir}/linux-package"/>
+        <mkdir dir="${build.dir}/linux-package/dsbudget"/>
+        
+	    <copy todir="${build.dir}/linux-package/dsbudget/tomcat/conf">
+		    <fileset dir="../tomcat/conf"/>
+		</copy>
+		<copy todir="${build.dir}/linux-package/dsbudget/tomcat/webapps">
+		    <fileset dir="../tomcat/webapps"/>
+		</copy>
+		
+		<copy file="run.sh" todir="${build.dir}/linux-package/dsbudget"/>
+		<copy file="dsbudget.conf" todir="${build.dir}/linux-package/dsbudget"/>
+		<copy file="dsbudget.user.conf" todir="${build.dir}/linux-package/dsbudget"/>
+
+		<copy file="BudgetDocument.xml" todir="${build.dir}/linux-package/dsbudget"/>
+		<tar longfile="gnu" destfile="${build.dir}/linux-package/dsbudget.tar">
+			<tarfileset dir="${build.dir}/linux-package/dsbudget" filemode="777">
 				<include name="**/*.sh"/>
 			</tarfileset>
-			<tarfileset dir="${build.dir}/dsbudget/..">
+			<tarfileset dir="${build.dir}/linux-package/dsbudget">
 				<include name="**/*"/>
 				<exclude name="**/*.sh"/>
 			</tarfileset>
 		</tar>
-		<gzip destfile="${linux-landing.dir}/dsbudget.tar.gz" src="${build.dir}/dsbudget.tar"/>
+		<gzip destfile="${linux-landing.dir}/dsbudget.tar.gz" src="${build.dir}/linux-package/dsbudget.tar"/>
 	</target>
 				
 </project>

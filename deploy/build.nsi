@@ -80,28 +80,22 @@ done:
 FunctionEnd
 
 Section "Normal" ; (default section)
-
-	;check if we have java
-	Call GetJRE
-	Pop $R0
-	
-	StrCmp $R0 "" NoJava
 	
 	; main installation
 	SetOutPath "$INSTDIR"
-	File "build\dsbudget\dsbudget.jar"
-	File "build\dsbudget\shortcut.ico"
+	File "build\dsbudget.exe"
+	;File "build\win-installer\shortcut.ico"
 	
 	; install appdata
 	CreateDirectory $APPDATA\dsBudget
 	SetOutPath $APPDATA\dsBudget
-	File /r "build\dsbudget\tomcat"
-	File "build\dsbudget\dsbudget.conf"
+	File /r "build\win-installer\tomcat"
+	File "build\win-installer\dsbudget.conf"
 
 	; install user conf if it doesn't exist yet
 	IfFileExists "$APPDATA\dsBudget\dsbudget.user.conf" DoneUserConfInstall UserConfNotExists
 	UserConfNotExists:
-		File "build\dsbudget\dsbudget.user.conf"
+		File "build\win-installer\dsbudget.user.conf"
 	DoneUserConfInstall:
 
 	IfFileExists "$APPDATA\dsBudget\BudgetDocument.xml" DoneDocInstall DocNotExists
@@ -136,13 +130,11 @@ Section "Normal" ; (default section)
 	; Create Start Menu shortcuts
 	CreateDirectory $SMPROGRAMS\dsBudget
 			
-	CreateShortCut "$DESKTOP\dsBudget.lnk" "$R0" '-Ddivrep_invalidate_samepagekey -jar "$INSTDIR\dsbudget.jar"' '$INSTDIR\shortcut.ico'
-	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$R0" '-Ddivrep_invalidate_samepagekey -jar "$INSTDIR\dsbudget.jar"' '$INSTDIR\shortcut.ico'
-	createShortCut "$INSTDIR\run.lnk" "$R0" '-Ddivrep_invalidate_samepagekey -jar "$INSTDIR\dsbudget.jar"'
-	
+	CreateShortCut "$DESKTOP\dsBudget.lnk" "$INSTDIR\dsbudget.exe"
+	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$INSTDIR\dsbudget.exe"
+		
 	;run as admin (doesn't seem to do anyyhing)
 	;WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\layers" "$DESKTOP\dsBudget.lnk" "RUNASADMIN"
-	
 	
 	createShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
 	
@@ -176,45 +168,6 @@ Section Uninstall
 	DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget"
 
 SectionEnd ; end of uninstall section
-
-Function GetJRE
-;
-;  returns the full path of a valid java.exe
-;  looks in:
-;  1 - .\jre directory (JRE Installed with application)
-;  2 - JAVA_HOME environment variable
-;  3 - the registry
-;  4 - hopes it is in current dir or PATH
- 
-  Push $R0
-  Push $R1
- 
-  ; use javaw.exe to avoid dosbox.
-  ; use java.exe to keep stdout/stderr
-  !define JAVAEXE "javaw.exe"
- 
-  ClearErrors
-  StrCpy $R0 "$EXEDIR\jre\bin\${JAVAEXE}"
-  IfFileExists $R0 JreFound  ;; 1) found it locally
-  StrCpy $R0 ""
- 
-  ClearErrors
-  ReadEnvStr $R0 "JAVA_HOME"
-  StrCpy $R0 "$R0\bin\${JAVAEXE}"
-  IfErrors 0 JreFound  ;; 2) found it in JAVA_HOME
- 
-  ClearErrors
-  ReadRegStr $R1 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
-  ReadRegStr $R0 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\$R1" "JavaHome"
-  StrCpy $R0 "$R0\bin\${JAVAEXE}"
- 
-  IfErrors 0 JreFound  ;; 3) found it in the registry
-  StrCpy $R0 "" ;; couldn't find it..
- 
- JreFound:
-  Pop $R1
-  Exch $R0
-FunctionEnd
 
 Function .OnInstFailed
     UAC::Unload ;Must call unload!

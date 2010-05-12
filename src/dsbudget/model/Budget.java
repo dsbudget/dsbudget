@@ -96,10 +96,12 @@ public class Budget implements XMLSerializer {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer;
 	    transformer = tf.newTransformer();
-		StreamResult result = new StreamResult(new OutputStreamWriter(new FileOutputStream(xmlpath), Charset.forName("UTF-8")));
+	    FileOutputStream fout = new FileOutputStream(xmlpath);
+		StreamResult result = new StreamResult(new OutputStreamWriter(fout, Charset.forName("UTF-8")));
 		transformer.setOutputProperty(OutputKeys.INDENT,"no");
 		transformer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
 		transformer.transform(source, result); 		
+		fout.close();
 	}
 
 	public Element toXML(Document doc) {
