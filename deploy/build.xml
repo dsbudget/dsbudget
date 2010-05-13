@@ -110,7 +110,7 @@
 		<copy file="dsbudget.user.conf" todir="${build.dir}/win-standalone/dsbudget"/>
 		<copy file="BudgetDocument.xml" todir="${build.dir}/win-standalone/dsbudget"/>
 				
-		<zip destfile="${win-landing.dir}/dsbudget.zip" basedir="${build.dir}/win-standalone" update="true"/>
+		<zip destfile="${win-landing.dir}/dsbudget_2.0.X.windows.zip" basedir="${build.dir}/win-standalone" update="true"/>
 	</target>
 
 

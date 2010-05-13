@@ -24,57 +24,57 @@ DirText "Select the directory to install dsBudget in:"
 RequestExecutionLevel admin
 Function .OnInit
  
-UAC_Elevate:
-    UAC::RunElevated 
-    StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
-    StrCmp 0 $0 0 UAC_Err ; Error?
-    StrCmp 1 $1 0 UAC_Success ;Are we the real deal or just the wrapper?
-    Quit
- 
-UAC_Err:
-    MessageBox mb_iconstop "Unable to elevate, error $0"
-    Abort
- 
-UAC_ElevationAborted:
-    # elevation was aborted, run as normal?
-    MessageBox mb_iconstop "This installer requires admin access, aborting!"
-    Abort
- 
-UAC_Success:
-    StrCmp 1 $3 +4 ;Admin?
-    StrCmp 3 $1 0 UAC_ElevationAborted ;Try again?
-    MessageBox mb_iconstop "This installer requires admin access, try again"
-    goto UAC_Elevate 
- 
-  ReadRegStr $R0 HKLM \
-  "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" \
-  "UninstallString"
-  StrCmp $R0 "" done
- 
-	; Make sure no dsbudget is running - this isn't perfect but...
-	DetailPrint "Requesting to terminate dsBudget - if it's already running"
-	NSISdl::download_quiet /TIMEOUT=100 http://127.0.0.1:16091/dsbudget/stop $TEMP/dsbudget.stop_request
-
-  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
-  "dsBudget is already installed. $\n$\nClick `OK` to remove the \
-  previous version or `Cancel` to cancel this upgrade. \
-  (Your document will be kept)" \
-  IDOK uninst
-  Abort
- 
-;Run the uninstaller
-uninst:
-  ClearErrors
-  ExecWait '$R0 _?=$INSTDIR' ;Do not copy the uninstaller to a temp file
- 
-  IfErrors no_remove_uninstaller done
-    ;You can either use Delete /REBOOTOK in the uninstaller or add some code
-    ;here to remove the uninstaller. Use a registry key to check
-    ;whether the user has chosen to uninstall. If you are using an uninstaller
-    ;components page, make sure all sections are uninstalled.
-  no_remove_uninstaller:
- 
-done:
+	UAC_Elevate:
+	    UAC::RunElevated 
+	    StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
+	    StrCmp 0 $0 0 UAC_Err ; Error?
+	    StrCmp 1 $1 0 UAC_Success ;Are we the real deal or just the wrapper?
+	    Quit
+	 
+	UAC_Err:
+	    MessageBox mb_iconstop "Unable to elevate, error $0"
+	    Abort
+	 
+	UAC_ElevationAborted:
+	    # elevation was aborted, run as normal?
+	    MessageBox mb_iconstop "This installer requires admin access, aborting!"
+	    Abort
+	 
+	UAC_Success:
+	    StrCmp 1 $3 +4 ;Admin?
+	    StrCmp 3 $1 0 UAC_ElevationAborted ;Try again?
+	    MessageBox mb_iconstop "This installer requires admin access, try again"
+	    goto UAC_Elevate 
+	 
+	  ReadRegStr $R0 HKLM \
+	  "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" \
+	  "UninstallString"
+	  StrCmp $R0 "" done
+	 
+		; Make sure no dsbudget is running - this isn't perfect but...
+		DetailPrint "Requesting to terminate dsBudget - if it's already running"
+		NSISdl::download_quiet /TIMEOUT=100 http://127.0.0.1:16091/dsbudget/stop $TEMP/dsbudget.stop_request
+	
+	  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+	  "dsBudget is already installed. $\n$\nClick `OK` to remove the \
+	  previous version or `Cancel` to cancel this upgrade. \
+	  (Your document will be kept)" \
+	  IDOK uninst
+	  Abort
+	 
+	;Run the uninstaller
+	uninst:
+	  ClearErrors
+	  ExecWait '$R0 _?=$INSTDIR' ;Do not copy the uninstaller to a temp file
+	 
+	  IfErrors no_remove_uninstaller done
+	    ;You can either use Delete /REBOOTOK in the uninstaller or add some code
+	    ;here to remove the uninstaller. Use a registry key to check
+	    ;whether the user has chosen to uninstall. If you are using an uninstaller
+	    ;components page, make sure all sections are uninstalled.
+	  no_remove_uninstaller:
+	 
+	done:
  
  
 FunctionEnd

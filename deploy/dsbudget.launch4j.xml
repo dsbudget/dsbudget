@@ -12,7 +12,7 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>C:\Users\soichi\dev\dsbudget\deploy\shortcut.ico</icon>
+  <icon>C:\Users\soichi\dev\dsbudget\deploy\dsbudget.ico</icon>
   <var>divrep_invalidate_samepagekey=true</var>
   <jre>
     <path></path>
