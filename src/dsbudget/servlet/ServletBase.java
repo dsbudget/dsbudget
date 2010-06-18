@@ -110,13 +110,13 @@ public class ServletBase extends HttpServlet {
 		out.println("<html><head>");
 		out.println("<title>"+StringEscapeUtils.escapeHtml(current_page.name)+"</title>");
 
-		out.println("<link href=\"css/smoothness/jquery-ui-1.7.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
+		out.println("<link href=\"css/smoothness/jquery-ui-1.8.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.println("<link href=\"css/divrep.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.println("<link href=\"css/dsbudget.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"css/dsbudget.print.css\" />");
 		
-		out.println("<script type=\"text/javascript\" src=\"jquery-1.3.2.min.js\"></script>");
-		out.println("<script type=\"text/javascript\" src=\"jquery-ui-1.7.2.custom.min.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"jquery-1.4.2.min.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"jquery-ui-1.8.2.custom.min.js\"></script>");
 		out.println("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
 		
 		out.println("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");

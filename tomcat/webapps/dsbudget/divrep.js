@@ -15,11 +15,11 @@ function divrep(id, event, value, action) {
 		if(event.stopPropagation) event.stopPropagation();//Standard
 	}
 	
-	if(!action)  {
-		if(event) {
-			var action = event.type;
-		} else {
-			var action = "unknown";
+	if(!action) {
+		try {
+			action = event.type;
+		} catch(e) {
+			action = "unknown";
 		}
 	}
 	//make sure there is only one request at the same time (prevent double clicking of submit button)
@@ -35,9 +35,12 @@ function divrep(id, event, value, action) {
 	if(divrep_processing_id != null) {
 		//wait until the previous processing ends
 		//console.log('queusing event on ' + id);
-		setTimeout(function() { divrep(id, event, value);}, 100);
+		setTimeout(function() { divrep(id, event, value,action);}, 100);
 		return;
 	}
+	
+	//set class while processing
+	$("#"+id).addClass("divrep_processing");
 	
 	divrep_processing_id = id;
 	jQuery.ajax({
@@ -59,25 +62,16 @@ function divrep(id, event, value, action) {
 	});
 }
 
-//this is basically the same thing as jquery.load, but instead of replacing the content 
-//of the div, it replace the whole div using replaceWith().
-function divrep_replace(node, content) 
+function divrep_replace(node, content, id) 
 {
 	if(node.length == 0) {
-		alert("couldn't find the divrep node - maybe it's not wrapped with div?\n" + url);
+		alert("couldn't find the divrep node - maybe it's not wrapped with div?\n" + id);
 	}
 	//why am I emptying the content before replacing it? because jQuery's replaceWith adds new content before removing the
 	//old content. This causes identical ID to coexist in the dom structure and causes redraw issue
 	node.empty();
 	node.replaceWith(content);
 }
-/*
-var divrep_jscallback = null;
-function divrep_runjs()
-{
-	divrep_jscallback();
-}
-*/
 
 //Firefox 3.0.10 (and may be others) has a bug where windows.location based redirect directly
 //from the returned javascript causes the browser history to incorrectly enter entry and hitting

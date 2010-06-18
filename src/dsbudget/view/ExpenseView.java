@@ -88,7 +88,7 @@ public class ExpenseView extends DivRep {
 			if(!hidden) {
 				Date current = new Date();
 				//time is to force reload when this divrep is refreshed
-				out.write("<img src=\"chart?type=balance&pageid="+mainview.getPageID()+"&catid="+category.getID()+"&time="+current.getTime()+"\"/>");
+				out.write("<img alt=\"line graph\" src=\"chart?type=balance&amp;pageid="+mainview.getPageID()+"&amp;catid="+category.getID()+"&amp;time="+current.getTime()+"\"/>");
 			}
 			out.write("</div>");
 		}	
@@ -105,7 +105,7 @@ public class ExpenseView extends DivRep {
 			if(!hidden) {
 				Date current = new Date();
 				//time is to force reload when this divrep is refreshed
-				out.write("<img src=\"chart?type=pie&pageid="+mainview.getPageID()+"&catid="+category.getID()+"&time="+current.getTime()+"\"/>");
+				out.write("<img alt=\"pie graph\" src=\"chart?type=pie&amp;pageid="+mainview.getPageID()+"&amp;catid="+category.getID()+"&amp;time="+current.getTime()+"\"/>");
 			}
 			out.write("</div>");
 		}	

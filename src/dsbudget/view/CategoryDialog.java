@@ -36,7 +36,6 @@ public class CategoryDialog extends DivRepDialog
 	
 	public DivRepSelectBox sort_by;
 	public DivRepCheckBox sort_reverse;
-	//public DivRepSelectBox graph_type;
 	
 	Category category;
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -98,14 +97,6 @@ public class CategoryDialog extends DivRepDialog
 			
 			sort_reverse = new DivRepCheckBox(this);
 			sort_reverse.setLabel(Labels.getString("CategoryDialog.LABEL_SORT_REVERSE"));
-/*
-	        options = new LinkedHashMap<Integer, String>();
-	        options.put(1, Labels.getString("CategoryDialog.OPTION_GRAPH_BALANCE"));
-	        options.put(2, Labels.getString("CategoryDialog.OPTION_GRAPH_PIE"));
-			graph_type = new DivRepSelectBox(this, options);
-			graph_type.setHasNull(false);
-			graph_type.setLabel(Labels.getString("CategoryDialog.LABEL_GRAPH_TYPE"));
-*/
 		}
 
 		protected void onEvent(DivRepEvent e) {
@@ -128,11 +119,10 @@ public class CategoryDialog extends DivRepDialog
 			out.write(Labels.getString("CategoryDialog.LABEL_EXPENSE_SORT_OPTION"));
 			out.write("</td><td>");
 			sort_by.render(out);
-			out.write("</td><tr><td></td><td>");
+			out.write("</td></tr><tr><td></td><td>");
 			sort_reverse.render(out);
 			out.write("</td></tr></table>");
-			//out.write("<br>");
-			//graph_type.render(out);
+
 			out.write("</div>");
 			
 			out.write("</div>");			
@@ -166,22 +156,7 @@ public class CategoryDialog extends DivRepDialog
 		}
 		return null;
 	}
-	/*
-	private int convertToIndex(GraphType type) {
-		switch(type) {
-		case BALANCE: return 1;
-		case PIE: return 2;
-		}
-		return -1;
-	}
-	private GraphType toGraphType(int id) {
-		switch(id) {
-		case 1: return GraphType.BALANCE;
-		case 2: return GraphType.PIE;
-		}
-		return null;
-	}
-	*/
+
 	public void open(Category _category)
 	{
 		category = _category;
@@ -193,7 +168,6 @@ public class CategoryDialog extends DivRepDialog
 			color.setValue(Color.blue);
 			sort_by.setValue(2);
 			sort_reverse.setValue(false);
-			//graph_type.setValue(1);
 		} else {
 			setTitle(Labels.getString(CAD_LABEL_UPDATE_CATEGORY));
 			name.setValue(category.name);
@@ -202,7 +176,6 @@ public class CategoryDialog extends DivRepDialog
 			color.setValue(category.color);
 			sort_by.setValue(convertToIndex(category.sort_by));
 			sort_reverse.setValue(category.sort_reverse);
-			//graph_type.setValue(convertToIndex(category.graph_type));
 		}
 		
 		name.redraw();
@@ -211,8 +184,6 @@ public class CategoryDialog extends DivRepDialog
 		color.redraw();
 		sort_by.redraw();
 		sort_reverse.redraw();
-		//graph_type.redraw();
-		
 		super.open();
 	}
 	
