@@ -1,6 +1,5 @@
 package dsbudget.view;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import com.divrep.DivRep;
 import com.divrep.common.DivRepDialog;
@@ -12,14 +11,18 @@ import dsbudget.model.Budget;
 import dsbudget.model.Income;
 import dsbudget.model.Page;
 
-public class RemoveDialog extends DivRepDialog
+public class RemovePageDialog extends DivRepDialog
 {
 	Budget budget;
 	Page current_page;
 	Boolean newpage;
 
-	public RemoveDialog(DivRep parent, Budget _budget, Page _current_page) {
-		super(parent, true);
+	public RemovePageDialog(DivRep parent, Budget _budget, Page _current_page) {
+		super(parent);
+		setHasCancelButton(true);
+		
+		//it is too dangerous to enable enter_to_submit here..
+		//setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
 		setTitle(Labels.getString(RED_LABEL_REMOVE_PAGE));
 		budget = _budget;

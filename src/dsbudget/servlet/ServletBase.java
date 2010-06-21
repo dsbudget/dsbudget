@@ -120,7 +120,10 @@ public class ServletBase extends HttpServlet {
 		out.println("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
 		
 		out.println("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");
-		
+		/*
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"bassistance.autocomplete/jquery.autocomplete.css\" />");
+		out.println("<script type=\"text/javascript\" src=\"bassistance.autocomplete/jquery.autocomplete.min.js\"></script>");	
+		*/
 		out.println("</head>");
 		out.println("<body>");
 		

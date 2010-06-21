@@ -56,8 +56,10 @@ public class IncomeView extends DivRep {
 	{
 		if(mainview.page.hide_income) {
 			toggler.setTitle("css/images/expand.gif");
+			toggler.setToolTip("Expand Income View");
 		} else {
 			toggler.setTitle("css/images/collapse.gif");	
+			toggler.setToolTip("Collapse Income View");
 		}
 	}
 
@@ -66,9 +68,8 @@ public class IncomeView extends DivRep {
 			//remove
  			for(Income income : mainview.getIncomes()) {
 				if(income.toString().equals(e.value)) {
-					mainview.removeIncome(income);
-					mainview.save();
-					return;
+					mainview.removeincomedialog.open(income);
+		 			return;
 				}
  			}
 		} else if(e.action.equals("deduction_edit")) {

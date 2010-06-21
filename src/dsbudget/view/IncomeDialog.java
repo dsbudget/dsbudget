@@ -10,10 +10,12 @@ import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepDialog;
+import com.divrep.common.DivRepMoneyAmount;
 import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
 
+import dsbudget.Main;
 import dsbudget.model.Income;
 import dsbudget.model.Page;
 import dsbudget.i18n.Labels;
@@ -36,6 +38,7 @@ public class IncomeDialog extends DivRepDialog
 		
 		setHeight(300);
 		setWidth(350);
+		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
 		balance_from = new DivRepCheckBox(this);
 		balance_from.setLabel(Labels.getString(IND_LABEL_USE_BALANCE_FROM_ANOTHER_PAGE));

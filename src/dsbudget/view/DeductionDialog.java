@@ -7,8 +7,10 @@ import java.text.ParseException;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepDialog;
+import com.divrep.common.DivRepMoneyAmount;
 import com.divrep.common.DivRepTextBox;
 
+import dsbudget.Main;
 import dsbudget.i18n.Labels;
 import dsbudget.model.Deduction;
 import dsbudget.model.Income;
@@ -30,6 +32,7 @@ public class DeductionDialog extends DivRepDialog
 		
 		setHeight(250);
 		setWidth(450);
+		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
 		description = new DivRepTextBox(this);
 		description.setLabel(Labels.getString(DED_LABEL_DESCRIPTION));

@@ -2,7 +2,7 @@
 
 !include "MUI2.nsh"
 
-!define VERSION "2.0.18"
+!define VERSION "2.0.X"
 
 Name "dsBudget"
 

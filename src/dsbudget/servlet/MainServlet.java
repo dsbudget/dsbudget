@@ -25,7 +25,8 @@ import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
 import dsbudget.view.PageDialog;
-import dsbudget.view.RemoveDialog;
+import dsbudget.view.RemoveCategoryDialog;
+import dsbudget.view.RemovePageDialog;
 
 public class MainServlet extends ServletBase  {
 	
@@ -35,7 +36,7 @@ public class MainServlet extends ServletBase  {
 	
 	DivRepButton newpagebutton;
 	
-	RemoveDialog removedialog;
+	RemovePageDialog removepagedialog;
 	PageDialog pagedialog;
 	
 	MainView pageview;
@@ -77,7 +78,7 @@ public class MainServlet extends ServletBase  {
 		new DivRepContainer(request) {
 			public void initPage(final DivRepPage pageroot) {
 				pagedialog = new PageDialog(pageroot, budget, current_page);
-				removedialog = new RemoveDialog(pageroot, budget, current_page);
+				removepagedialog = new RemovePageDialog(pageroot, budget, current_page);
 				pageview = new MainView(pageroot, budget, current_page);
 				
 				LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
@@ -96,7 +97,7 @@ public class MainServlet extends ServletBase  {
 				removepagebutton.setToolTip(Labels.getString(M_LABEL_REMOVE_OPENED_PAGE));
 				removepagebutton.addEventListener(new DivRepEventListener(){
 					public void handleEvent(DivRepEvent e) {
-						removedialog.open();
+						removepagedialog.open();
 					}
 				});
 				
@@ -180,7 +181,7 @@ public class MainServlet extends ServletBase  {
 		out.write("</div>"); //main
 		
 		pagedialog.render(out);
-		removedialog.render(out);
+		removepagedialog.render(out);
 	}
 	
 	public static final String M_LABEL_SETTINGS = "Main.LABEL_SETTINGS";

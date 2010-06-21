@@ -13,10 +13,12 @@ import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepColorPicker;
 import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
+import com.divrep.common.DivRepMoneyAmount;
 import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
 
+import dsbudget.Main;
 import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Page;
@@ -119,7 +121,7 @@ public class CategoryDialog extends DivRepDialog
 			out.write(Labels.getString("CategoryDialog.LABEL_EXPENSE_SORT_OPTION"));
 			out.write("</td><td>");
 			sort_by.render(out);
-			out.write("</td></tr><tr><td></td><td>");
+			out.write("</td><td>");
 			sort_reverse.render(out);
 			out.write("</td></tr></table>");
 
@@ -136,6 +138,7 @@ public class CategoryDialog extends DivRepDialog
 		
 		setHeight(540);
 		setWidth(450);
+		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
 		content = new CategoryDialogContent(this);
 	}

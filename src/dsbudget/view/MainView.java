@@ -34,6 +34,8 @@ public class MainView extends DivRep {
 	CategoryDialog category_dialog;
 	ExpenseDialog expense_dialog;
 	DeductionDialog deduction_dialog;
+	RemoveIncomeDialog removeincomedialog;
+	RemoveCategoryDialog removecategorydialog;
 	
 	public MainView(DivRep parent, Budget _budget, Page _page) {
 		super(parent);
@@ -44,6 +46,8 @@ public class MainView extends DivRep {
 		category_dialog = new CategoryDialog(this); 
 		expense_dialog = new ExpenseDialog(this); 
 		deduction_dialog = new DeductionDialog(this);
+		removeincomedialog = new RemoveIncomeDialog(this);
+		removecategorydialog = new RemoveCategoryDialog(this);
 		
 		initView();
 	}
@@ -85,6 +89,8 @@ public class MainView extends DivRep {
 		category_dialog.render(out);
 		expense_dialog.render(out);
 		deduction_dialog.render(out);
+		removeincomedialog.render(out);
+		removecategorydialog.render(out);
 		
 		out.write("</div>");
 	}

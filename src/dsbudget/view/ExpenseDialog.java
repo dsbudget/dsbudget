@@ -4,7 +4,9 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
@@ -12,9 +14,11 @@ import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
+import com.divrep.common.DivRepMoneyAmount;
 import com.divrep.common.DivRepStaticContent;
 import com.divrep.common.DivRepTextBox;
 
+import dsbudget.Main;
 import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
@@ -74,10 +78,10 @@ public class ExpenseDialog extends DivRepDialog
 		public void render(PrintWriter out) {
 			out.write("<div id=\""+getNodeID()+"\">");
 			where.render(out);
-			note.render(out);
-			date.render(out);
 			amount.render(out);
-			
+			date.render(out);
+			note.render(out);
+		
 			out.write("<div class=\"optional_section round4\">");
 			tentative.render(out);
 			out.write("</div>");
@@ -93,6 +97,7 @@ public class ExpenseDialog extends DivRepDialog
 		
 		setHeight(400);
 		setWidth(370);
+		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
 		content = new ExpenseDialogContent(this);
 	}
@@ -122,6 +127,13 @@ public class ExpenseDialog extends DivRepDialog
 			date.validate();
 			tentative.validate();
 		}
+		
+		//TODO - reset autocomplete values for where field based
+		HashSet<String> values = new HashSet<String>();
+		for(Expense expense : category.expenses) {
+			values.add(expense.where.trim());
+		}
+		where.setAutoCompleteValues(values);
 		
 		where.redraw();
 		amount.redraw();

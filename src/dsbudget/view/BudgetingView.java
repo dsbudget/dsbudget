@@ -45,21 +45,23 @@ public class BudgetingView extends DivRep {
 				mainview.save();
 			}
 		});
-		
 	}
 	
 	protected void setTogglerIcon()
 	{
 		if(mainview.page.hide_budget) {
 			toggler.setTitle("css/images/expand.gif");
+			toggler.setToolTip("Expand Budget View");
 		} else {
 			toggler.setTitle("css/images/collapse.gif");	
+			toggler.setToolTip("Collapge Budget View");
 		}
 	}
 
 	protected void onEvent(DivRepEvent e) {
 		if(e.action.equals("remove")) {
 			//remove
+			/*
  			for(Category category : mainview.getCategories()) {
 				if(category.toString().equals(e.value)) {
 					mainview.removeCategory(category);
@@ -67,6 +69,14 @@ public class BudgetingView extends DivRep {
 		 			return;
 				}
  			}
+ 			*/
+ 			for(Category category : mainview.getCategories()) {
+				if(category.toString().equals(e.value)) {
+					mainview.removecategorydialog.open(category);
+		 			return;
+				}
+ 			}
+			
 		} else if(e.action.equals("sortstop")) {
 			String [] tokens = e.value.split("&");
 			Integer target_id = Integer.parseInt(tokens[0].split("_")[1]);

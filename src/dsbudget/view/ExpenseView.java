@@ -347,8 +347,10 @@ public class ExpenseView extends DivRep {
 	{
 		if(mainview.page.hide_expense) {
 			toggler.setTitle("css/images/expand.gif");
+			toggler.setToolTip("Expand Expense View");
 		} else {
 			toggler.setTitle("css/images/collapse.gif");	
+			toggler.setToolTip("Collapse Expense View");
 		}
 	}
 	

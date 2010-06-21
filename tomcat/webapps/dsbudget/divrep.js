@@ -9,9 +9,9 @@ function divrepClearProcessing() {
 function divrep(id, event, value, action) {
 	//stop bubble - needs to happen before ignore / queueing events to prevent
 	//event such as double clicking to bubble up
-	if(!event) var event = window.event;//IE
+	if(!event) var event = window.event;//for IE
 	if(event) {
-		event.cancelBubble = true;//IE
+		//event.cancelBubble = true;//IE
 		if(event.stopPropagation) event.stopPropagation();//Standard
 	}
 	

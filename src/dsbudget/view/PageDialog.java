@@ -17,6 +17,7 @@ import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
 
+import dsbudget.Main;
 import dsbudget.i18n.Labels;
 import dsbudget.model.Budget;
 import dsbudget.model.Category;
@@ -129,10 +130,12 @@ public class PageDialog extends DivRepDialog
 	}
 	
 	public PageDialog(DivRep parent, Budget _budget, Page _current_page) {
-		super(parent, true);
+		super(parent);
 		
 		setHeight(350);
-		setWidth(400);	
+		setWidth(400);
+		setHasCancelButton(true);
+		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
 		budget = _budget;
 		current_page = _current_page;
