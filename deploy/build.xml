@@ -125,16 +125,18 @@
 		    <fileset dir="../tomcat/webapps"/>
 		</copy>
 		
+		<copy file="${build.dir}/dsbudget.jar" todir="${build.dir}/linux-package/dsbudget"/>
+		
 		<copy file="run.sh" todir="${build.dir}/linux-package/dsbudget"/>
 		<copy file="dsbudget.conf" todir="${build.dir}/linux-package/dsbudget"/>
 		<copy file="dsbudget.user.conf" todir="${build.dir}/linux-package/dsbudget"/>
 
 		<copy file="BudgetDocument.xml" todir="${build.dir}/linux-package/dsbudget"/>
 		<tar longfile="gnu" destfile="${build.dir}/linux-package/dsbudget.tar">
-			<tarfileset dir="${build.dir}/linux-package/dsbudget" filemode="777">
+			<tarfileset dir="${build.dir}/linux-package" filemode="777">
 				<include name="**/*.sh"/>
 			</tarfileset>
-			<tarfileset dir="${build.dir}/linux-package/dsbudget">
+			<tarfileset dir="${build.dir}/linux-package">
 				<include name="**/*"/>
 				<exclude name="**/*.sh"/>
 			</tarfileset>
