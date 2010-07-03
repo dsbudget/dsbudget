@@ -25,7 +25,6 @@ import dsbudget.model.Page;
 import dsbudget.servlet.ServletBase;
 import dsbudget.view.MainView;
 import dsbudget.view.PageDialog;
-import dsbudget.view.RemoveCategoryDialog;
 import dsbudget.view.RemovePageDialog;
 
 public class MainServlet extends ServletBase  {
