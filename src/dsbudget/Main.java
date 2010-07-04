@@ -34,7 +34,7 @@ import dsbudget.model.Page;
 public class Main {
 	static Logger logger = Logger.getLogger(Main.class);
 	
-	static public String version = "2.0.19b";
+	static public String version = "2.0.19c";
 	
     public static Embedded tomcat = null;
     private Host host = null;

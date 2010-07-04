@@ -53,7 +53,7 @@ Function .OnInit
 	 
 		; Make sure no dsbudget is running - this isn't perfect but...
 		DetailPrint "Requesting to terminate dsBudget - if it's already running"
-		NSISdl::download_quiet /TIMEOUT=100 http://127.0.0.1:16091/dsbudget/stop $TEMP/dsbudget.stop_request
+		NSISdl::download_quiet /TIMEOUT=200 http://127.0.0.1:16091/dsbudget/stop $TEMP/dsbudget.stop_request
 	
 	  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
 	  "dsBudget is already installed. $\n$\nClick `OK` to remove the \
@@ -143,14 +143,6 @@ Section "Normal" ; (default section)
 	WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" "UninstallString" '"$INSTDIR\uninstall.exe"'
 	; write out uninstaller
 	WriteUninstaller "$INSTDIR\uninstall.exe"
-
-	;done of normal installation - define some special cases
-	Goto Done
-	
-	NoJava:
-	messageBox MB_OK "dsBudget requires Java to be installed on your machine. Please download it from http://java.com and install it first."
-	
-	Done:
 	
 SectionEnd ; end of default section
 
