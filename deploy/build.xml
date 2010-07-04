@@ -105,7 +105,7 @@
 		    <fileset dir="../tomcat/webapps"/>
 		</copy>
       		
-		<copy file="dsbudget.exe" todir="${build.dir}/win-standalone/dsbudget"/>
+		<copy file="${build.dir}/dsbudget.exe" todir="${build.dir}/win-standalone/dsbudget"/>
 		<copy file="dsbudget.conf" todir="${build.dir}/win-standalone/dsbudget"/>
 		<copy file="dsbudget.user.conf" todir="${build.dir}/win-standalone/dsbudget"/>
 		<copy file="BudgetDocument.xml" todir="${build.dir}/win-standalone/dsbudget"/>
