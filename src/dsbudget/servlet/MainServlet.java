@@ -134,7 +134,7 @@ public class MainServlet extends ServletBase  {
 		newpagebutton.render(out);
 		out.write("</div>");
 		
-		out.write("<h2>Pages</h2>");
+		out.write("<h2>"+Labels.getString("Main.LABEL_PAGES")+"</h2>");
 
 		ArrayList<Page> sorted_pages = budget.pages;
 		if(Main.conf.getProperty("pagelist_sortorder").equals("up")) {
