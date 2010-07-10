@@ -117,6 +117,7 @@ public class MainServlet extends ServletBase  {
 			}
 		};
 	
+		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		renderHeader(out, request);
 		renderSide(out, request);

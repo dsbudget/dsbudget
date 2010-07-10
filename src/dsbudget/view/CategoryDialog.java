@@ -7,6 +7,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.LinkedHashMap;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.common.DivRepCheckBox;

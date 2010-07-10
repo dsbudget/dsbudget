@@ -108,6 +108,7 @@ public class ServletBase extends HttpServlet {
 	{	
 		out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 		out.println("<html><head>");
+		out.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />");
 		out.println("<title>"+StringEscapeUtils.escapeHtml(current_page.name)+"</title>");
 
 		out.println("<link href=\"css/smoothness/jquery-ui-1.8.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
