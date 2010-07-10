@@ -1,3 +1,5 @@
-#Fri Jul 09 16:01:54 EDT 2010
+#Sat Jul 10 11:08:19 EDT 2010
 eclipse.preferences.version=1
+encoding//src/dsbudget/i18n=UTF-8
+encoding//src/dsbudget/i18n/labels_tr.properties=UTF-8
 encoding//src/dsbudget/servlet/ServletBase.java=UTF-8

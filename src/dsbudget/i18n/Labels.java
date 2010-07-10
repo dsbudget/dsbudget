@@ -19,8 +19,7 @@ public class Labels {
 	/**
 	 * The resource bundle.
 	 */
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
+	private static final ResourceBundle RESOURCE_BUNDLE = UTF8ResourceBundle.getBundle(BUNDLE_NAME);
 
 	/**
 	 * Retrieve the value associated to the key, and replace the parameters.
