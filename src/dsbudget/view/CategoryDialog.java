@@ -7,13 +7,12 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.LinkedHashMap;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepColorPicker;
-import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepMoneyAmount;
 import com.divrep.common.DivRepSelectBox;
@@ -25,10 +24,10 @@ import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 import dsbudget.model.Page;
 import dsbudget.model.Category.SortBy;
-import dsbudget.view.ExpenseDialog.ExpenseDialogContent;
 
 public class CategoryDialog extends DivRepDialog
 {
+	static Logger logger = Logger.getLogger(CategoryDialog.class);
 	MainView mainview;
 	
 	CategoryDialogContent content;
@@ -218,7 +217,6 @@ public class CategoryDialog extends DivRepDialog
 			category.color = color.getValue();
 			category.sort_by = toSortBy(sort_by.getValue());
 			category.sort_reverse = sort_reverse.getValue();
-			//category.graph_type = toGraphType(graph_type.getValue());
 			
 			mainview.redraw();
 			mainview.initView();
@@ -239,7 +237,6 @@ public class CategoryDialog extends DivRepDialog
 		valid &= color.isValid();
 		valid &= sort_by.isValid();
 		valid &= sort_reverse.isValid();
-		//valid &= graph_type.isValid();
 		return valid;
 	}
 	

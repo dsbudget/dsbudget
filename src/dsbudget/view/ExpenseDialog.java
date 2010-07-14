@@ -4,18 +4,22 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+
+import org.apache.log4j.Logger;
+import org.jfree.util.Log;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
-import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepCheckBox;
 import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepMoneyAmount;
-import com.divrep.common.DivRepStaticContent;
+import com.divrep.common.DivRepSelectBox;
 import com.divrep.common.DivRepTextBox;
 
 import dsbudget.Main;
@@ -25,6 +29,7 @@ import dsbudget.model.Expense;
 
 public class ExpenseDialog extends DivRepDialog
 {
+	static Logger logger = Logger.getLogger(ExpenseDialog.class);
 	MainView mainview;
 	
 	ExpenseDialogContent content;
@@ -34,6 +39,7 @@ public class ExpenseDialog extends DivRepDialog
 	public DivRepDate date;
 	public DivRepTextBox amount;
 	public DivRepCheckBox tentative;
+	public DivRepSelectBox moveto;
 	
 	Category category;
 	Expense expense;
@@ -68,6 +74,10 @@ public class ExpenseDialog extends DivRepDialog
 			//
 			tentative = new DivRepCheckBox(this);
 			tentative.setLabel(Labels.getString(EXD_LABEL_TENTATIVE));	
+			
+			moveto = new DivRepSelectBox(this);
+			moveto.setLabel(Labels.getString("ExpenseDialog.LABEL_MOVE"));
+			moveto.setNullLabel(Labels.getString("ExpenseDialog.LABEL_NOMOVE"));
 		}
 
 		protected void onEvent(DivRepEvent e) {
@@ -84,18 +94,19 @@ public class ExpenseDialog extends DivRepDialog
 		
 			out.write("<div class=\"optional_section round4\">");
 			tentative.render(out);
+			out.write("<br>");
+			moveto.render(out);
 			out.write("</div>");
 			
 			out.write("</div>");			
 		}
-		
 	}
 	
 	public ExpenseDialog(MainView parent) {
 		super(parent);
 		mainview = parent;
 		
-		setHeight(400);
+		setHeight(430);
 		setWidth(370);
 		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
@@ -113,6 +124,7 @@ public class ExpenseDialog extends DivRepDialog
 			note.setValue("");
 			date.setValue(new Date());
 			tentative.setValue(false);
+			moveto.setHidden(true);
 		} else {
 			setTitle(Labels.getString(EXD_LABEL_UPDATE_EXPENSE, category.name));
 			where.setValue(expense.where);
@@ -121,11 +133,21 @@ public class ExpenseDialog extends DivRepDialog
 			date.setValue(expense.date);
 			tentative.setValue(expense.tentative);
 			
+			moveto.setHidden(false);
+			LinkedHashMap<Integer, String> kv = new LinkedHashMap<Integer, String>();
+			for(Category cat : mainview.page.categories) {
+				if(cat == category) continue;
+				kv.put(cat.getID(), cat.name);
+			}
+			moveto.setValues(kv);
+			moveto.setValue(null);
+			
 			where.validate();
 			amount.validate();
 			note.validate();
 			date.validate();
 			tentative.validate();
+			moveto.validate();
 		}
 		
 		//TODO - reset autocomplete values for where field based
@@ -140,6 +162,7 @@ public class ExpenseDialog extends DivRepDialog
 		note.redraw();
 		date.redraw();
 		tentative.redraw();
+		moveto.redraw();
 		super.open();
 	}
 	
@@ -167,6 +190,18 @@ public class ExpenseDialog extends DivRepDialog
 			expense.description = note.getValue();
 			expense.date = date.getValue();
 			expense.tentative = tentative.getValue();
+			
+			Integer moveto = this.moveto.getValue();
+			if(moveto != null) {
+				for(Category cat : mainview.page.categories) {
+					if(cat.getID().equals(moveto)) {
+						category.removeExpense(expense);
+						cat.addExpense(expense);
+						mainview.updateCategory(cat);
+						break;
+					}
+				}
+			}
 			
 			close();
 			mainview.updateExpenseCategory(category);

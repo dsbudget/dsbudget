@@ -44,27 +44,6 @@ public class DeductionDialog extends DivRepDialog
 		amount.setWidth(200);
 		amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(DED_LABEL_AMOUNT_SAMPLE))));
 		amount.setRequired(true);
-		/*
-		amount.addEventListener(new DivRepEventListener() {
-			public void handleEvent(DivRepEvent e) {
-				String value = e.value.trim();
-				amount.setValue("");
-				try {
-					BigDecimal b = new BigDecimal(value);
-					amount.setValue(nf.format(b));
-				} catch(NumberFormatException ne) {
-					try {
-						Number n = nf.parse(value);
-						amount.setValue(nf.format(n));
-					} catch (ParseException e1) {
-						//any other idea?
-					}
-
-				}
-				amount.redraw();
-			}
-		});
-		*/
 	}
 	
 	public void open(Income _income, Deduction _deduction)
