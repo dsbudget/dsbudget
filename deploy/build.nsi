@@ -115,7 +115,7 @@ Section "Normal" ; (default section)
 			CopyOld:
 				messageBox MB_OK "You have SimpleD Budget document in $0. Creating a copy for dsBudget at $APPDATA\dsBudget."
 				DetailPrint "Copying SimpleD Budget doc from program files location"
-				CopyFiles $0 $APPDATA/BudgetDocument.xml
+				CopyFiles $0 $APPDATA\dsBudget\BudgetDocument.xml
 				Goto DoneDocInstall
 				
 			CopySample:
