@@ -5,12 +5,17 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class Category extends ObjectID implements XMLSerializer {
+import dsbudget.servlet.ServletBase;
 
+public class Category extends ObjectID implements XMLSerializer {
+	static Logger logger = Logger.getLogger(Category.class);
+	
 	private Page parent;
 	
 	public BigDecimal amount;
@@ -171,11 +176,14 @@ public class Category extends ObjectID implements XMLSerializer {
 		}
 		
 		name = element.getAttribute("name");
-		
+
+		sort_by = SortBy.DATE;
 		if(element.hasAttribute("sort_by")) {
-			sort_by = SortBy.valueOf(element.getAttribute("sort_by"));
-		} else {
-			sort_by = SortBy.DATE;
+			try {
+				sort_by = SortBy.valueOf(element.getAttribute("sort_by"));
+			} catch(Exception e) {
+				logger.warn("invalid sort_by parameter on category - ignoring and using default", e);
+			}
 		}
 		
 		if(element.hasAttribute("sort_reverse")) {
