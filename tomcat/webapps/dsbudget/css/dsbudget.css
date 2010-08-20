@@ -340,7 +340,8 @@ border: none;
 }
 
 #footer {
-padding-top: 10px;
+padding-top: 5px;
+padding-bottom: 5px;
 color: white;
 text-align: center;
 line-height: 150%;

@@ -139,15 +139,13 @@ public class ServletBase extends HttpServlet {
 
 		out.println("<div id=\"footer\">");
 		out.println("<span class=\"version\">dsBudget "+Main.version+"</span>&nbsp;");
-		out.println("<span class=\"divrep\">Developed with <a href=\"http://divrep.com\" target=\"_blank\">DivRep Library</a> by <a href=\"http://sites.google.com/site/soichih/\" target=\"_blank\">Soichi Hayashi</a></span>");
-		out.println("<br/>");
-		out.println("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");
 		out.println(" | ");
-		out.println("<a href=\"http://dsbudget.blogspot.com/\" target=\"_blank\">Blog</a>");
+		out.println("<a href=\"http://sites.google.com/site/dsbudgethome/\" target=\"_blank\">Homepage</a>");
 		out.println(" | ");
 		out.println("<a href=\"http://code.google.com/p/dsbudget/issues/list\" target=\"_blank\">Report Bugs</a>");
 		out.println(" | ");
-		out.println("<a href=\"http://groups.google.com/group/dsbudget/topics\" target=\"_blank\">Discussion Forum</a>");
+		out.println("<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9574026\" target=\"_blank\">Donate</a>");
+
 
 		out.println("</div>");
 		out.println("</body></html>");
