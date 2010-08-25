@@ -63,7 +63,7 @@ margin-right: 10px;
 }
 
 .pageselector {
-background-color: #444;
+background:#333 url(images/pages_back.gif) repeat-x scroll left top;
 color: #ccc;
 font-size: 12px;
 line-height: 160%;
@@ -186,13 +186,15 @@ font-size: 10pt;
 
 #budgetting_list li, 
 #income_list li,
-.expenseview tr.expense_category {
+.expenseview tr.expense_category,
+#balanceview_list li {
 background-color: #ddd;
 border-bottom: 1px solid white;
 }
 
 #budgetting_list,
-#income_list { 
+#income_list,
+#balanceview_list { 
 list-style-type: none;
 margin: 0;
 padding: 0;
@@ -273,9 +275,6 @@ background-color: #666;
 color: white;
 }
 
-.balanceview td {
-padding-top: 5px;
-}
 
 /*for IE - which doesn't honer tr border...*/
 tr.expense td,
@@ -370,4 +369,16 @@ color: red;
 background-color: #ddd;
 margin-top: 10px;
 padding: 10px;
+}
+
+table.graph {
+width: 100%;
+height: 18px;
+padding: 0px;
+margin: 0px;
+}
+
+table.graph td {
+padding: 0px;
+margin: 0px;
 }

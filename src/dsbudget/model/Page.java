@@ -16,6 +16,7 @@ public class Page extends ObjectID implements XMLSerializer {
 	public Boolean hide_budget;
 	public Boolean hide_income;
 	public Boolean hide_expense;
+	public Boolean hide_balance;
 	
 	public ArrayList<Income> incomes = new ArrayList<Income>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
@@ -39,6 +40,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		hide_budget = false;
 		hide_income = false;
 		hide_expense = false;
+		hide_balance = false;
 	}
 	public Page clone() {
 		Page page = new Page(parent);
@@ -47,6 +49,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		page.hide_budget = hide_budget;
 		page.hide_income = hide_income;
 		page.hide_expense = hide_expense;
+		page.hide_balance = hide_balance;
 		
 		page.incomes = new ArrayList<Income>();
 		for(Income income : incomes) {
@@ -125,6 +128,16 @@ public class Page extends ObjectID implements XMLSerializer {
 			hide_expense = false;
 		}
 		
+		if(element.hasAttribute("hide_balance")) {
+			if(element.getAttribute("hide_balance").equals("yes")) {
+				hide_balance = true;
+			} else {
+				hide_balance = false;
+			}
+		} else {
+			hide_balance = false;
+		}
+		
 		//income / category
 		NodeList nl = element.getChildNodes();
 		if(nl != null && nl.getLength() > 0) {
@@ -150,6 +163,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		elem.setAttribute("hide_budget", (hide_budget==true?"yes":"no"));
 		elem.setAttribute("hide_income", (hide_income==true?"yes":"no"));
 		elem.setAttribute("hide_expense", (hide_expense==true?"yes":"no"));
+		elem.setAttribute("hide_balance", (hide_balance==true?"yes":"no"));
 		for(Income income : incomes) {
 			elem.appendChild(income.toXML(doc));
 		}
