@@ -94,7 +94,7 @@ public class ExpenseDialog extends DivRepDialog
 		
 			out.write("<div class=\"optional_section round4\">");
 			tentative.render(out);
-			out.write("<br>");
+			out.write("<br/>");
 			moveto.render(out);
 			out.write("</div>");
 			

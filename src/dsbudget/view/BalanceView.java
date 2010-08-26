@@ -92,7 +92,7 @@ class BalanceView extends DivRep
 				int g = (255 + 255 + orig.getGreen())/3;
 				int b = (255 + 255 + orig.getBlue())/3;
 				Color header_color = new Color(r,g,b);
-				out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+"; class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");			
+				out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\" class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");			
 				
 				//out.write("<tr class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");			
 
