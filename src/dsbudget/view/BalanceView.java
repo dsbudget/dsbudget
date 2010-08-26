@@ -142,28 +142,30 @@ class BalanceView extends DivRep
 			}
 			
 			//unbudgeted income
-			out.write("<li>");
-			out.write("<table width=\"100%\">");
-			out.write("<tr>");
-			out.write("<td width=\"20px\">&nbsp;</td>");	
-			out.write("<th style=\"color: #666;\" width=\"270px\">"+Labels.getHtmlEscapedString("BalanceView.LABEL_UNBUDGETED_INCOME")+"</th>");
-			out.write("<td style=\"text-align: right;\" width=\"90px\"></td>"); //budget
-			out.write("<td style=\"text-align: right;\" width=\"90px\"></td>"); //spent
+			BigDecimal unbudgetted = mainview.getTotalUnBudgetted();
+			if(unbudgetted.compareTo(BigDecimal.ZERO) != 0) {
+				out.write("<li>");
+				out.write("<table width=\"100%\">");
+				out.write("<tr>");
+				out.write("<td width=\"20px\">&nbsp;</td>");	
+				out.write("<th style=\"color: #666;\" width=\"270px\">"+Labels.getHtmlEscapedString("BalanceView.LABEL_UNBUDGETED_INCOME")+"</th>");
+				out.write("<td style=\"text-align: right;\" width=\"90px\"></td>"); //budget
+				out.write("<td style=\"text-align: right;\" width=\"90px\"></td>"); //spent
+				
+				//remaining
+				out.write("<td style=\"text-align: right;\" width=\"90px\">");
+				AmountView av = new AmountView(this, unbudgetted);
+				av.render(out);
+				out.write("</td>");
 			
-			//remaining
-			out.write("<td style=\"text-align: right;\" width=\"90px\">");
-			AmountView av = new AmountView(this, mainview.getTotalUnBudgetted());
-			av.render(out);
-			out.write("</td>");
-		
-			out.write("<td></td>");	//graph
-			
-			out.write("<th width=\"20px\"></th>");
-			
-			out.write("</tr>");
-			out.write("</table>");
-			out.write("</li>");				
-			
+				out.write("<td></td>");	//graph
+				
+				out.write("<th width=\"20px\"></th>");
+				
+				out.write("</tr>");
+				out.write("</table>");
+				out.write("</li>");		
+			}
 			
 			out.write("</ul>");
 		}
