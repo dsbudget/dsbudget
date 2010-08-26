@@ -144,8 +144,7 @@ public class ServletBase extends HttpServlet {
 		out.println(" | ");
 		out.println("<a href=\"http://code.google.com/p/dsbudget/issues/list\" target=\"_blank\">Report Bugs</a>");
 		out.println(" | ");
-		out.println("<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9574026\" target=\"_blank\">Donate</a>");
-
+		out.println("<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9574026\" target=\"_blank\">Donate</a> to support this project");
 
 		out.println("</div>");
 		out.println("</body></html>");
