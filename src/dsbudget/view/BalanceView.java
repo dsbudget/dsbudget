@@ -194,13 +194,15 @@ class BalanceView extends DivRep
 		out.write("<td>");
 		int amount = total_budgetted.intValue();
 		int spent = total_spent.intValue()*100;
-		int percentage = spent / amount;
+		int percentage = 0;
+		if(amount != 0) {
+			percentage = spent / amount;
+		}
 		if(percentage > 100) {
 			percentage = 100;
 		}
 		DivRepProgressbar pbar = new DivRepProgressbar(this);
 		pbar.setValue(100-percentage);
-		//pbar.setColor(category.color);
 		pbar.render(out);
 		out.write("</td>");	
 		
@@ -214,15 +216,6 @@ class BalanceView extends DivRep
 		
 		out.write("</div>");
 	}
-	/*
-	private void renderAmountTD(PrintWriter out, BigDecimal amount) {
-		String negative = "";
-		if(amount.compareTo(BigDecimal.ZERO) < 0) {
-			negative = "negative";
-		}
-		out.write("<td style=\"text-align: right;\" class=\""+negative+"\">" + nf.format(amount) + "</td>");
-	}
-	*/
 	
 	public static final String BAV_LABEL_HEADER = "BalanceView.LABEL_HEADER";;
 
