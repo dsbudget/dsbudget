@@ -194,7 +194,10 @@ class BalanceView extends DivRep
 		out.write("<td>");
 		int amount = total_budgetted.intValue();
 		int spent = total_spent.intValue()*100;
-		int percentage = spent / amount;
+		int percentage = 0;
+		if(amount != 0) {
+			percentage = spent / amount;
+		}
 		if(percentage > 100) {
 			percentage = 100;
 		}
