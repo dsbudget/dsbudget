@@ -51,7 +51,12 @@ public class Main {
 		conf = new Properties();
 		try {
 			//load configuration
-			conf.load(new FileInputStream("dsbudget.conf"));
+			File conf_file = new File("dsbudget.conf");
+			if(!conf_file.exists()) {
+				JOptionPane.showMessageDialog(null, "Can't find dsbudget.conf. Make sure you are using a luncher shortcut which sets the current directory, or run .exe on a directory that contains the conf file.");	
+				System.exit(1);
+			}
+			conf.load(new FileInputStream(conf_file));
 			
 			//override it with user configuration
 			File user_conf_file = new File("dsbudget.user.conf");

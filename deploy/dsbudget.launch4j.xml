@@ -1,8 +1,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\soichi\dev\dsbudget\deploy\build\dsbudget.jar</jar>
-  <outfile>C:\Users\soichi\dev\dsbudget\deploy\build\dsbudget.exe</outfile>
+  <jar>build\dsbudget.jar</jar>
+  <outfile>build\dsbudget.exe</outfile>
   <errTitle>dsBudget runs on Java. Please install Java first.</errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>
@@ -12,7 +12,7 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>C:\Users\soichi\dev\dsbudget\deploy\dsbudget.ico</icon>
+  <icon>dsbudget.ico</icon>
   <var>divrep_invalidate_samepagekey=true</var>
   <jre>
     <path></path>

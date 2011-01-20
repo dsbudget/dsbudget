@@ -131,16 +131,14 @@ Section "Normal" ; (default section)
 	CreateDirectory $SMPROGRAMS\dsBudget
 			
 	CreateShortCut "$DESKTOP\dsBudget.lnk" "$INSTDIR\dsbudget.exe"
-	createShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$INSTDIR\dsbudget.exe"
+	CreateShortCut "$SMPROGRAMS\dsBudget\Start dsBudget.lnk" "$INSTDIR\dsbudget.exe"
+	CreateShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
+	CreateShortCut "$INSTDIR\start.lnk" "$INSTDIR\dsbudget.exe"
 		
-	;run as admin (doesn't seem to do anyyhing)
-	;WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\layers" "$DESKTOP\dsBudget.lnk" "RUNASADMIN"
-	
-	createShortCut "$SMPROGRAMS\dsBudget\Uninstall dsBudget.lnk" "$INSTDIR\uninstall.exe"
-	
 	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\dsBudget" "" "$INSTDIR"
 	WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" "DisplayName" "dsBudget (remove only)"
 	WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\dsBudget" "UninstallString" '"$INSTDIR\uninstall.exe"'
+
 	; write out uninstaller
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 
