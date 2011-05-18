@@ -144,8 +144,13 @@ public class ServletBase extends HttpServlet {
 		out.println(" | ");
 		out.println("<a href=\"http://code.google.com/p/dsbudget/issues/list\" target=\"_blank\">Report Bugs</a>");
 		out.println(" | ");
-		out.println("Your <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=9574026\" target=\"_blank\">Donation</a> supports this project");
-
+		out.println("<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=9574026\" target=\"_blank\">Donate</a>");
+		
+		out.println("<br>");
+		File document = new File(Main.conf.getProperty("document"));
+		document.getAbsolutePath();
+		out.println(StringEscapeUtils.escapeHtml(document.getAbsolutePath()));
+		
 		out.println("</div>");
 		out.println("</body></html>");
 	}

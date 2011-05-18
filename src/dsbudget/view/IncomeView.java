@@ -209,7 +209,7 @@ public class IncomeView extends DivRep {
 				out.write(">"+StringEscapeUtils.escapeHtml(name)+"</th>");
 				
 				if(income.deductions.size() > 0) {
-					out.write("<td width=\"120px\" class=\"note\">");
+					out.write("<td width=\"140px\" class=\"note\">");
 					DivRepButton showhidedeductionbutton = new DivRepButton(this, Labels.getString(INV_LABEL_SHOW_DEDUCTIONS));
 					if(income.show_deductions) {
 						showhidedeductionbutton.setTitle(Labels.getString(INV_LABEL_HIDE_DEDUCTIONS));
@@ -224,7 +224,7 @@ public class IncomeView extends DivRep {
 					showhidedeductionbutton.render(out);
 					out.write("</td>");
 				} else {
-					out.write("<td width=\"120px\" class=\"newitem\">");
+					out.write("<td width=\"140px\" class=\"newitem\">");
 					addnewdeduction.render(out);
 					out.write("</td>");
 				}
