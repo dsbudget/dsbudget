@@ -90,14 +90,18 @@ public class SearchServlet extends PageServletBase  {
         			if(deduction.description.toLowerCase().contains(primary_term.toLowerCase())) {
         				resultarea.deduction_results.add(new DeductionSearchResult(income, deduction));
         			}
+        			
     			}
     		}
     		
     		for(Category category : page.categories) {
     			//search expense
     			for(Expense expense : category.expenses) {
-        			if(expense.description.toLowerCase().contains(primary_term.toLowerCase()) ||
-        					expense.where.toLowerCase().contains(primary_term.toLowerCase())) {
+        			if(
+        					expense.description.toLowerCase().contains(primary_term.toLowerCase()) ||
+        					category.name.toLowerCase().contains(primary_term.toLowerCase()) ||
+        					expense.where.toLowerCase().contains(primary_term.toLowerCase())
+        			) {
         				resultarea.expense_results.add(new ExpenseSearchResult(category, expense));
         			}
     			}
@@ -342,7 +346,7 @@ class ExpenseSearchResult implements SearchResult {
 		out.write("</tr>");
 	}
 	public String getTerm() {
-		return expense.description + " " + expense.where;
+		return expense.description + " " + expense.where + " " + category.name;
 	}
 	
 	static public void renderCSVHeader(PrintWriter out) {
