@@ -23,6 +23,7 @@ class BalanceView extends DivRep
 	
 	DivRepButton toggler;
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
+	NumberFormat pnf = NumberFormat.getPercentInstance();
 	DateFormat df = DateFormat.getDateInstance();
 	
 	public BalanceView(final MainView parent) {
@@ -101,7 +102,12 @@ class BalanceView extends DivRep
 
 				//budget
 				out.write("<td style=\"text-align: right;\" width=\"90px\">");
-				AmountView av = new AmountView(this, category.amount);
+				if(category.isPercentage()) {
+					out.write("<span class=\"note\">(");
+					out.write(StringEscapeUtils.escapeHtml((pnf.format(category.getPercentage()))));
+					out.write(")</span> ");
+				}
+				AmountView av = new AmountView(this, category.getAmount());
 				av.render(out);
 				out.write("</td>");
 				
@@ -113,13 +119,13 @@ class BalanceView extends DivRep
 				
 				//remaining
 				out.write("<td style=\"text-align: right;\" width=\"90px\">");
-				av = new AmountView(this, category.amount.subtract(category.getTotalExpense()));
+				av = new AmountView(this, category.getAmount().subtract(category.getTotalExpense()));
 				av.render(out);
 				out.write("</td>");
 				
 				//graph
 				out.write("<td>");
-				int amount = category.amount.intValue();
+				int amount = category.getAmount().intValue();
 				int spent = category.getTotalExpense().intValue()*100;
 				int percentage = 0;
 				if(amount != 0) {

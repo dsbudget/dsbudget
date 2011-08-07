@@ -11,6 +11,12 @@ import org.w3c.dom.NodeList;
 public class Page extends ObjectID implements XMLSerializer {
 	Budget parent;
 	
+	//define static pages
+	public static final Page search_page = new Page(null);
+	static {
+		search_page.name = "Search";
+	}
+	
 	public String name;
 	public Date created;
 	public Boolean hide_budget;
@@ -88,7 +94,7 @@ public class Page extends ObjectID implements XMLSerializer {
 	{
 		BigDecimal total = new BigDecimal(0);
 		for(Category category : categories) {
-			total = total.add(category.amount);
+			total = total.add(category.getAmount());
 		}
 		return total;
 	}

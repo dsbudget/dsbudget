@@ -34,10 +34,16 @@ public class Budget implements XMLSerializer {
 	public String openpage;
 	public static SaveThread savethread;
 	
+	private Page search_page;
+	
 	public Budget()
-	{
+	{	
 		savethread = new SaveThread(this);
 		savethread.start();
+		
+		//init static pages
+		search_page = new Page(this);
+		search_page.name = "__search__";
 	}
 	
 	public void save()
@@ -130,7 +136,7 @@ public class Budget implements XMLSerializer {
 		return null;
 	}
 	
-	public Page findPage(String pagename) {	
+	public Page findPage(String pagename) {			
 		for(Page p : pages) {
 			if(p.name.equals(pagename)) {
 				return p;

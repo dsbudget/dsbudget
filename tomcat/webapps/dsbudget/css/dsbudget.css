@@ -19,6 +19,10 @@ h1, h2, h3 {
 font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;	
 }
 
+a {
+color: #666;
+}
+
 span.application_header {
 font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
 font-size:19pt;
@@ -381,4 +385,50 @@ margin: 0px;
 table.graph td {
 padding: 0px;
 margin: 0px;
+}
+
+.search_result {
+background-color: white;
+}
+
+.search_result h2 {
+    font-size: 20px;
+    margin-bottom: 3px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+
+.search_result p {
+padding: 10px;
+}
+.search_result table {
+width: 100%;
+padding: 10px;
+border-collapse: collapse;
+}
+.search_result th {
+text-align: left;
+padding-right: 10px;
+}
+.search_result td {
+border-bottom: 1px solid white;
+padding-right: 10px;
+}
+.search_result tr {
+height: 25px;
+}
+.search_result tr.data {
+background-color: #eee;
+}
+
+button.ui-datepicker-trigger {
+padding: 2px;
+}
+
+.search_result .export {
+float: right;
+padding-top: 12px;
+padding-right: 15px;
 }

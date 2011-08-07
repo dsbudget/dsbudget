@@ -139,6 +139,7 @@ public class BudgetingView extends DivRep {
 		final AmountView total_unbudgetted_view = new AmountView(this, mainview.getTotalUnBudgetted());
 		
 		NumberFormat nf = NumberFormat.getCurrencyInstance();
+		NumberFormat pnf = NumberFormat.getPercentInstance();
 
 		Long max = total_free_income.longValue();
 		if(max > 0) {
@@ -156,7 +157,7 @@ public class BudgetingView extends DivRep {
 				out.write(StringEscapeUtils.escapeHtml(nf.format(total_free_income)));
 			}
 			out.write("</th>");
-			out.write("<th width=\"90px\" style=\"text-align: right;\"></th><th width=\"20px\">");
+			out.write("<th width=\"110px\" style=\"text-align: right;\"></th><th width=\"20px\">");
 			toggler.render(out);
 			out.write("</th></tr>");
 			out.write("</table>");
@@ -168,7 +169,7 @@ public class BudgetingView extends DivRep {
 					slider.addEventListener(new DivRepEventListener() {
 						public void handleEvent(DivRepEvent e) {
 							if(e.action.equals("slidechange")) {
-								category.amount = new BigDecimal(e.value);
+								category.setAmount(new BigDecimal(e.value));
 								redraw();
 								mainview.updateExpenseCategory(category);
 								mainview.save();
@@ -178,7 +179,7 @@ public class BudgetingView extends DivRep {
 					
 					slider.setListenSlideEvents(true);
 					slider.setMax(max);
-					slider.setValue(category.amount.longValue());
+					slider.setValue(category.getAmount().longValue());
 					slider.setColor(category.color);
 					
 					out.write("<li id=\"cat_"+category.getID()+"\" >");
@@ -192,15 +193,20 @@ public class BudgetingView extends DivRep {
 					slider.render(out);
 					out.write("</td>");
 					
-					out.write("<th style=\"text-align: right;\" width=\"90px\">");
-					final AmountView av = new AmountView(this, category.amount);
+					out.write("<th style=\"text-align: right;\" width=\"110px\">");
+					if(category.isPercentage()) {
+						out.write("<span class=\"note\">(");
+						out.write(StringEscapeUtils.escapeHtml((pnf.format(category.getPercentage()))));
+						out.write(")</span> ");
+					}
+					final AmountView av = new AmountView(this, category.getAmount());
 					av.render(out);
 					slider.addEventListener(new DivRepEventListener(){
 						public void handleEvent(DivRepEvent e) {
 							if(e.action.equals("slide")) {
-								category.amount = new BigDecimal(e.value);
+								category.setAmount(new BigDecimal(e.value));
 	
-								av.setValue(category.amount);
+								av.setValue(category.getAmount());
 								av.redraw();
 								
 								total_unbudgetted_view.setValue(mainview.getTotalUnBudgetted());
@@ -232,7 +238,7 @@ public class BudgetingView extends DivRep {
 
 			out.write("<th style=\"text-align: right;\">");
 			out.write(Labels.getHtmlEscapedString(BUV_LABEL_TOTAL_UNBUDGETED));
-			out.write("</th><th width=\"90px\" style=\"text-align: right;\">");
+			out.write("</th><th width=\"110px\" style=\"text-align: right;\">");
 			total_unbudgetted_view.render(out);
 			out.write("</th><th width=\"20px\"></th></tr>");
 		

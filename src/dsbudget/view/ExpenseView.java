@@ -28,6 +28,7 @@ public class ExpenseView extends DivRep {
 	ArrayList<CategoryView> category_views;
 	
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
+	NumberFormat pnf = NumberFormat.getPercentInstance();
 	DateFormat df = DateFormat.getDateInstance();
 
 	class PageBalanceGraphView extends DivRep
@@ -236,7 +237,14 @@ public class ExpenseView extends DivRep {
 			out.write(" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"', 'cat_edit')\" class=\"expense_category\">");
 			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
-			out.write("<th width=\"100px\"></th><th width=\"90px\" class=\"note\" style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(category.amount))+"</th><td width=\"20px\"></td>");
+			out.write("<th width=\"100px\"></th><th width=\"110px\" class=\"note\" style=\"text-align: right;\">");
+			if(category.isPercentage()) {
+				out.write("<span class=\"note\">(");
+				out.write(StringEscapeUtils.escapeHtml((pnf.format(category.getPercentage()))));
+				out.write(")</span> ");
+			}
+			out.write(StringEscapeUtils.escapeHtml(nf.format(category.getAmount())));
+			out.write("</th><td width=\"20px\"></td>");
 			out.write("</tr>");
 			
 			for(Expense expense : category.getExpensesSorted()) {
@@ -251,22 +259,19 @@ public class ExpenseView extends DivRep {
 				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.where)+"&nbsp;" + decoration + "</td>");
 				out.write("<td>"+StringEscapeUtils.escapeHtml(expense.description)+"</td>");
 				out.write("<td style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(df.format(expense.date))+"</td>");
-				String negative = "";
-				if(expense.amount.compareTo(BigDecimal.ZERO) < 0) {
-					negative = "negative";
-				}
-				out.write("<td style=\"text-align: right;\" class=\""+negative+"\">");
-				out.write(StringEscapeUtils.escapeHtml(nf.format(expense.amount))+"</td>");
 				
+				out.write("<td style=\"text-align: right;\">");
+				AmountView av_deduction = new AmountView(this, expense.amount);
+				av_deduction.render(out);
 				out.write("<td>");
+				
 				out.write("<img onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"', 'remove');\" class=\"remove_button\" alt=\"remove\" src=\"css/images/delete.png\"/>");
 				out.write("</td>");
 				out.write("</tr>");
 			}
 			
 			//balance
-			BigDecimal remain = category.amount;
-			remain = remain.subtract(category.getTotalExpense());
+			BigDecimal remain = category.getAmount().subtract(category.getTotalExpense());
 			out.write("<tr class=\"expense_footer\">");
 			
 			out.write("<td></td>");
@@ -284,11 +289,11 @@ public class ExpenseView extends DivRep {
 			out.write("<th style=\"text-align: right;\">");
 			out.write(Labels.getHtmlEscapedString(EXV_LABEL_REMAINING));
 			out.write("</th>");
-			String negative = "";
-			if(remain.compareTo(BigDecimal.ZERO) < 0) {
-				negative = "negative";
-			}
-			out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(remain))+"</th>");
+			
+			out.write("<th style=\"text-align: right;\">");
+			AmountView av_remain = new AmountView(this, remain);
+			av_remain.render(out);
+			out.write("</th>");
 			
 			out.write("<td></td>"); //remove button
 			
@@ -305,11 +310,11 @@ public class ExpenseView extends DivRep {
 				out.write("<th colspan=\"2\" style=\"text-align: right;\">");
 				out.write(Labels.getHtmlEscapedString(EXV_LABEL_SCHEDULED_REMAINING));
 				out.write("</th>");
-				negative = "";
-				if(scheduled_remaining.compareTo(BigDecimal.ZERO) < 0) {
-					negative = "negative";
-				}
-				out.write("<th style=\"text-align: right;\" class=\""+negative+"\">"+StringEscapeUtils.escapeHtml(nf.format(scheduled_remaining))+"</th>");
+
+				out.write("<th style=\"text-align: right;\">");
+				AmountView av_scheduled_remaining = new AmountView(this, scheduled_remaining);
+				av_scheduled_remaining.render(out);
+				out.write("</th>");
 				out.write("<td></td>"); //remove button
 				
 				out.write("</tr>");

@@ -84,7 +84,7 @@ public class Income extends ObjectID implements XMLSerializer {
 	public BigDecimal getTotalDeduction() {
 		BigDecimal total = new BigDecimal(0);
 		for(Deduction deduction : deductions) {
-			total = total.add(deduction.amount);
+			total = total.add(deduction.getAmount(getAmount()));
 		}
 		return total;
 	}

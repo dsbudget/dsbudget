@@ -34,7 +34,7 @@ import dsbudget.model.Page;
 public class Main {
 	static Logger logger = Logger.getLogger(Main.class);
 	
-	static public String version = "2.0.22";
+	static public String version = "2.0.22(alpha)";
 	
     public static Embedded tomcat = null;
     private Host host = null;
@@ -86,7 +86,7 @@ public class Main {
 			} 
 	
 			//open browser
-			page_url = "http://127.0.0.1:"+conf.getProperty("tomcat_port")+"/dsbudget/main";
+			page_url = "http://"+conf.getProperty("tomcat_ip")+":"+conf.getProperty("tomcat_port")+"/dsbudget/main";
 			if (Desktop.isDesktopSupported()) {
 				logger.info("Opening a browser...");
 				try {
@@ -210,7 +210,7 @@ public class Main {
         Connector connector = null;
         try {
             connector = new Connector();
-            IntrospectionUtils.setProperty(connector, "address", "127.0.0.1");
+            IntrospectionUtils.setProperty(connector, "address", conf.getProperty("tomcat_ip"));
             IntrospectionUtils.setProperty(connector, "port", conf.getProperty("tomcat_port"));     
         } catch (Exception ex) {
             logger.error("Couldn't create connector", ex);

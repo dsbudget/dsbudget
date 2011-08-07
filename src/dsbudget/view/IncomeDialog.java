@@ -191,10 +191,10 @@ public class IncomeDialog extends DivRepDialog
 	{
 		Boolean valid = true;
 		if(balance_from.getValue()) {
-			valid &= balance_from_name.isValid();
+			valid &= balance_from_name.validate();
 		} else {
-			valid &= amount.isValid();
-			valid &= description.isValid();
+			valid &= amount.validate();
+			valid &= description.validate();
 		}
 		//valid &= deductionview.isValid();
 		return valid;

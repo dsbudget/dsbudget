@@ -34,9 +34,9 @@ public class AmountView extends DivRep {
 			negative = "negative";
 		}
 		
-		out.write("<div class=\""+negative+"\" id=\""+getNodeID()+"\">");
+		out.write("<span class=\""+negative+"\" id=\""+getNodeID()+"\">");
 		out.write(StringEscapeUtils.escapeHtml(nf.format(amount)));
-		out.write("</div>");
+		out.write("</span>");
 	}
 
 }

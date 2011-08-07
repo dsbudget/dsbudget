@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ChartServlet extends ServletBase {
+public class ChartServlet extends BudgetServletBase {
 
 	public ChartServlet() {
 		super();
@@ -87,7 +88,7 @@ public class ChartServlet extends ServletBase {
 	
 		///////////////////////////////////////////////////////////////////////////////////////////
 		TimeSeries pop = new TimeSeries("Balance");
-		BigDecimal balance = category.amount;
+		BigDecimal balance = category.getAmount();
 		Boolean bfirst = true;
 		Date last = page.created;
 		Date first = page.created;
@@ -95,7 +96,7 @@ public class ChartServlet extends ServletBase {
 		ArrayList<Expense> expenses = category.getExpensesSortedBy(Category.SortBy.DATE, false);
 		for (Expense expense : expenses) {
 			if(bfirst && expense.date.compareTo(page.created) > 0) {
-				pop.addOrUpdate(new Day(page.created), category.amount);
+				pop.addOrUpdate(new Day(page.created), category.getAmount());
 			}
 			bfirst = false;
 			balance = balance.subtract(expense.amount);

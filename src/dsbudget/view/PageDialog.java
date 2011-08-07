@@ -233,8 +233,7 @@ public class PageDialog extends DivRepDialog
 			} else if(action.equals(2)) {
 				//as negative income
 				for(Category category : newpage.categories) {
-					BigDecimal balance = category.amount;
-					balance = balance.subtract(category.getTotalExpense());
+					BigDecimal balance = category.getAmount().subtract(category.getTotalExpense());
 					
 					category.expenses = new ArrayList<Expense>();
 					Expense balance_expense = new Expense();
@@ -261,7 +260,7 @@ public class PageDialog extends DivRepDialog
 	public Boolean isValid()
 	{
 		Boolean valid = true;
-		valid &= title.isValid();
+		valid &= title.validate();
 		return valid;
 	}
 

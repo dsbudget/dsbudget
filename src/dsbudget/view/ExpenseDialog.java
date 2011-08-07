@@ -106,7 +106,7 @@ public class ExpenseDialog extends DivRepDialog
 		super(parent);
 		mainview = parent;
 		
-		setHeight(430);
+		setHeight(440);
 		setWidth(370);
 		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
@@ -212,11 +212,11 @@ public class ExpenseDialog extends DivRepDialog
 	protected Boolean validate()
 	{
 		Boolean valid = true;
-		valid &= where.isValid();
-		valid &= note.isValid();
-		valid &= date.isValid();
-		valid &= amount.isValid();
-		valid &= tentative.isValid();
+		valid &= where.validate();
+		valid &= note.validate();
+		valid &= date.validate();
+		valid &= amount.validate();
+		valid &= tentative.validate();
 		return valid;
 	}
 	

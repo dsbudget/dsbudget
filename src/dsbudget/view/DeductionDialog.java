@@ -19,12 +19,13 @@ public class DeductionDialog extends DivRepDialog
 {
 	MainView mainview;
 	
-	public DivRepTextBox amount;
+	public DivRepMoneyAmount amount;
 	public DivRepTextBox description;
 	
 	Income income;
 	Deduction deduction;
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
+	NumberFormat pnf = NumberFormat.getPercentInstance();
 	
 	public DeductionDialog(MainView parent) {
 		super(parent);
@@ -44,6 +45,7 @@ public class DeductionDialog extends DivRepDialog
 		amount.setWidth(200);
 		amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(DED_LABEL_AMOUNT_SAMPLE))));
 		amount.setRequired(true);
+		amount.allowPercentage(true);
 	}
 	
 	public void open(Income _income, Deduction _deduction)
@@ -57,7 +59,11 @@ public class DeductionDialog extends DivRepDialog
 		} else {
 			setTitle(Labels.getString(DED_LABEL_UPDATE_DEDUCTION, income.getName()));
 			description.setValue(deduction.description);
-			amount.setValue(nf.format(deduction.amount));
+			if(deduction.isPercentage()) {
+				amount.setValue(pnf.format(deduction.getPercentage()));
+			} else {
+				amount.setValue(nf.format(deduction.getAmount(null)));
+			}
 		}
 		description.redraw();
 		amount.redraw();
@@ -76,10 +82,16 @@ public class DeductionDialog extends DivRepDialog
 			}
 			
 			try {
-				deduction.amount = new BigDecimal(nf.parse(amount.getValue()).toString());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//try parsing it as amount
+				deduction.setAmount(new BigDecimal(nf.parse(amount.getValue()).toString()));
+			} catch (ParseException e1) {
+				try {
+					//try parsing it as percentage
+					deduction.setAmountAsPercentage(new BigDecimal(pnf.parse(amount.getValue()).toString()));
+				} catch (ParseException e2) {
+					//neither amount nor percentage
+					e2.printStackTrace();
+				}
 			}
 			deduction.description = description.getValue();
 			
@@ -95,8 +107,8 @@ public class DeductionDialog extends DivRepDialog
 	protected Boolean validate()
 	{
 		Boolean valid = true;
-		valid &= description.isValid();
-		valid &= amount.isValid();
+		valid &= description.validate();
+		valid &= amount.validate();
 		return valid;
 	}
 	

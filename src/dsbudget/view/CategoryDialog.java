@@ -34,7 +34,7 @@ public class CategoryDialog extends DivRepDialog
 	
 	public DivRepTextBox name;
 	public DivRepTextBox description;
-	public DivRepTextBox amount;
+	public DivRepMoneyAmount amount;
 	public DivRepColorPicker color;
 	
 	public DivRepSelectBox sort_by;
@@ -42,6 +42,7 @@ public class CategoryDialog extends DivRepDialog
 	
 	Category category;
 	NumberFormat nf = NumberFormat.getCurrencyInstance();
+	NumberFormat pnf = NumberFormat.getPercentInstance();
 	
 	class CategoryDialogContent extends DivRep {
 
@@ -59,6 +60,7 @@ public class CategoryDialog extends DivRepDialog
 			amount.setWidth(200);
 			amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(CAD_BUDGET_SAMPLE))));
 			amount.setRequired(true);
+			amount.allowPercentage(true);
 			amount.addValidator(new DivRepIValidator<String>(){
 				public String getErrorMessage() {
 					return Labels.getString(CAD_MESSAGE_USE_POSITIVE_AMOUNT);
@@ -70,10 +72,15 @@ public class CategoryDialog extends DivRepDialog
 						if(a.compareTo(BigDecimal.ZERO) < 0) {
 							return false;
 						}
-					} catch (NumberFormatException ne) {
-						//ignore then
 					} catch (ParseException e) {
-						//ignore then
+						try {
+							BigDecimal a = new BigDecimal(pnf.parse(value).doubleValue());
+							if(a.compareTo(BigDecimal.ZERO) < 0) {
+								return false;
+							}
+						} catch (ParseException e2) {
+							//ignore then..
+						}
 					}
 					return true;
 				}});
@@ -176,7 +183,11 @@ public class CategoryDialog extends DivRepDialog
 			setTitle(Labels.getString(CAD_LABEL_UPDATE_CATEGORY));
 			name.setValue(category.name);
 			description.setValue(category.description);
-			amount.setValue(nf.format(category.amount));
+			if(category.isPercentage()) {
+				amount.setValue(pnf.format(category.getPercentage()));
+			} else {
+				amount.setValue(nf.format(category.getAmount()));
+			}
 			color.setValue(category.color);
 			sort_by.setValue(convertToIndex(category.sort_by));
 			sort_reverse.setValue(category.sort_reverse);
@@ -207,10 +218,15 @@ public class CategoryDialog extends DivRepDialog
 			}
 			
 			try {
-				category.amount = new BigDecimal(nf.parse(amount.getValue()).toString());
+				category.setAmount(new BigDecimal(nf.parse(amount.getValue()).toString()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					//try parsing it as percentage
+					category.setAmountAsPercentage(new BigDecimal(pnf.parse(amount.getValue()).toString()));
+				} catch (ParseException e2) {
+					//neither amount nor percentage
+					e2.printStackTrace();
+				}
 			}
 			category.name = name.getValue();
 			category.description = description.getValue();
@@ -231,12 +247,12 @@ public class CategoryDialog extends DivRepDialog
 	protected Boolean validate()
 	{
 		Boolean valid = true;
-		valid &= name.isValid();
-		valid &= description.isValid();
-		valid &= amount.isValid();
-		valid &= color.isValid();
-		valid &= sort_by.isValid();
-		valid &= sort_reverse.isValid();
+		valid &= name.validate();
+		valid &= description.validate();
+		valid &= amount.validate();
+		valid &= color.validate();
+		valid &= sort_by.validate();
+		valid &= sort_reverse.validate();
 		return valid;
 	}
 	
