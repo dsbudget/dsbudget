@@ -32,6 +32,7 @@ public class SearchServlet extends PageServletBase  {
 	
 	DivRepTextBox query;
 	ResultArea resultarea;
+	NumberFormat nf = NumberFormat.getCurrencyInstance();
 	
     public SearchServlet() {
         super();
@@ -73,7 +74,7 @@ public class SearchServlet extends PageServletBase  {
 		public void handleEvent(DivRepEvent e) {
 			resultarea.clearResult();
 			resultarea.redraw();
-			if(e.value.length() < 2) return;
+			if(e.value.length() < 3) return; //maybe I should have "search" button..
 			
 			doSearch(e.value.split(" "));
 		}
@@ -176,21 +177,38 @@ public class SearchServlet extends PageServletBase  {
 			
 				//deduction matches
 				out.write("<div class=\"search_result round8\">");
-				out.write("<span class=\"export\"><a target=\"_blank\" href=\"search?export=deduction\">Export</a></span>");
+				out.write("<span class=\"export\" style=\"padding-right: 40px;\"><a target=\"_blank\" href=\"search?export=deduction\">");
+				out.write(Labels.getHtmlEscapedString("Search.LABEL_EXPORT"));
+				out.write("</a></span>");
 				out.write("<h2>Deduction</h2>");
 				out.write("<table>");
-				//columns				
+				
+				//columns heaeders
 				out.write("<tr>");
 				out.write("<th></th>");
-				out.write("<th>Page</th>");
-				out.write("<th>Income</th>");
-				out.write("<th>Deduction</th>");
-				out.write("<th style=\"text-align: right;\">Amount</th>");
+				out.write("<th>"+Labels.getHtmlEscapedString("Search.LABEL_PAGE")+"</th>");
+				out.write("<th>"+Labels.getHtmlEscapedString("Search.LABEL_INCOME")+"</th>");
+				out.write("<th>"+Labels.getHtmlEscapedString("Search.LABEL_DEDUCTION")+"</th>");
+				out.write("<th style=\"width: 110px; text-align: right;\">"+Labels.getHtmlEscapedString("Search.LABEL_AMOUNT")+"</th>");
 				out.write("<th></th>");
-				out.write("</tr>");				
+				out.write("</tr>");		
+				
+				//rows
+				BigDecimal total = new BigDecimal(0);
+				int count = 0;
 				for(SearchResult result : deduction_results) {
+					total = total.add(result.getAmount());
 					result.render(out);
+					count++;
 				}
+				
+				//render total
+				out.write("<tr class=\"total\">");
+				out.write("<th colspan=\"4\" style=\"text-align: right;\">"+Labels.getHtmlEscapedString("Search.LABEL_TOTAL")+" ("+count+" Items)</th>");
+				out.write("<th style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(total))+"</th>");
+				out.write("<th></th>");
+				out.write("</tr>");	
+				
 				out.write("</table>");
 				out.write("<br>");
 				out.write("</div>");
@@ -201,23 +219,40 @@ public class SearchServlet extends PageServletBase  {
 			if(expense_results.size() > 0) {
 				//expense matches
 				out.write("<div class=\"search_result round8\">");
-				out.write("<span class=\"export\"><a target=\"_blank\" href=\"search?export=expense\">Export</a></span>");
+				out.write("<span class=\"export\" style=\"padding-right: 40px;\"><a target=\"_blank\" href=\"search?export=expense\">");
+				out.write(Labels.getHtmlEscapedString("Search.LABEL_EXPORT"));
+				out.write("</a></span>");
 				out.write("<h2>Expenses</h2>");
 				out.write("<table>");
-				//columns			
+				
+				//column header	
 				out.write("<tr>");
 				out.write("<th></th>");
-				out.write("<th>Page</th>");
-				out.write("<th>Category</th>");
-				out.write("<th>Where</th>");
+				out.write("<th>"+Labels.getHtmlEscapedString("Search.LABEL_PAGE")+"</th>");
+				out.write("<th>"+Labels.getHtmlEscapedString("Search.LABEL_CATEGORY")+"</th>");
+				out.write("<th>"+Labels.getHtmlEscapedString("Search.LABEL_WHERE")+"</th>");
 				out.write("<th></th>");//description
 				out.write("<th style=\"text-align: right;\"></th>");//date
-				out.write("<th style=\"text-align: right;\">Amount</th>");
+				out.write("<th style=\"width: 110px; text-align: right;\">"+Labels.getHtmlEscapedString("Search.LABEL_AMOUNT")+"</th>");
 				out.write("<th></th>");
 				out.write("</tr>");		
+				
+				//rows
+				BigDecimal total = new BigDecimal(0);
+				int count = 0;
 				for(SearchResult result : expense_results) {
+					total = total.add(result.getAmount());
 					result.render(out);
+					count++;
 				}
+				
+				//render total
+				out.write("<tr class=\"total\">");
+				out.write("<th colspan=\"6\" style=\"text-align: right;\">"+Labels.getHtmlEscapedString("Search.LABEL_TOTAL")+" ("+count+" Items)</th>");
+				out.write("<th style=\"text-align: right;\">"+StringEscapeUtils.escapeHtml(nf.format(total))+"</th>");
+				out.write("<th></th>");
+				out.write("</tr>");	
+				
 				out.write("</table>");
 				out.write("<br>");
 				out.write("</div>");
@@ -253,6 +288,7 @@ public class SearchServlet extends PageServletBase  {
 interface SearchResult {
 	public String getTerm();
 	public void render(PrintWriter out);
+	public BigDecimal getAmount();
 	
 	//for CSV output
 	//public void renderCSVHeader(PrintWriter out); // static method in the interface might be possible in Java7 (https://docs.google.com/Doc?docid=dfkwr6vq_30dtg2z9d8&hl=en)
@@ -315,9 +351,15 @@ class DeductionSearchResult implements SearchResult {
 		if(deduction.isPercentage()) {
 			//show percentage as note
 			BigDecimal percentage = deduction.getPercentage();
-			out.write("\""+pnf.format(percentage)+"\"");
+			out.write("\""+pnf.format(percentage));
+			out.write(" of " + income.getName() + " income which was " + nf.format(income.getAmount()));
+			out.write("\"");
 		}
 		out.write("\n");
+	}
+	@Override
+	public BigDecimal getAmount() {
+		return deduction.getAmount(income.getAmount());
 	}
 }
 
@@ -373,5 +415,9 @@ class ExpenseSearchResult implements SearchResult {
 		out.write(",");
 		
 		out.write("\n");
+	}
+	@Override
+	public BigDecimal getAmount() {
+		return expense.amount;
 	}
 }

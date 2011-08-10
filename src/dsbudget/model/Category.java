@@ -2,6 +2,8 @@ package dsbudget.model;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,10 +21,19 @@ public class Category extends ObjectID implements XMLSerializer {
 	private BigDecimal amount_or_percentage;
 	private Boolean amount_is_percentage;
 	public BigDecimal getAmount() {
-		if(amount_is_percentage) {
-			return parent.getTotalIncome()
-				.subtract(parent.getTotalIncomeDeduction())
-				.multiply(amount_or_percentage);
+		if(amount_is_percentage) {			
+			//I need to round number like $2,082.8504 to $2,082.85 .. since sub-cent values are invisible to the users			NumberFormat nf = NumberFormat.getCurrencyInstance();
+			NumberFormat nf = NumberFormat.getCurrencyInstance();
+			BigDecimal amount = parent.getTotalIncome()
+			.subtract(parent.getTotalIncomeDeduction())
+			.multiply(amount_or_percentage);
+			String amount_str = nf.format(amount);
+			try {
+				return new BigDecimal(nf.parse(amount_str).toString());
+			} catch (ParseException e) {
+				//why does this fail? it should be impossible.. just return un-rounded number.
+				return amount;
+			}
 		}
 		return amount_or_percentage;
 	}

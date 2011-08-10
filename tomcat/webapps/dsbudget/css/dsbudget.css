@@ -62,7 +62,7 @@ color: white;
 
 #side {
 float: left;
-width: 170px;
+width: 190px;
 margin-right: 10px;
 }
 
@@ -86,6 +86,7 @@ color: #fff;
 
 .pageselector .page {
 padding-left: 15px;
+padding-right: 5px;
 font-weight: bold;
 color: #ccc;
 cursor: pointer;
@@ -119,7 +120,7 @@ color: #ccc;
 
 #main {
 background:#155797 url(images/landing-back.gif) repeat-x scroll left top;
-margin-left: 180px;
+margin-left: 200px;
 padding: 5px 15px 5px 15px;
 -moz-border-radius-topleft: 8px;
 -moz-border-radius-bottomleft: 8px;
@@ -413,14 +414,19 @@ text-align: left;
 padding-right: 10px;
 }
 .search_result td {
-border-bottom: 1px solid white;
 padding-right: 10px;
 }
 .search_result tr {
 height: 25px;
 }
-.search_result tr.data {
-background-color: #eee;
+.search_result tr.data td {
+border-top-color: #EEEEEE;
+border-top-style: solid;
+border-top-width: 1px;
+}
+.search_result tr.total {
+background-color: #666666;
+color: white;
 }
 
 button.ui-datepicker-trigger {
