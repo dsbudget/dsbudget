@@ -92,6 +92,9 @@ abstract public class BudgetServletBase extends HttpServlet {
 			logger.info("keep_backup_for set to " + Main.conf.getProperty("keep_backup_for") + " days");
 			long keep_backup_for = 1000*3600*24*Long.parseLong(Main.conf.getProperty("keep_backup_for").trim());
 			File parent = path.getParentFile();
+			if(parent == null) {
+				parent = new File(".");
+			}
 			String[] files = parent.list();
 			for(String file : files) {
 				if(file.startsWith(path.getName()+".backup.")) {
@@ -102,9 +105,9 @@ abstract public class BudgetServletBase extends HttpServlet {
 					}
 				}
 			}
-			
 			config.getServletContext().setAttribute("budget", budget);
 		}
+		logger.info("completed init");
 	}
 	
 
