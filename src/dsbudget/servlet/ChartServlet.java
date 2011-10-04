@@ -2,6 +2,8 @@ package dsbudget.servlet;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Paint;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -14,9 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -37,6 +41,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -178,10 +183,17 @@ public class ChartServlet extends BudgetServletBase {
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		JFreeChart chart = ChartFactory.createPieChart3D(null, dataset, false, false, false);
-		
-		Plot plot = chart.getPlot();
+        /*
+		final TextTitle subtitle = new TextTitle("日本語");
+            subtitle.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            chart.addSubtitle(subtitle);
+		*/
+        PiePlot3D plot = (PiePlot3D)chart.getPlot();
 		plot.setBackgroundPaint(Color.white);
 		plot.setOutlineVisible(false);
+		plot.setLabelFont(new Font("Default", Font.PLAIN, 13));
+		plot.setLabelBackgroundPaint(Color.white);
+		plot.setLabelOutlinePaint(Color.gray);
         //plot.setForegroundAlpha(0.6f);
 
 		try {
