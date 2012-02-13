@@ -58,7 +58,7 @@ public class Main {
 			}
 			conf.load(new FileInputStream(conf_file));
 			
-			//override it with user configuration
+			//override it with user configuration -- TODO - I should let user overide the location via in put parameter
 			File user_conf_file = new File("dsbudget.user.conf");
 			if(user_conf_file.exists()) {
 				Properties user_conf = new Properties();
