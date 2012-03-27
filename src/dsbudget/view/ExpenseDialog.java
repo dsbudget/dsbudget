@@ -160,7 +160,7 @@ public class ExpenseDialog extends DivRepDialog
 			for(Expense expense : icategory.expenses) {
 				values.add(expense.where.trim());
 			}
-			if(depth++ > 5) break;
+			if(depth++ > 6) break;
 			Page ipage = icategory.getParent();
 			if(ipage.previous_name == null) break;
 			Page previous = mainview.budget.findPage(ipage.previous_name);

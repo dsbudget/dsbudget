@@ -111,8 +111,10 @@ public class PageDialog extends DivRepDialog
 			String newname = monthName;
 			title.setValue(newname);
 			cdate.setValue(new Date()); //use today's date
-			previous_page.setValues(pages_kv);
-			previous_page.setValue(current_page.getID());
+			
+			previous_page.setHidden(true);//just use copy_from field instead
+			//previous_page.setValues(pages_kv);
+			//previous_page.setValue(current_page.getID());
 			
 			newpage_stuff.copy_from.setValue(current_page.getID()); //copy from current page by default
 			newpage_stuff.hidden = false;
@@ -226,6 +228,7 @@ public class PageDialog extends DivRepDialog
 			//copy from the original page
 			Page original = budget.findPage(id);
 			newpage = original.clone();
+			newpage.previous_name = original.name;
 			
 			//clear balance income
 			ArrayList<Income> non_balance_incomes = new ArrayList<Income>();
@@ -275,7 +278,6 @@ public class PageDialog extends DivRepDialog
 		}
 		newpage.name = title.getValue();
 		newpage.created = cdate.getValue();
-		newpage.previous_name = budget.findPage(previous_page.getValue()).name;
 		budget.pages.add(newpage);
 
 		redirect("?page="+newpage.getID());
