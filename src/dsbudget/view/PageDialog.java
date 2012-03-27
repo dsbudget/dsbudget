@@ -34,6 +34,7 @@ public class PageDialog extends DivRepDialog
 	DivRepTextBox title;
 	DivRepDate cdate;
 	NewPageStuff newpage_stuff;
+	DivRepSelectBox previous_page;
 	
 	LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
 
@@ -110,6 +111,8 @@ public class PageDialog extends DivRepDialog
 			String newname = monthName;
 			title.setValue(newname);
 			cdate.setValue(new Date()); //use today's date
+			previous_page.setValues(pages_kv);
+			previous_page.setValue(current_page.getID());
 			
 			newpage_stuff.copy_from.setValue(current_page.getID()); //copy from current page by default
 			newpage_stuff.hidden = false;
@@ -119,12 +122,24 @@ public class PageDialog extends DivRepDialog
 			
 			title.setValue(current_page.name);
 			cdate.setValue(current_page.created);
+			if(current_page.previous_name != null) {
+				previous_page.setValue(budget.findPage(current_page.previous_name).getID());
+			} else {
+				previous_page.setValue(null);
+			}
+			LinkedHashMap<Integer, String> pages_subkv = new LinkedHashMap<Integer, String>();
+			for(Page page : budget.pages) {
+				if(page == current_page) continue;
+				pages_subkv.put(page.getID(), page.name);
+			}
+			previous_page.setValues(pages_subkv);
 			
 			newpage_stuff.hidden = true;
 		}
 		title.redraw();
 		cdate.redraw();
 		newpage_stuff.redraw();
+		previous_page.redraw();
 		
 		super.open();
 	}
@@ -165,6 +180,11 @@ public class PageDialog extends DivRepDialog
 		cdate = new DivRepDate(this);
 		cdate.setLabel(Labels.getString(PAD_LABEL_GRAPH_BEGINNING_DATE));
 		cdate.setRequired(true);
+		
+		//values are set when user opens dialog
+		previous_page = new DivRepSelectBox(this);
+		previous_page.setLabel(Labels.getString("PageDialog.LABEL_PREVIOUS_PAGE"));
+		previous_page.setNullLabel(Labels.getString("PageDialog.LABEL_NO_PREVIOUS_PAGE"));
 
 		newpage_stuff = new NewPageStuff(this);
 	}
@@ -189,6 +209,11 @@ public class PageDialog extends DivRepDialog
 	{
 		current_page.name = title.getValue();
 		current_page.created = cdate.getValue();
+		if(previous_page.getValue() != null) {
+			current_page.previous_name = budget.findPage(previous_page.getValue()).name;
+		} else {
+			current_page.previous_name = null;
+		}
 		redirect("?page="+current_page.getID());
 	}
 	
@@ -202,7 +227,6 @@ public class PageDialog extends DivRepDialog
 			Page original = budget.findPage(id);
 			newpage = original.clone();
 			
-			
 			//clear balance income
 			ArrayList<Income> non_balance_incomes = new ArrayList<Income>();
 			for(Income income : newpage.incomes) {
@@ -211,7 +235,6 @@ public class PageDialog extends DivRepDialog
 				}
 			}
 			newpage.incomes = non_balance_incomes;
-			
 			
 			//add balance as income
 			Integer action = newpage_stuff.balance_handling.getValue();
@@ -252,6 +275,7 @@ public class PageDialog extends DivRepDialog
 		}
 		newpage.name = title.getValue();
 		newpage.created = cdate.getValue();
+		newpage.previous_name = budget.findPage(previous_page.getValue()).name;
 		budget.pages.add(newpage);
 
 		redirect("?page="+newpage.getID());
@@ -267,6 +291,7 @@ public class PageDialog extends DivRepDialog
 	public void renderDialog(PrintWriter out) {
 		title.render(out);
 		cdate.render(out);
+		previous_page.render(out);
 		newpage_stuff.render(out);
 	}
 	

@@ -23,6 +23,7 @@ public class Page extends ObjectID implements XMLSerializer {
 	public Boolean hide_income;
 	public Boolean hide_expense;
 	public Boolean hide_balance;
+	public String previous_name;
 	
 	public ArrayList<Income> incomes = new ArrayList<Income>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
@@ -47,6 +48,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		hide_income = false;
 		hide_expense = false;
 		hide_balance = false;
+		previous_name = null;
 	}
 	public Page clone() {
 		Page page = new Page(parent);
@@ -56,6 +58,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		page.hide_income = hide_income;
 		page.hide_expense = hide_expense;
 		page.hide_balance = hide_balance;
+		page.previous_name = previous_name;
 		
 		page.incomes = new ArrayList<Income>();
 		for(Income income : incomes) {
@@ -97,6 +100,34 @@ public class Page extends ObjectID implements XMLSerializer {
 			total = total.add(category.getAmount());
 		}
 		return total;
+	}
+	public BigDecimal getBalance()
+	{
+		BigDecimal balance = getTotalIncome();
+		balance = balance.subtract(getTotalIncomeDeduction());
+		for(Category category : categories) {
+			balance = balance.subtract(category.getTotalExpense());
+		}
+		return balance;
+	}
+	public Category findCategory(Integer catid) {	
+		for(Category cat : categories) {
+			if(cat.getID().equals(catid)) {
+				return cat;
+			}
+		}
+		return null;
+	}
+	public Page getPreviousPage() {
+		if(previous_name != null) {
+			for(Page page : getParent().pages) {
+				if(page == this) continue;//this should never happen, but..
+				if(page.name.equals(previous_name)) {
+					return page;
+				}
+			}	
+		}
+		return null;
 	}
 	
 	public void fromXML(Element element) {
@@ -144,6 +175,10 @@ public class Page extends ObjectID implements XMLSerializer {
 			hide_balance = false;
 		}
 		
+		if(element.hasAttribute("previous_name")) {
+			previous_name = element.getAttribute("previous_name");
+		}
+		
 		//income / category
 		NodeList nl = element.getChildNodes();
 		if(nl != null && nl.getLength() > 0) {
@@ -170,6 +205,9 @@ public class Page extends ObjectID implements XMLSerializer {
 		elem.setAttribute("hide_income", (hide_income==true?"yes":"no"));
 		elem.setAttribute("hide_expense", (hide_expense==true?"yes":"no"));
 		elem.setAttribute("hide_balance", (hide_balance==true?"yes":"no"));
+		if(previous_name != null) {
+			elem.setAttribute("previous_name", previous_name);
+		}
 		for(Income income : incomes) {
 			elem.appendChild(income.toXML(doc));
 		}
@@ -178,22 +216,5 @@ public class Page extends ObjectID implements XMLSerializer {
 		}
 		return elem;
 	}
-	
-	public BigDecimal getBalance()
-	{
-		BigDecimal balance = getTotalIncome();
-		balance = balance.subtract(getTotalIncomeDeduction());
-		for(Category category : categories) {
-			balance = balance.subtract(category.getTotalExpense());
-		}
-		return balance;
-	}
-	public Category findCategory(Integer catid) {	
-		for(Category cat : categories) {
-			if(cat.getID().equals(catid)) {
-				return cat;
-			}
-		}
-		return null;
-	}
+
 }

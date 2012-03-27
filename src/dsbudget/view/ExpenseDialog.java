@@ -24,8 +24,10 @@ import com.divrep.common.DivRepTextBox;
 
 import dsbudget.Main;
 import dsbudget.i18n.Labels;
+import dsbudget.model.Budget;
 import dsbudget.model.Category;
 import dsbudget.model.Expense;
+import dsbudget.model.Page;
 
 public class ExpenseDialog extends DivRepDialog
 {
@@ -152,9 +154,25 @@ public class ExpenseDialog extends DivRepDialog
 		
 		//TODO - reset autocomplete values for where field based
 		HashSet<String> values = new HashSet<String>();
-		for(Expense expense : category.expenses) {
-			values.add(expense.where.trim());
-		}
+		Category icategory = category;
+		int depth = 0;
+		do {
+			for(Expense expense : icategory.expenses) {
+				values.add(expense.where.trim());
+			}
+			if(depth++ > 5) break;
+			Page ipage = icategory.getParent();
+			if(ipage.previous_name == null) break;
+			Page previous = mainview.budget.findPage(ipage.previous_name);
+			//find category with same name
+			icategory = null;
+			for(Category cat : previous.categories) {
+				if(cat.name.equals(category.name)) {
+					icategory = cat;
+				}
+			}
+			if(icategory == null) break;//didn't find
+		} while(true);
 		where.setAutoCompleteValues(values);
 		
 		where.redraw();
