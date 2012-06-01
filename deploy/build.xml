@@ -3,7 +3,7 @@
 
 	<property name="build.dir" value="build"/>
 	<property name="linux-landing.dir" value="/home/soichih/Desktop"/>
-	<property name="win-landing.dir" value="C:\Users\soichi\Desktop"/>
+	<property name="win-landing.dir" value="C:\Users\soichih\Desktop"/>
 	
 	<target name="windows" depends="clean, win-installer, win-standalone"></target>
 	<target name="linux" depends="clean, linux-package"></target>
@@ -66,7 +66,7 @@
     </target>   	
     
     <target name="dsbudget.exe" depends="jar">
-    	<exec executable="C:\Program Files\Launch4j\launch4jc.exe">
+    	<exec executable="C:/Program Files (x86)/Launch4j/launch4jc.exe">
 			<arg value="dsbudget.launch4j.xml"/>
 		</exec>
     </target>
@@ -83,7 +83,7 @@
         		
 	    <copy file="dsbudget.conf" todir="${build.dir}/win-installer"/>
      	<copy file="dsbudget.user.conf" todir="${build.dir}/win-installer"/>
-		<exec executable="C:\Program Files\NSIS\makensis.exe">
+		<exec executable="C:\Program Files (x86)\NSIS\makensis.exe">
 			<arg value="build.nsi"/>
 		</exec>
 		<!--

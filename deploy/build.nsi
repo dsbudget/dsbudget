@@ -1,12 +1,13 @@
 
 
 !include "MUI2.nsh"
+!include "UAC.nsh"
 
 !define VERSION "2.0.X"
 
 Name "dsBudget"
 
-OutFile "C:\Users\soichi\Desktop\dsbudget_${VERSION}.exe"
+OutFile "C:\Users\soichih\Desktop\dsbudget_${VERSION}.exe"
 
 ; Some default compiler settings (uncomment and change at will):
 ; SetCompress auto ; (can be off or force)
@@ -25,7 +26,7 @@ RequestExecutionLevel admin
 Function .OnInit
  
 	UAC_Elevate:
-	    UAC::RunElevated 
+	    !insertmacro UAC_RunElevated
 	    StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
 	    StrCmp 0 $0 0 UAC_Err ; Error?
 	    StrCmp 1 $1 0 UAC_Success ;Are we the real deal or just the wrapper?
@@ -167,10 +168,10 @@ Section Uninstall
 
 SectionEnd ; end of uninstall section
 
-Function .OnInstFailed
-    UAC::Unload ;Must call unload!
-FunctionEnd
+;Function .OnInstFailed
+;    UAC::Unload ;Must call unload!
+;FunctionEnd
  
-Function .OnInstSuccess
-    UAC::Unload ;Must call unload!
-FunctionEnd
+;Function .OnInstSuccess
+;    UAC_Unload ;Must call unload!
+;FunctionEnd

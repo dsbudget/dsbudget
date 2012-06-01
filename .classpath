@@ -9,7 +9,6 @@
 	<classpathentry kind="lib" path="tomcat/lib/commons-modeler-2.0.1.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/naming-factory.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/naming-resources.jar"/>
-	<classpathentry kind="lib" path="tomcat/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/servlets-default.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/tomcat-coyote.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/tomcat-http.jar"/>
@@ -24,5 +23,6 @@
 	<classpathentry kind="lib" path="tomcat/lib/jasper-compiler-jdt.jar"/>
 	<classpathentry kind="lib" path="tomcat/lib/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="tomcat/webapps/dsbudget/WEB-INF/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="tomcat/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

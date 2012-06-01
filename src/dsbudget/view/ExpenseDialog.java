@@ -5,13 +5,10 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
-import org.jfree.util.Log;
 
 import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
@@ -152,8 +149,8 @@ public class ExpenseDialog extends DivRepDialog
 			moveto.validate();
 		}
 		
-		//TODO - reset autocomplete values for where field based
 		HashSet<String> values = new HashSet<String>();
+		/*
 		Category icategory = category;
 		int depth = 0;
 		do {
@@ -173,6 +170,24 @@ public class ExpenseDialog extends DivRepDialog
 			}
 			if(icategory == null) break;//didn't find
 		} while(true);
+		*/
+		//pull all recent pages and populate from category with identical names
+		Page page = category.getParent();
+		Budget budget = page.getParent();
+		for(Page opage : budget.pages) {
+			long mytime = page.created.getTime();
+			long otime = opage.created.getTime();
+			if(mytime - otime < 1000L*3600*24*360) { //within a year
+				for(Category ocategory : opage.categories) {
+					if(category.name.equals(ocategory.name)) {
+						for(Expense oexpense : ocategory.expenses) {
+							values.add(oexpense.where.trim());
+						}
+					}
+				}
+			}
+		}
+		
 		where.setAutoCompleteValues(values);
 		
 		where.redraw();
