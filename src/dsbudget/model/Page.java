@@ -110,6 +110,15 @@ public class Page extends ObjectID implements XMLSerializer {
 		}
 		return balance;
 	}
+	public BigDecimal getScheduledBalance() {
+		BigDecimal balance = getTotalIncome();
+		balance = balance.subtract(getTotalIncomeDeduction());
+		for(Category category : categories) {
+			balance = balance.subtract(category.getTotalScheduled());
+		}
+		return balance;
+	}
+	
 	public Category findCategory(Integer catid) {	
 		for(Category cat : categories) {
 			if(cat.getID().equals(catid)) {

@@ -70,9 +70,21 @@ class BalanceView extends DivRep
 		out.write("</h2>");
 		out.write("</td>");
 		
+		//find out if we need to display scheduled remaining
+		boolean show_scheduled_remaining = false;
+		for(final Category category : mainview.getCategories()) {
+			BigDecimal total_scheduled = category.getTotalScheduled();
+			if(!total_scheduled.equals(BigDecimal.ZERO)) {
+				show_scheduled_remaining = true;
+			}
+		}
+		
 		out.write("<th style=\"vertical-align: bottom; text-align: right\" width=\"90px\">"+Labels.getHtmlEscapedString("BalanceView.LABEL_BUDGET")+"</th>");
 		out.write("<th style=\"vertical-align: bottom; text-align: right\" width=\"90px\">"+Labels.getHtmlEscapedString("BalanceView.LABEL_SPENT")+"</th>");
 		out.write("<th style=\"vertical-align: bottom; text-align: right\" width=\"90px\">"+Labels.getHtmlEscapedString("BalanceView.LABEL_REMAINING")+"</th>");
+		if(show_scheduled_remaining) {
+			out.write("<th style=\"vertical-align: bottom; text-align: right\" width=\"90px\">"+Labels.getHtmlEscapedString("BalanceView.LABEL_SCHEDULED_REMAINING")+"</th>");
+		}
 		out.write("<th style=\"vertical-align: bottom; text-align: left\" class=\"note\">0%</th>");
 		out.write("<th style=\"vertical-align: bottom; text-align: right\" class=\"note\">100%</th>");
 		
@@ -122,6 +134,17 @@ class BalanceView extends DivRep
 				av = new AmountView(this, category.getAmount().subtract(category.getTotalExpense()));
 				av.render(out);
 				out.write("</td>");
+				
+				//scheduled remaining
+				if(show_scheduled_remaining) {
+					out.write("<td style=\"text-align: right;\" width=\"90px\">");
+					BigDecimal total_scheduled = category.getTotalScheduled();
+					if(!total_scheduled.equals(BigDecimal.ZERO)) {
+						av = new AmountView(this, total_scheduled);
+						av.render(out);
+					}				
+					out.write("</td>");
+				}
 				
 				//graph
 				out.write("<td>");
@@ -195,6 +218,11 @@ class BalanceView extends DivRep
 		av = new AmountView(this, mainview.getBalance());
 		av.render(out);
 		out.write("</th>");
+		if(show_scheduled_remaining) {
+			out.write("<th width=\"90px\" style=\"text-align: right;\">");
+			av = new AmountView(this, mainview.getScheduledBalance());
+			av.render(out);
+			out.write("</th>");		}
 		
 		//graph
 		out.write("<td>");

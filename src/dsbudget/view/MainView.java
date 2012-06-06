@@ -185,6 +185,9 @@ public class MainView extends DivRep {
 	public BigDecimal getBalance() {
 		return page.getBalance();
 	}
+	public BigDecimal getScheduledBalance() {
+		return page.getScheduledBalance();
+	}
 	public ArrayList<Page> getPages() {
 		return budget.pages;
 	}
