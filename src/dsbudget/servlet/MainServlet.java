@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.divrep.DivRepPage;
 
 import dsbudget.view.MainView;
@@ -26,7 +28,11 @@ public class MainServlet extends PageServletBase  {
 		removepagebutton.render(out);
 		out.write("</div>");
 		
-		out.write("<div class=\"pagename\">" + current_page.name + "</div>");
+		out.write("<div class=\"pagename\">" + StringEscapeUtils.escapeHtml(current_page.name) + "</div>");
+		
+		if(current_page.description.length() > 0) {
+			out.write("<p class=\"page-description\">" + StringEscapeUtils.escapeHtml(current_page.description) + "</p>");
+		}
 		
 		pageview.render(out);
 		

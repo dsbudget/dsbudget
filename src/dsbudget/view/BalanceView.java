@@ -12,7 +12,6 @@ import com.divrep.DivRep;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
-import com.divrep.common.DivRepSlider;
 
 import dsbudget.i18n.Labels;
 import dsbudget.model.Category;

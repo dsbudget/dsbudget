@@ -14,6 +14,7 @@ import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepDate;
 import com.divrep.common.DivRepDialog;
 import com.divrep.common.DivRepSelectBox;
+import com.divrep.common.DivRepTextArea;
 import com.divrep.common.DivRepTextBox;
 import com.divrep.validator.DivRepIValidator;
 
@@ -35,6 +36,7 @@ public class PageDialog extends DivRepDialog
 	DivRepDate cdate;
 	NewPageStuff newpage_stuff;
 	//DivRepSelectBox previous_page;
+	DivRepTextArea description;
 	
 	LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
 
@@ -111,8 +113,7 @@ public class PageDialog extends DivRepDialog
 			String newname = monthName;
 			title.setValue(newname);
 			cdate.setValue(new Date()); //use today's date
-			
-			//previous_page.setHidden(true);//just use copy_from field instead
+			description.setValue("");
 			
 			newpage_stuff.copy_from.setValue(current_page.getID()); //copy from current page by default
 			newpage_stuff.hidden = false;
@@ -122,34 +123,22 @@ public class PageDialog extends DivRepDialog
 			
 			title.setValue(current_page.name);
 			cdate.setValue(current_page.created);
-			/*
-			if(current_page.previous_name != null) {
-				previous_page.setValue(budget.findPage(current_page.previous_name).getID());
-			} else {
-				previous_page.setValue(null);
-			}
-			
-			LinkedHashMap<Integer, String> pages_subkv = new LinkedHashMap<Integer, String>();
-			for(Page page : budget.pages) {
-				if(page == current_page) continue;
-				pages_subkv.put(page.getID(), page.name);
-			}
-			previous_page.setValues(pages_subkv);
-			*/
+			description.setValue(current_page.description);
+
 			newpage_stuff.hidden = true;
 		}
 		title.redraw();
 		cdate.redraw();
+		description.redraw();
 		newpage_stuff.redraw();
-		//previous_page.redraw();
-		
+
 		super.open();
 	}
 	
 	public PageDialog(DivRep parent, Budget _budget, Page _current_page) {
 		super(parent);
 		
-		setHeight(350);
+		setHeight(380);
 		setWidth(400);
 		setHasCancelButton(true);
 		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
@@ -183,12 +172,11 @@ public class PageDialog extends DivRepDialog
 		cdate.setLabel(Labels.getString(PAD_LABEL_GRAPH_BEGINNING_DATE));
 		cdate.setRequired(true);
 		
-		/*
-		//values are set when user opens dialog
-		previous_page = new DivRepSelectBox(this);
-		previous_page.setLabel(Labels.getString("PageDialog.LABEL_PREVIOUS_PAGE"));
-		previous_page.setNullLabel(Labels.getString("PageDialog.LABEL_NO_PREVIOUS_PAGE"));
-		*/
+		description = new DivRepTextArea(this);
+		description.setLabel(Labels.getString("PageDialog.LABEL_DESCRIPTION"));
+		description.setWidth(365);
+		description.setHeight(50);
+		
 		newpage_stuff = new NewPageStuff(this);
 	}
 	
@@ -212,6 +200,7 @@ public class PageDialog extends DivRepDialog
 	{
 		current_page.name = title.getValue();
 		current_page.created = cdate.getValue();
+		current_page.description = description.getValue();
 		/*
 		if(previous_page.getValue() != null) {
 			current_page.previous_name = budget.findPage(previous_page.getValue()).name;
@@ -281,6 +270,7 @@ public class PageDialog extends DivRepDialog
 		}
 		newpage.name = title.getValue();
 		newpage.created = cdate.getValue();
+		newpage.description = description.getValue();
 		budget.pages.add(newpage);
 
 		redirect("?page="+newpage.getID());
@@ -290,13 +280,14 @@ public class PageDialog extends DivRepDialog
 	{
 		Boolean valid = true;
 		valid &= title.validate();
+		valid &= description.validate();
 		return valid;
 	}
 
 	public void renderDialog(PrintWriter out) {
 		title.render(out);
 		cdate.render(out);
-		//previous_page.render(out);
+		description.render(out);
 		newpage_stuff.render(out);
 	}
 	

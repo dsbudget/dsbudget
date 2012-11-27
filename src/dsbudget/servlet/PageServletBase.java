@@ -3,6 +3,7 @@ package dsbudget.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,7 +43,8 @@ public abstract class PageServletBase  extends BudgetServletBase {
 	
 	protected void renderHeader(PrintWriter out, HttpServletRequest request) 
 	{	
-		out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
+		//out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
+		out.println("<!doctype html>");
 		out.println("<html><head>");
 		out.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />");
 		if(current_page == null) {
@@ -51,13 +53,13 @@ public abstract class PageServletBase  extends BudgetServletBase {
 			out.println("<title>"+StringEscapeUtils.escapeHtml(current_page.name)+"</title>");
 		}
 		
-		out.println("<link href=\"css/smoothness/jquery-ui-1.8.2.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
+		out.println("<link href=\"css/smoothness-1.8.18/jquery-ui-1.8.18.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.println("<link href=\"css/divrep.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.println("<link href=\"css/dsbudget.css\" rel=\"stylesheet\" type=\"text/css\"/>");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"css/dsbudget.print.css\" />");
 		
-		out.println("<script type=\"text/javascript\" src=\"jquery-1.4.2.min.js\"></script>");
-		out.println("<script type=\"text/javascript\" src=\"jquery-ui-1.8.2.custom.min.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"jquery-1.7.1.min.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"jquery-ui-1.8.18.custom.min.js\"></script>");
 		out.println("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
 		
 		out.println("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");
@@ -119,10 +121,14 @@ public abstract class PageServletBase  extends BudgetServletBase {
 		}
 		
 		for(Page p : budget.pages) {
+			String cls = "";
+			if(p.getBalance().compareTo(BigDecimal.ZERO) < 0) {
+				cls = "page-negativebalance";
+			}
 			if(p == current_page) {
-				out.write("<div class=\"page currentpage\">"+p.name+"</div>");
+				out.write("<div class=\"page currentpage "+cls+"\">"+p.name+"</div>");
 			} else {
-				out.write("<div class=\"page\" onclick=\"document.location='"+"main?page="+p.getID()+"';\">"+p.name+"</div>");				
+				out.write("<div class=\"page "+cls+"\" onclick=\"document.location='"+"main?page="+p.getID()+"';\">"+p.name+"</div>");				
 			}
 		}
 		out.write("<br/></div>");

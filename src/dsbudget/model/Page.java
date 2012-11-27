@@ -24,6 +24,7 @@ public class Page extends ObjectID implements XMLSerializer {
 	public Boolean hide_expense;
 	public Boolean hide_balance;
 	//public String previous_name;
+	public String description;
 	
 	public ArrayList<Income> incomes = new ArrayList<Income>();
 	public ArrayList<Category> categories = new ArrayList<Category>();
@@ -43,6 +44,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		parent = _parent;
 		
 		name = "Untitled";
+		description = "";
 		created = new Date();
 		hide_budget = false;
 		hide_income = false;
@@ -53,6 +55,7 @@ public class Page extends ObjectID implements XMLSerializer {
 	public Page clone() {
 		Page page = new Page(parent);
 		page.name = name;
+		page.description = description;
 		page.created = new Date();
 		page.hide_budget = hide_budget;
 		page.hide_income = hide_income;
@@ -127,24 +130,14 @@ public class Page extends ObjectID implements XMLSerializer {
 		}
 		return null;
 	}
-	/*
-	public Page getPreviousPage() {
-		if(previous_name != null) {
-			for(Page page : getParent().pages) {
-				if(page == this) continue;//this should never happen, but..
-				if(page.name.equals(previous_name)) {
-					return page;
-				}
-			}	
-		}
-		return null;
-	}
-	*/
-	
+
 	public void fromXML(Element element) {
 
 		name = element.getAttribute("name");
 		created = new Date(Long.parseLong(element.getAttribute("ctime"))*1000L);
+		if(element.hasAttribute("description")) {
+			description = element.getAttribute("description");
+		}
 		
 		if(element.hasAttribute("hide_budget")) {
 			if(element.getAttribute("hide_budget").equals("yes")) {
@@ -186,12 +179,6 @@ public class Page extends ObjectID implements XMLSerializer {
 			hide_balance = false;
 		}
 		
-		/*
-		if(element.hasAttribute("previous_name")) {
-			previous_name = element.getAttribute("previous_name");
-		}
-		*/
-		
 		//income / category
 		NodeList nl = element.getChildNodes();
 		if(nl != null && nl.getLength() > 0) {
@@ -213,16 +200,12 @@ public class Page extends ObjectID implements XMLSerializer {
 	public Element toXML(Document doc) {
 		Element elem = doc.createElement("Page");
 		elem.setAttribute("name", name);
+		elem.setAttribute("description", description);
 		elem.setAttribute("ctime", String.valueOf(created.getTime()/1000L));
 		elem.setAttribute("hide_budget", (hide_budget==true?"yes":"no"));
 		elem.setAttribute("hide_income", (hide_income==true?"yes":"no"));
 		elem.setAttribute("hide_expense", (hide_expense==true?"yes":"no"));
 		elem.setAttribute("hide_balance", (hide_balance==true?"yes":"no"));
-		/*
-		if(previous_name != null) {
-			elem.setAttribute("previous_name", previous_name);
-		}
-		*/
 		for(Income income : incomes) {
 			elem.appendChild(income.toXML(doc));
 		}
