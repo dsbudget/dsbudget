@@ -85,25 +85,29 @@ public class Main {
 				logger.error(e);
 			} 
 	
-			//open browser
-			page_url = "http://"+conf.getProperty("tomcat_ip")+":"+conf.getProperty("tomcat_port")+"/dsbudget/main";
-			if (Desktop.isDesktopSupported()) {
-				logger.info("Opening a browser...");
-				try {
-					Desktop.getDesktop().browse(new URI(page_url));
-				} catch (URISyntaxException e) {
-					JOptionPane.showMessageDialog(null, "Failed to open browser: " + e);	
-					e.printStackTrace();
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Failed to open browser: " + e);	
-					e.printStackTrace();
+			if(Main.conf.getProperty("open_browser").equals("true")) {
+				//open browser
+				page_url = "http://"+conf.getProperty("tomcat_ip")+":"+conf.getProperty("tomcat_port")+"/dsbudget/main";
+				if (Desktop.isDesktopSupported()) {
+					logger.info("Opening a browser...");
+					try {
+						Desktop.getDesktop().browse(new URI(page_url));
+					} catch (URISyntaxException e) {
+						JOptionPane.showMessageDialog(null, "Failed to open browser: " + e);	
+						e.printStackTrace();
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(null, "Failed to open browser: " + e);	
+						e.printStackTrace();
+					}
+					
+					//close splash screen
+					SplashScreen splash = SplashScreen.getSplashScreen();
+					if(splash != null) {
+						splash.close();
+					}
 				}
-				
-				//close splash screen
-				SplashScreen splash = SplashScreen.getSplashScreen();
-				if(splash != null) {
-					splash.close();
-				}
+			} else {
+				logger.info("Skipping browser window opener - open_browser is set to false");
 			}
 		} catch (FileNotFoundException e1) {
 			JOptionPane.showMessageDialog(null, "Failed to load dsbudget.conf: " + e1);	
