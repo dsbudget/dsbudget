@@ -85,7 +85,9 @@ public class Main {
 				logger.error(e);
 			} 
 	
-			if(Main.conf.getProperty("open_browser").equals("true")) {
+			if(System.getProperty("no_browser_open") != null) {
+				logger.info("Skipping browser window opener - no_browser_open is set");
+			} else {
 				//open browser
 				page_url = "http://"+conf.getProperty("tomcat_ip")+":"+conf.getProperty("tomcat_port")+"/dsbudget/main";
 				if (Desktop.isDesktopSupported()) {
@@ -106,8 +108,6 @@ public class Main {
 						splash.close();
 					}
 				}
-			} else {
-				logger.info("Skipping browser window opener - open_browser is set to false");
 			}
 		} catch (FileNotFoundException e1) {
 			JOptionPane.showMessageDialog(null, "Failed to load dsbudget.conf: " + e1);	
