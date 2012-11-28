@@ -189,7 +189,7 @@ public class BudgetingView extends DivRep {
 					out.write("<td width=\"20px\"><span class=\"sort_button ui-icon ui-icon-arrowthick-2-n-s\"></span></td>");				
 					out.write("<th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 									
-					out.write("<td colspan=\"2\">");
+					out.write("<td>");
 					slider.render(out);
 					out.write("</td>");
 					

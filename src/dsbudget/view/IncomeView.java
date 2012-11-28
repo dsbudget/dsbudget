@@ -154,7 +154,7 @@ public class IncomeView extends DivRep {
 		out.write("<table width=\"100%\">");
 		
 		out.write("<tr>");
-		out.write("<td colspan=\"3\">");
+		out.write("<td>");
 		out.write("<h2>");
 		out.write(Labels.getHtmlEscapedString(INV_LABEL_HEADER));
 		out.write("</h2>");

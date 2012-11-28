@@ -54,15 +54,15 @@ public abstract class PageServletBase  extends BudgetServletBase {
 		}
 		
 		out.println("<link href=\"css/smoothness-1.8.18/jquery-ui-1.8.18.custom.css\" rel=\"stylesheet\" type=\"text/css\"/>");
-		out.println("<link href=\"css/divrep.css\" rel=\"stylesheet\" type=\"text/css\"/>");
-		out.println("<link href=\"css/dsbudget.css\" rel=\"stylesheet\" type=\"text/css\"/>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"css/dsbudget.print.css\" />");
+		out.println("<link href=\"css/divrep.css?v=1\" rel=\"stylesheet\" type=\"text/css\"/>");
+		out.println("<link href=\"css/dsbudget.css?v=1\" rel=\"stylesheet\" type=\"text/css\"/>");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" media=\"print\" href=\"css/dsbudget.print.css?v=1\" />");
 		
 		out.println("<script type=\"text/javascript\" src=\"jquery-1.7.1.min.js\"></script>");
 		out.println("<script type=\"text/javascript\" src=\"jquery-ui-1.8.18.custom.min.js\"></script>");
-		out.println("<script type=\"text/javascript\" src=\"divrep.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"divrep.js?v=1\"></script>");
 		
-		out.println("<script type=\"text/javascript\" src=\"dsbudget.js\"></script>");
+		out.println("<script type=\"text/javascript\" src=\"dsbudget.js?v=1\"></script>");
 		out.println("</head>");
 		out.println("<body>");
 		
