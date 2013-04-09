@@ -236,7 +236,7 @@ public class PageDialog extends DivRepDialog
 			if(action == null) {
 				//do nothing.. just clear all expenses
 				for(Category category : newpage.categories) {
-					category.expenses = new ArrayList<Expense>();
+					category.expenses = filterRecurringExpenses(category.expenses);
 				}
 			} else if(action.equals(1)) {
 				//add as income
@@ -246,20 +246,21 @@ public class PageDialog extends DivRepDialog
 				
 				//then clear all expenses
 				for(Category category : newpage.categories) {
-					category.expenses = new ArrayList<Expense>();
+					category.expenses = filterRecurringExpenses(category.expenses);
 				}
 			} else if(action.equals(2)) {
 				//as negative income
 				for(Category category : newpage.categories) {
 					BigDecimal balance = category.getAmount().subtract(category.getTotalExpense());
 					
-					category.expenses = new ArrayList<Expense>();
+					category.expenses = filterRecurringExpenses(category.expenses);
 					Expense balance_expense = new Expense();
 					balance_expense.amount = balance.negate();
 					balance_expense.date = newpage.created;
 					balance_expense.where = Labels.getString(PAD_LABEL_BALANCE_FROM, original.name);
 					balance_expense.description = "";
 					balance_expense.tentative = false;
+					balance_expense.recurring = false;
 					category.expenses.add(balance_expense);
 				}
 			}
@@ -274,6 +275,18 @@ public class PageDialog extends DivRepDialog
 		budget.pages.add(newpage);
 
 		redirect("?page="+newpage.getID());
+	}
+
+	private ArrayList<Expense> filterRecurringExpenses(ArrayList<Expense> expenses) {
+		ArrayList<Expense> filtered = new ArrayList<Expense>();
+		for(Expense expense : expenses) {
+			if(expense.recurring) {
+				Expense new_expense = expense.clone();
+				new_expense.date = new Date(); //date of cloning
+				filtered.add(new_expense);
+			}
+		}
+		return filtered;
 	}
 	
 	public Boolean isValid()

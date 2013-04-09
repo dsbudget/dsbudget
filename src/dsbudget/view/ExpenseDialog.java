@@ -38,6 +38,7 @@ public class ExpenseDialog extends DivRepDialog
 	public DivRepDate date;
 	public DivRepTextBox amount;
 	public DivRepCheckBox tentative;
+	public DivRepCheckBox recurring;
 	public DivRepSelectBox moveto;
 	
 	Category category;
@@ -73,6 +74,9 @@ public class ExpenseDialog extends DivRepDialog
 			//
 			tentative = new DivRepCheckBox(this);
 			tentative.setLabel(Labels.getString(EXD_LABEL_TENTATIVE));	
+
+			recurring = new DivRepCheckBox(this);
+			recurring.setLabel(Labels.getString(EXD_LABEL_RECURRING));	
 			
 			moveto = new DivRepSelectBox(this);
 			moveto.setLabel(Labels.getString("ExpenseDialog.LABEL_MOVE"));
@@ -94,6 +98,8 @@ public class ExpenseDialog extends DivRepDialog
 			out.write("<div class=\"optional_section round4\">");
 			tentative.render(out);
 			out.write("<br/>");
+			recurring.render(out);
+			out.write("<br/>");
 			moveto.render(out);
 			out.write("</div>");
 			
@@ -105,7 +111,7 @@ public class ExpenseDialog extends DivRepDialog
 		super(parent);
 		mainview = parent;
 		
-		setHeight(440);
+		setHeight(450);
 		setWidth(370);
 		setEnterToSubmit(Main.conf.getProperty("enter_to_submit").equals("true"));
 		
@@ -123,6 +129,7 @@ public class ExpenseDialog extends DivRepDialog
 			note.setValue("");
 			date.setValue(new Date());
 			tentative.setValue(false);
+			recurring.setValue(false);
 			moveto.setHidden(true);
 		} else {
 			setTitle(Labels.getString(EXD_LABEL_UPDATE_EXPENSE, category.name));
@@ -131,6 +138,7 @@ public class ExpenseDialog extends DivRepDialog
 			note.setValue(expense.description);
 			date.setValue(expense.date);
 			tentative.setValue(expense.tentative);
+			recurring.setValue(expense.recurring);
 			
 			moveto.setHidden(false);
 			LinkedHashMap<Integer, String> kv = new LinkedHashMap<Integer, String>();
@@ -146,6 +154,7 @@ public class ExpenseDialog extends DivRepDialog
 			note.validate();
 			date.validate();
 			tentative.validate();
+			recurring.validate();
 			moveto.validate();
 		}
 		
@@ -195,6 +204,7 @@ public class ExpenseDialog extends DivRepDialog
 		note.redraw();
 		date.redraw();
 		tentative.redraw();
+		recurring.redraw();
 		moveto.redraw();
 		super.open();
 	}
@@ -223,6 +233,7 @@ public class ExpenseDialog extends DivRepDialog
 			expense.description = note.getValue();
 			expense.date = date.getValue();
 			expense.tentative = tentative.getValue();
+			expense.recurring = recurring.getValue();
 			
 			Integer moveto = this.moveto.getValue();
 			if(moveto != null) {
@@ -250,6 +261,7 @@ public class ExpenseDialog extends DivRepDialog
 		valid &= date.validate();
 		valid &= amount.validate();
 		valid &= tentative.validate();
+		valid &= recurring.validate();
 		return valid;
 	}
 	
@@ -259,6 +271,7 @@ public class ExpenseDialog extends DivRepDialog
 	public static final String EXD_LABEL_AMOUNT = "ExpenseDialog.LABEL_AMOUNT";
 	public static final String EXD_LABEL_AMOUNT_SAMPLE = "ExpenseDialog.LABEL_AMOUNT_SAMPLE";
 	public static final String EXD_LABEL_TENTATIVE = "ExpenseDialog.LABEL_TENTATIVE";
+	public static final String EXD_LABEL_RECURRING = "ExpenseDialog.LABEL_RECURRING";
 	public static final String EXD_LABEL_NEW_EXPENSE = "ExpenseDialog.LABEL_NEW_EXPENSE";
 	public static final String EXD_LABEL_UPDATE_EXPENSE = "ExpenseDialog.LABEL_UPDATE_EXPENSE";
 

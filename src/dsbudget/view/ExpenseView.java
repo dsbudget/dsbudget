@@ -251,8 +251,12 @@ public class ExpenseView extends DivRep {
 				String expense_type = "";
 				String decoration = "";
 				if(expense.tentative) {
-					expense_type = "tentative";
-					decoration += "<b>" + Labels.getHtmlEscapedString(EXV_LABEL_EXPENSE_SCHEDULED) + "</b>";
+					expense_type += " tentative";
+					decoration += "<b>(" + Labels.getHtmlEscapedString("ExpenseView.LABEL_EXPENSE_SCHEDULED") + ")</b>";
+				}
+				if(expense.recurring) {
+					expense_type += " expense-recurring";
+					decoration += "<b>(" + Labels.getHtmlEscapedString("ExpenseView.LABEL_EXPENSE_RECURRING") + ")</b>";
 				}
 				out.write("<tr class=\"expense "+expense_type+"\" onclick=\"divrep('"+getNodeID()+"', event, '"+expense.toString()+"')\">");
 				out.write("<th>&nbsp;</th>"); //side
@@ -404,7 +408,6 @@ public class ExpenseView extends DivRep {
 	public static final String EXV_LABEL_HEADER = "ExpenseView.LABEL_HEADER";
 	public static final String EXV_LABEL_ADD_NEW_EXPENSE = "ExpenseView.LABEL_ADD_NEW_EXPENSE";
 	public static final String EXV_LABEL_IMPORT_EXPENSES = "ExpenseView.LABEL_ADD_NEW_EXPENSES";
-	public static final String EXV_LABEL_EXPENSE_SCHEDULED = "ExpenseView.LABEL_EXPENSE_SCHEDULED";
 	public static final String EXV_LABEL_REMAINING = "ExpenseView.LABEL_REMAINING";
 	public static final String EXV_LABEL_SCHEDULED_REMAINING = "ExpenseView.LABEL_SCHEDULED_REMAINING";
 

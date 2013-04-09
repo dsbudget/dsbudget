@@ -281,6 +281,10 @@ padding-right: 10px;
 color: gray;
 }
 
+tr.expense-recurring th {
+/*background: url(images/schedule_recurring.png) no-repeat 10px 3px;*/
+}
+
 .balanceview tr.balance_header {
 background-color: #666;
 color: white;
