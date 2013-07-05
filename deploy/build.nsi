@@ -52,9 +52,9 @@ Function .OnInit
 	  "UninstallString"
 	  StrCmp $R0 "" done
 	 
-		; Make sure no dsbudget is running - this isn't perfect but...
-		DetailPrint "Requesting to terminate dsBudget - if it's already running"
-		NSISdl::download_quiet /TIMEOUT=100 http://127.0.0.1:16091/dsbudget/stop $TEMP/dsbudget.stop_request
+      ; Make sure no dsbudget is running - this isn't perfect but...
+	  DetailPrint "Requesting to terminate dsBudget - if it's already running"
+	  NSISdl::download_quiet /TIMEOUT=500 http://127.0.0.1:16091/dsbudget/stop $TEMP/dsbudget.stop_request
 	
 	  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
 	  "dsBudget is already installed. $\n$\nClick `OK` to remove the \

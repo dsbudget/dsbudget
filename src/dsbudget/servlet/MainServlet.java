@@ -44,8 +44,6 @@ public class MainServlet extends PageServletBase  {
 
 	@Override
 	protected void initDivRepObjects(DivRepPage pageroot) {
-		pageview = new MainView(pageroot, budget, current_page);
+		pageview = new MainView(pageroot, budget, current_page, pageselector);
 	}
-	
-
 }

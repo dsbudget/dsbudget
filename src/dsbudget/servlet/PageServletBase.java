@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import com.divrep.DivRep;
 import com.divrep.DivRepContainer;
 import com.divrep.DivRepEvent;
 import com.divrep.DivRepEventListener;
@@ -28,17 +29,19 @@ import dsbudget.i18n.Labels;
 import dsbudget.model.Page;
 import dsbudget.view.PageDialog;
 import dsbudget.view.RemovePageDialog;
+import dsbudget.view.PageSelector;
 
 public abstract class PageServletBase  extends BudgetServletBase {
 	
 	protected abstract void renderMain(PrintWriter out, HttpServletRequest request);
 	protected abstract void initDivRepObjects(DivRepPage pageroot);
 	
+	PageSelector pageselector;
 	DivRepButton pagesettingsbutton;
 	DivRepButton removepagebutton;
 	RemovePageDialog removepagedialog;
 	PageDialog pagedialog;
-	DivRepButton newpagebutton;
+	
 	protected Page current_page; 
 	
 	protected void renderHeader(PrintWriter out, HttpServletRequest request) 
@@ -96,42 +99,8 @@ public abstract class PageServletBase  extends BudgetServletBase {
 	void renderSide(PrintWriter out, HttpServletRequest request)
 	{
 		out.write("<div id=\"side\">");
-		
-		///////////////////////////////////////////////////////////////////////////////////////////
-		// Budget Pages
-		out.write("<div class=\"pageselector\">");
-
-		out.write("<div class=\"newpage\">");
-		newpagebutton.render(out);
-		out.write("</div>");
-		
-		out.write("<h2>"+Labels.getString("Main.LABEL_PAGES")+"</h2>");
-
-		ArrayList<Page> sorted_pages = budget.pages;
-		if(Main.conf.getProperty("pagelist_sortorder").equals("up")) {
-			Collections.sort(sorted_pages, new Comparator<Page>() {
-				public int compare(Page o1, Page o2) {
-					return(o2.created.compareTo(o1.created));
-				}});			
-		} else {
-			Collections.sort(sorted_pages, new Comparator<Page>() {
-				public int compare(Page o1, Page o2) {
-					return(o1.created.compareTo(o2.created));
-				}});
-		}
-		
-		for(Page p : budget.pages) {
-			String cls = "";
-			if(p.getBalance().compareTo(BigDecimal.ZERO) < 0) {
-				cls = "page-negativebalance";
-			}
-			if(p == current_page) {
-				out.write("<div class=\"page currentpage "+cls+"\">"+p.name+"</div>");
-			} else {
-				out.write("<div class=\"page "+cls+"\" onclick=\"document.location='"+"main?page="+p.getID()+"';\">"+p.name+"</div>");				
-			}
-		}
-		out.write("<br/></div>");
+			
+		pageselector.render(out);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		// Reports
@@ -157,9 +126,10 @@ public abstract class PageServletBase  extends BudgetServletBase {
 			public void initPage(final DivRepPage pageroot) {
 				pagedialog = new PageDialog(pageroot, budget, current_page);
 				removepagedialog = new RemovePageDialog(pageroot, budget, current_page);
-				initDivRepObjects(pageroot);
 				
 				LinkedHashMap<Integer, String> pages_kv = new LinkedHashMap<Integer, String>();
+				
+				pageselector = new PageSelector(pageroot, budget, current_page, pagedialog);
 				
 				pagesettingsbutton = new DivRepButton(pageroot, Labels.getString(M_LABEL_SETTINGS));
 				pagesettingsbutton.setStyle(DivRepButton.Style.ALINK);
@@ -178,14 +148,7 @@ public abstract class PageServletBase  extends BudgetServletBase {
 						removepagedialog.open();
 					}
 				});
-				
-				newpagebutton = new DivRepButton(pageroot, Labels.getString(M_LABEL_NEW_PAGE));
-		        newpagebutton.setStyle(Style.ALINK);
-		        newpagebutton.addEventListener(new DivRepEventListener() {
-					public void handleEvent(DivRepEvent e) {
-						pagedialog.open(true);
-					}});
-		        
+	        
 		    	budget.savethread.setFileUpdateCallBack(new FileUpdateCallBack() {
 		    		public void alert() {
 		    			pageroot.alert("Document has been updated externally - reloading document");
@@ -193,6 +156,8 @@ public abstract class PageServletBase  extends BudgetServletBase {
 		    			pageroot.js("window.location.reload();");
 		    		}
 		    	});
+		    	
+				initDivRepObjects(pageroot);
 			}
 		};
 	
@@ -233,6 +198,5 @@ public abstract class PageServletBase  extends BudgetServletBase {
 	public static final String M_LABEL_EDIT_CURRENT_PAGE_SETTINGS = "Main.LABEL_EDIT_CURRENT_PAGE_SETTINGS";
 	public static final String M_LABEL_REMOVE = "Main.LABEL_REMOVE";
 	public static final String M_LABEL_REMOVE_OPENED_PAGE = "Main.LABEL_REMOVE_OPENED_PAGE";
-	public static final String M_LABEL_NEW_PAGE = "Main.LABEL_NEW_PAGE";
 	public static final String M_LABEL_UNTITLED = "Main.LABEL_UNTITLED";
 }

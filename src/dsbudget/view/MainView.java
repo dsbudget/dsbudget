@@ -16,6 +16,7 @@ import dsbudget.model.Category;
 import dsbudget.model.Expense;
 import dsbudget.model.Income;
 import dsbudget.model.Page;
+import dsbudget.view.PageSelector;
 
 public class MainView extends DivRep {
 
@@ -36,11 +37,13 @@ public class MainView extends DivRep {
 	DeductionDialog deduction_dialog;
 	RemoveIncomeDialog removeincomedialog;
 	RemoveCategoryDialog removecategorydialog;
+	PageSelector pageselector;
 	
-	public MainView(DivRep parent, Budget _budget, Page _page) {
+	public MainView(DivRep parent, Budget _budget, Page _page, PageSelector pageselector) {
 		super(parent);
-		page = _page;
-		budget = _budget;
+		this.page = _page;
+		this.budget = _budget;
+		this.pageselector = pageselector;
 
 		income_dialog = new IncomeDialog(this); 
 		category_dialog = new CategoryDialog(this); 
@@ -102,37 +105,45 @@ public class MainView extends DivRep {
 		page.categories.add(cat);
 		initView();
 		redraw();
+		pageselector.redraw();
 	}
 	public void removeCategory(Category cat) {
 		page.categories.remove(cat);
 		initView();
 		redraw();
+		pageselector.redraw();
 	}
 	public void removeIncome(Income in) {
 		page.incomes.remove(in);
 		incomeview.redraw();
 		budgettingview.redraw();
 		balanceview.redraw();
+		pageselector.redraw();
 	}
 	public void removeExpense(Category cat, Expense ex) {
 		cat.removeExpense(ex);
 		expenseview.updateExpenseCategory(cat);
 		balanceview.redraw();
+		pageselector.redraw();
 	}
 	public void updateCategory(Category cat) {
 		budgettingview.redraw();
 		expenseview.redraw();
 		balanceview.redraw();
+		pageselector.redraw();
 	}
 	public void updateExpenseCategory(Category cat) {
 		expenseview.updateExpenseCategory(cat);
 		balanceview.redraw();
+		//js("window.location.reload();");
+		pageselector.redraw();
 	}
 	public void updateIncomeView()
 	{
 		incomeview.redraw();
 		budgettingview.redraw();
 		balanceview.redraw();
+		pageselector.redraw();
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
