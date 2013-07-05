@@ -117,6 +117,7 @@ public class Page extends ObjectID implements XMLSerializer {
 		BigDecimal balance = getTotalIncome();
 		balance = balance.subtract(getTotalIncomeDeduction());
 		for(Category category : categories) {
+			balance = balance.subtract(category.getTotalExpense());
 			balance = balance.subtract(category.getTotalScheduled());
 		}
 		return balance;

@@ -130,7 +130,8 @@ class BalanceView extends DivRep
 				
 				//remaining
 				out.write("<td style=\"text-align: right;\" width=\"90px\">");
-				av = new AmountView(this, category.getAmount().subtract(category.getTotalExpense()));
+				BigDecimal remain = category.getAmount().subtract(category.getTotalExpense());
+				av = new AmountView(this, remain);
 				av.render(out);
 				out.write("</td>");
 				
@@ -139,7 +140,8 @@ class BalanceView extends DivRep
 					out.write("<td style=\"text-align: right;\" width=\"90px\">");
 					BigDecimal total_scheduled = category.getTotalScheduled();
 					if(!total_scheduled.equals(BigDecimal.ZERO)) {
-						av = new AmountView(this, total_scheduled);
+						BigDecimal scheduled_remaining = remain.subtract(total_scheduled);
+						av = new AmountView(this, scheduled_remaining);
 						av.render(out);
 					}				
 					out.write("</td>");
