@@ -13,6 +13,7 @@ import com.divrep.DivRepEventListener;
 import com.divrep.common.DivRepButton;
 import com.divrep.common.DivRepSlider;
 
+import dsbudget.Main;
 import dsbudget.i18n.Labels;
 import dsbudget.model.Category;
 
@@ -181,6 +182,9 @@ public class BudgetingView extends DivRep {
 					slider.setMax(max);
 					slider.setValue(category.getAmount().longValue());
 					slider.setColor(category.color);
+					if(Main.conf.getProperty("disable_budget_slider", "false").equals("true")) {
+						slider.setDisabled(true);
+					}
 					
 					out.write("<li id=\"cat_"+category.getID()+"\" >");
 	
