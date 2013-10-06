@@ -235,7 +235,7 @@ public class ExpenseView extends DivRep {
 			
 			out.write("<tr style=\"background-color: #"+String.format("%06x", (header_color.getRGB() & 0x00ffffff) )+";\"");
 			out.write(" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"', 'cat_edit')\" class=\"expense_category\">");
-			out.write("<th width=\"20px\"></th><th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
+			out.write("<th width=\"20px\"></th><th width=\"280px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
 			out.write("<td>"+StringEscapeUtils.escapeHtml(category.description)+"</td>");
 			out.write("<th width=\"100px\"></th><th width=\"110px\" class=\"note\" style=\"text-align: right;\">");
 			if(category.isPercentage()) {

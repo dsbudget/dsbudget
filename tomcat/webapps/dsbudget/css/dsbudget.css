@@ -221,11 +221,16 @@ background-color: #ccc;
 cursor: pointer;
 }
 
+.budgetting tr.category span.quick_expense_button {
+cursor: cell;
+}
+
 .incomeview tr:hover.income img.remove_button, 
 .incomeview tr:hover.income span.sort_button, 
 .incomeview tr:hover.deduction img.remove_button, 
 .budgetting tr:hover.category img.remove_button, 
 .budgetting tr:hover.category span.sort_button, 
+.budgetting tr:hover.category span.quick_expense_button, 
 .expenseview tr:hover.expense img.remove_button,
 .pageselector div:hover.page img.remove_button {
 visibility: visible;
@@ -236,6 +241,7 @@ visibility: visible;
 .incomeview tr.deduction img.remove_button,
 .budgetting tr.category img.remove_button,
 .budgetting tr.category span.sort_button, 
+.budgetting tr.category span.quick_expense_button, 
 .expenseview tr.expense img.remove_button,
 .pageselector div.page img.remove_button {
 visibility: hidden;

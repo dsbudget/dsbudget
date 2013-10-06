@@ -2,8 +2,11 @@ package dsbudget.view;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -145,10 +148,12 @@ public class BudgetingView extends DivRep {
 		Long max = total_free_income.longValue();
 		if(max > 0) {
 			out.write("<table width=\"100%\">");
-			out.write("<tr class=\"header\"><td width=\"300px\">");
+			out.write("<tr class=\"header\"><td width=\"310px\">");
 			out.write("<h2>");
 			out.write(Labels.getHtmlEscapedString(BUV_LABEL_HEADER));
-			out.write("</h2></td><th style=\"vertical-align: bottom\" class=\"note\">");
+			out.write("</h2></td>");
+			
+			out.write("<th style=\"vertical-align: bottom\" class=\"note\">");
 			if(!mainview.page.hide_budget) {
 				out.write(StringEscapeUtils.escapeHtml(nf.format(0)));
 			}
@@ -190,9 +195,22 @@ public class BudgetingView extends DivRep {
 	
 					out.write("<table width=\"100%\">");
 					out.write("<tr class=\"category\" onclick=\"divrep('"+getNodeID()+"', event, '"+category.toString()+"')\">");			
-					out.write("<td width=\"20px\"><span class=\"sort_button ui-icon ui-icon-arrowthick-2-n-s\"></span></td>");				
-					out.write("<th width=\"270px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
-									
+					out.write("<td width=\"20px\"><span class=\"sort_button ui-icon ui-icon-arrowthick-2-n-s\"></span></td>");		
+					out.write("<th width=\"255px\">"+StringEscapeUtils.escapeHtml(category.name)+"</th>");
+					
+					//add new expense button
+					out.write("<th width=\"15px\">");
+					//Currency c = Currency.getInstance(Locale.getDefault());
+					DivRepButton addnewexpense = new DivRepButton(this, "<span class=\"quick_expense_button ui-icon ui-icon-pencil\"></span>");
+					addnewexpense.setStyle(DivRepButton.Style.HTML);
+					addnewexpense.addEventListener(new DivRepEventListener() {
+						public void handleEvent(DivRepEvent e) {
+							mainview.expense_dialog.open(category, null);
+						}
+					});
+					addnewexpense.render(out);
+					out.write("</th>");				
+					
 					out.write("<td>");
 					slider.render(out);
 					out.write("</td>");
