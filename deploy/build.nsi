@@ -7,7 +7,7 @@
 
 Name "dsBudget"
 
-OutFile "C:\Users\soichih\Desktop\dsbudget_${VERSION}.exe"
+OutFile "C:\Users\Soichi\Desktop\dsbudget_${VERSION}.exe"
 
 ; Some default compiler settings (uncomment and change at will):
 ; SetCompress auto ; (can be off or force)
