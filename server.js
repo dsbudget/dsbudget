@@ -34,7 +34,7 @@ if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     config.mongo_user = process.env.OPENSHIFT_MONGODB_DB_USER;
     config.mongo_pass = process.env.OPENSHIFT_MONGODB_DB_PASSWORD;
     */
-    config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL;
+    config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
 } else {
     //assume development
     app.use(express.errorHandler());
