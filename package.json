@@ -1,30 +1,37 @@
 {
-  "name": "OpenShift-Sample-App",
-  "version": "1.0.0",
-  "description": "OpenShift Sample Application",
+  "name": "dsBudget",
+  "version": "3.0.0",
+  "description": "dsBudget version 3",
   "keywords": [
-    "OpenShift",
+    "dsBudget",
     "Node.js",
-    "application",
+    "personal",
+    "budgeting",
     "openshift"
   ],
   "author": {
-    "name": "OpenShift",
-    "email": "ramr@example.org",
-    "url": "http://www.openshift.com/"
+    "name": "Soichi Hayashi",
+    "email": "soichih@gmail.com",
+    "url":  "http://openshift.redhat.com/"
   },
-  "homepage": "http://www.openshift.com/",
+  "homepage": "https://sites.google.com/site/dsbudgethome/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openshift/origin-server"
+    "url": "https://github.com/soichih/dsbudget"
   },
 
   "engines": {
-    "node": ">= 0.6.0",
+    "node": ">= 0.10.0",
     "npm": ">= 1.0.0"
   },
 
   "dependencies": {
+    "express": "*",
+    "socket.io": "*",
+    "mongodb": "*",
+    "ejs": "*",
+    "merge": "*",
+    "passport": "*",
     "express": "~3.4.4"
   },
   "devDependencies": {},

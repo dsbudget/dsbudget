@@ -1,0 +1,11 @@
+{
+"name": "something",
+"host": "soichi6.grid.iu.edu",
+"port": 12369,
+"socket_url": "soichi6.grid.iu.edu:12369",
+"mongo_db": "dsbudget",
+"mongo_port": 27017,
+"mongo_host": "localhost",
+"mongo_user": "dsbudget",
+"mongo_pass": "dsbudget#pass"
+}
