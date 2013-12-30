@@ -3,6 +3,7 @@ var http = require('http');
 var path = require('path');
 var express = require('express');
 var mongo = require('mongodb');
+var assert = require('assert');
 
 //store config on global space
 config = require('./config.json');
@@ -60,8 +61,8 @@ db.open(function(err, db) {
         throw err;
     } else {
         console.log("connected to mongo.. authenticating");
-        db.authenticate(config.mongo_user, config.mongo_pass, function(err, result) {
-            //assert.equal(true, result);
+        db.authenticate(config.mongo_user, config.mongo_pass, {authdb: config.mongo_db}, function(err, result) {
+            assert.equal(true, result);
             if(err) {
                 console.log("failed to authenticate to mongo");
                 throw err;
