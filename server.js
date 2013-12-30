@@ -27,11 +27,14 @@ if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     //https://dl.dropboxusercontent.com/u/61433005/Web%20Socket%20and%20Http%20routing%20on%20OpenShift.png
     config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
 
+    /*
     config.mongo_db = process.env.OPENSHIFT_APP_NAME;
     config.mongo_port = process.env.OPENSHIFT_MONGODB_DB_PORT;
     config.mongo_host = process.env.OPENSHIFT_MONGODB_DB_HOST;
     config.mongo_user = process.env.OPENSHIFT_MONGODB_DB_USER;
     config.mongo_pass = process.env.OPENSHIFT_MONGODB_DB_PASSWORD;
+    */
+    config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL;
 } else {
     //assume development
     app.use(express.errorHandler());
@@ -49,6 +52,16 @@ io.sockets.on('connection', function (socket) {
     });
 });
 
+mongo.MongoClient.connect(config.mongo_url, function(err, db) {
+    if(err) throw err;
+    app.get('/', require('./routes/index')(db));
+    app.get('/admin', require('./routes/admin')(db));
+    server.listen(config.port, config.host, function(){
+        console.log('Express server listening on host ' + config.host);
+    });
+});
+
+/*
 var mongo_server = new mongo.Server(config.mongo_host, config.mongo_port, {auto_reconnect: true});
 var db = new mongo.Db(config.mongo_db, mongo_server);
 app.get('/', require('./routes/index')(db));
@@ -74,3 +87,4 @@ db.open(function(err, db) {
         });
     }
 });
+*/

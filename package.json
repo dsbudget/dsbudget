@@ -21,14 +21,14 @@
   },
 
   "engines": {
-    "node": ">= 0.10.0",
+    "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
 
   "dependencies": {
     "express": "*",
     "socket.io": "*",
-    "mongodb": "*",
+    "mongodb": "> 1.1.10",
     "ejs": "*",
     "merge": "*",
     "passport": "*",
