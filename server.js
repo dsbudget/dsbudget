@@ -27,8 +27,8 @@ if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
 
     config.mongo_db = process.env.OPENSHIFT_APP_NAME;
-    config.mongo_host = process.env.OPENSHIFT_MONGODB_DB_HOST;
     config.mongo_port = process.env.OPENSHIFT_MONGODB_DB_PORT;
+    config.mongo_host = process.env.OPENSHIFT_MONGODB_DB_HOST;
     config.mongo_user = process.env.OPENSHIFT_MONGODB_DB_USER;
     config.mongo_pass = process.env.OPENSHIFT_MONGODB_DB_PASSWORD;
 } else {
@@ -58,8 +58,18 @@ db.open(function(err, db) {
     if(err) {
         console.log("failed to connect to mongodb");
         throw err;
+    } else {
+        console.log("connected to mongo.. authenticating");
+        db.authenticate(config.mongo_user, config.mongo_pass, function(err, result) {
+            //assert.equal(true, result);
+            if(err) {
+                console.log("failed to authenticate to mongo");
+                throw err;
+            }
+            console.log("mongo auth success");
+            server.listen(config.port, config.host, function(){
+                console.log('Express server listening on host ' + config.host);
+            });
+        });
     }
-    server.listen(config.port, config.host, function(){
-        console.log('Express server listening on host ' + config.host);
-    });
 });
