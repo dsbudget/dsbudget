@@ -49,14 +49,16 @@ public class ExpenseDialog extends DivRepDialog
 
 		public ExpenseDialogContent(DivRep parent) {
 			super(parent);
+			setWidth(450);
+			
 			where = new DivRepTextBox(this);
 			where.setLabel(Labels.getString(EXD_LABEL_WHERE));
-			where.setWidth(200);
+			//where.setWidth(200);
 			where.setRequired(true);
 			
 			note = new DivRepTextBox(this);
 			note.setLabel(Labels.getString(EXD_LABEL_NOTE));
-			note.setWidth(300);
+			//note.setWidth(300);
 			
 			date = new DivRepDate(this);
 			date.setLabel(Labels.getString(EXD_LABEL_DATE));
@@ -64,7 +66,7 @@ public class ExpenseDialog extends DivRepDialog
 			
 			amount = new DivRepMoneyAmount(this);
 			amount.setLabel(Labels.getString(EXD_LABEL_AMOUNT));
-			amount.setWidth(200);
+			//amount.setWidth(200);
 			amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(EXD_LABEL_AMOUNT_SAMPLE))));
 			amount.setRequired(true);
 			

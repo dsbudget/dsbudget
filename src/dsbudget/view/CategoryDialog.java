@@ -51,13 +51,13 @@ public class CategoryDialog extends DivRepDialog
 			
 			name = new DivRepTextBox(this);
 			name.setLabel(Labels.getString(CAD_LABEL_NAME));
-			name.setWidth(200);
+			//name.setWidth(200);
 			name.setRequired(true);
 			name.setSampleValue(Labels.getString(CAD_LABEL_NAME_SAMPLE));
 			
 			amount = new DivRepMoneyAmount(this);
 			amount.setLabel(Labels.getString(CAD_BUDGET_NAME));
-			amount.setWidth(200);
+			//amount.setWidth(200);
 			amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(CAD_BUDGET_SAMPLE))));
 			amount.setRequired(true);
 			amount.allowPercentage(true);
@@ -87,7 +87,7 @@ public class CategoryDialog extends DivRepDialog
 			
 			description = new DivRepTextBox(this);
 			description.setLabel(Labels.getString(CAD_LABEL_NOTE));
-			description.setWidth(290);
+			//description.setWidth(290);
 			
 			color = new DivRepColorPicker(this);
 			color.setLabel(Labels.getString(CAD_LABEL_COLOR));

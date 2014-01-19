@@ -76,7 +76,7 @@ public class IncomeDialog extends DivRepDialog
 		
 		amount = new DivRepMoneyAmount(this);
 		amount.setLabel(Labels.getString(IND_LABEL_AMOUNT));
-		amount.setWidth(200);
+		//amount.setWidth(200);
 		amount.setSampleValue(nf.format(10));
 		amount.setRequired(true);
 		/*
@@ -102,7 +102,7 @@ public class IncomeDialog extends DivRepDialog
 		
 		description = new DivRepTextBox(this);
 		description.setLabel(Labels.getString(IND_LABEL_NAME));
-		description.setWidth(200);
+		//description.setWidth(200);
 		description.setRequired(true);		
 	}
 	

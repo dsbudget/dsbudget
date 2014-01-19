@@ -47,6 +47,10 @@ input {
 margin-top: 3px;
 }
 
+.ui-dialog input[type='text'] {
+width: 250px;
+}
+
 select {
 padding: 2px;
 margin-top: 3px;

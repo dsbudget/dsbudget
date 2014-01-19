@@ -3,7 +3,7 @@
 
 	<property name="build.dir" value="build"/>
 	<property name="linux-landing.dir" value="/home/soichih/Desktop"/>
-	<property name="win-landing.dir" value="C:\Users\Soichi\Desktop"/>
+	<property name="win-landing.dir" value="C:\Users\hayashis\Desktop"/>
 	
 	<target name="windows" depends="clean, win-installer, win-standalone"></target>
 	<target name="linux" depends="clean, linux-package"></target>

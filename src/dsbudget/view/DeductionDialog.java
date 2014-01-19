@@ -38,11 +38,11 @@ public class DeductionDialog extends DivRepDialog
 		description = new DivRepTextBox(this);
 		description.setLabel(Labels.getString(DED_LABEL_DESCRIPTION));
 		description.setRequired(true);
-		description.setWidth(300);
+		//description.setWidth(300);
 		
 		amount = new DivRepMoneyAmount(this);
 		amount.setLabel(Labels.getString(DED_LABEL_AMOUNT));
-		amount.setWidth(200);
+		//amount.setWidth(200);
 		amount.setSampleValue(nf.format(Integer.valueOf(Labels.getString(DED_LABEL_AMOUNT_SAMPLE))));
 		amount.setRequired(true);
 		amount.allowPercentage(true);

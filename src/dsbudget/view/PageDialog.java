@@ -148,7 +148,7 @@ public class PageDialog extends DivRepDialog
 
 		title = new DivRepTextBox(this);
 		title.setLabel(Labels.getString(PAD_LABEL_TITLE));
-		title.setWidth(220);
+		//title.setWidth(220);
 				
 		title.setRequired(true);
 		title.addValidator(new DivRepIValidator<String>() {
