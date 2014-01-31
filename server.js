@@ -18,6 +18,9 @@ var MemoryStore = express.session.MemoryStore,
     sessionStore = new MemoryStore();
 */
 
+console.log("dumping env");
+condor.dir(process.env);
+
 var now = new Date().getTime();
 
 //store config on global space
@@ -46,6 +49,8 @@ app.configure(function() {
     app.use(flash());
 
     app.use(app.router);
+    app.use(express.errorHandler());
+    app.use(express.logger());
 });
 
 if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
@@ -57,15 +62,14 @@ if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
     config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
     config.app_url = "https://"+config.host+":"+config.port;
-} else {
-    //assume development
-    app.use(express.errorHandler());
-    app.use(express.logger('dev'));
-}
+} 
 
-//environment override
-config.mongo_url = process.env.MONGOLAB_URI || config.mongo_url;
-config.port = process.env.PORT || config.port;
+if(process.env.HEROKU) {
+    config.mongo_url = process.env.MONGOLAB_URI;
+    config.port = process.env.PORT;
+    config.app_url = ''; 
+    config.socket_url = '';
+}
 
 var io = require('socket.io').listen(server);
 /*
