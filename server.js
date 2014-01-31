@@ -54,8 +54,8 @@ app.configure(function() {
 });
 
 if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
+    console.log("seems to be running on openshift");
     //on openshift. override port/host
-    console.dir(process.env); //https://www.openshift.com/page/openshift-environment-variables
     config.port = process.env.OPENSHIFT_NODEJS_PORT;
     config.host = process.env.OPENSHIFT_NODEJS_IP;
     //https://dl.dropboxusercontent.com/u/61433005/Web%20Socket%20and%20Http%20routing%20on%20OpenShift.png
@@ -103,20 +103,7 @@ io.sockets.on('connection', function (socket) {
     });
 });
 
-/*
-function message(req, msg, type) {
-    if(!type) {
-        type = "normal";
-    }
-    if(!req.session.messages) {
-        req.session.messages = [];
-    }
-    req.session.messages.push({type: type, msg: msg});
-}
-*/
-
 function hashpassword(pass, salt, callback) {
-    //crypto.pbkdf2(pass, salt, 10000, 512, callback);
     crypto.pbkdf2(pass, salt, 10000, 512, function(err, hash) {
         if(err) {
             callback(err);
