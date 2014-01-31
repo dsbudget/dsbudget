@@ -65,10 +65,11 @@ if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
 } 
 
 if(process.env.HEROKU) {
+    console.log("seems to be running on heroku");
     config.mongo_url = process.env.MONGOLAB_URI;
     config.port = process.env.PORT;
-    config.app_url = ''; 
-    config.socket_url = '';
+    config.app_url = 'http://dsbudget.herokuapp.com'; 
+    config.socket_url = 'dsbudget.herokuapp.com';
 }
 
 var io = require('socket.io').listen(server);
