@@ -19,7 +19,7 @@ var MemoryStore = express.session.MemoryStore,
 */
 
 console.log("dumping env");
-condor.dir(process.env);
+console.dir(process.env);
 
 var now = new Date().getTime();
 
