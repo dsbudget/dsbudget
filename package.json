@@ -32,7 +32,15 @@
     "ejs": "*",
     "merge": "*",
     "passport": "*",
-    "express": "~3.4.4"
+    "async": "*",
+    "accounting": "*",
+    "passport-google": "*",
+    "passport-local": "*",
+    "express": "~3.4.4",
+    "xml2js": "*",
+    "node-sass": "*",
+    "extend": "*",
+    "connect-flash": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],

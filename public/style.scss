@@ -1,0 +1,36 @@
+
+/*CSS compiled by SASS*/
+
+$titlecolor: #999;
+$bordercolor: #e5e5e5;
+
+.navbar {
+    li.imgbutton a {
+        padding: 0px;
+    }
+}
+
+.page-header,
+.doc-title {
+    color: $titlecolor;
+    border-bottom: 1px solid $bordercolor;
+    text-transform:uppercase;
+}
+
+@media (min-width: 768px) {
+  footer {
+    text-align: left;
+  }
+  footer p {
+    margin-bottom: 0;
+  }
+}
+
+footer {
+padding-top: 40px;
+padding-bottom: 30px;
+margin-top: 100px;
+color: #777;
+text-align: center;
+border-top: 1px solid $bordercolor;
+}

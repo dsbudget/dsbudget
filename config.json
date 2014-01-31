@@ -1,7 +1,8 @@
 {
-"name": "something",
-"host": "soichi6.grid.iu.edu",
+"cookie_secret": "hogehogehogehoge",
 "port": 12369,
+"host": null,
+"app_url": "http://soichi6.grid.iu.edu:12369",
 "socket_url": "soichi6.grid.iu.edu:12369",
 "mongo_url": "mongodb://dsbudget:dsbudget#pass@localhost:27017/dsbudget"
 }

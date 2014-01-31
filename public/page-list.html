@@ -1,0 +1,60 @@
+<div class="pull-right"><input ng-model="page_query" placeholder="Page Filter"></div>
+<br clear="all">
+<div ng-repeat="doc in docs">
+
+    <div class="pull-right">
+        <button type="button" class="btn btn-default">New Page</button>
+        <button type="button" class="btn btn-default" ng-click="openimport(doc)">Import</button>
+    </div>
+    <h1 class="doc-title">{{doc.name}}</h1>
+
+    <div class="page-summary" ng-repeat="page in doc.pages | filter:page_query | orderBy:orderProp">
+        <div class="row">
+            <div class="col-md-2">
+                <a href="#/{{page._id}}"><b>{{page.name}}</b></a>
+            </div>
+            <div class="col-md-8">
+                <div class="progress" ng-class="{'progress-striped active' : page._active}">
+                    <div class="progress-bar" ng-class="{'progress-bar-danger' : page._pct >= 100}" role="progressbar" aria-valuenow="{{page._pct}}" aria-valuemin="0" aria-valuemax="100" style="width: {{page._pct}}%">
+                        <span class="sr-only">{{page._pct}}% Complete</span>
+                    </div>
+                </div><!--process-->
+            </div>
+            <div class="col-md-2">
+                <span>{{page.start_date | date:'shortDate'}} to {{page.end_date|date:'shortDate'}}</span>
+            </div>
+        </div> <!--row-->
+    </div><!--pages-->
+</div><!--docs-->
+
+<p>test {{123400 | currency }}</p>
+
+<script type="text/ng-template" id="importdialog.html">
+    <form role="form" ng-submit="ok(doc._id)">
+    <div class="modal-header">
+        <h3>Import Data</h3>
+    </div>
+    <div class="modal-body">
+        <p>Please upload your dsBudget document (BudgetDocument.xml) stored on your computer to import data. 
+        If you are not sure how to find it, please contact dsBudget support forum.</p>
+            <div class="form-group">
+                <label for="importtype">From</label><br>
+                <select id="importtype" ng-model="importtype" ng-options="type.name for type in importtypes" required></select>
+            </div>
+            <div class="form-group">
+                <label for="fd">Currency Fraction Digists</label><br>
+                <p>Please select number of digits under major denomination in your currrency. For example, for USD(like $.00), it is 2 
+                and for JPY(&yen;) it is 0.</p>
+                <input type="text" ng-model="fd" required/>
+            </div>
+            <div class="form-group">
+                <label for="importfile">Data File</label><br>
+                <input id="importfile" type="file" ng-file-select="onFileSelect($files)" required/>
+            </div>
+    </div>
+    <div class="modal-footer">
+        <input type="submit" class="btn btn-primary" value="Import"/>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+    </form>
+</script>

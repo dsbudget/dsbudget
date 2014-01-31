@@ -1,0 +1,57 @@
+<style>
+.navbar-static-top {
+  margin-bottom: 19px;
+}
+</style>
+<!-- Static navbar -->
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">dsBudget 3</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li id="menu_about"><a href="/about">Home</a></li>
+        <% if (req.user) { %>
+            <li id="menu_page"><a href="/page">Pages</a></li>
+            <li id="menu_setting"><a href="/setting">Settings</a></li>
+        <% } %>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <% if (req.user) { %>
+            <li class="not-active"><a href="/auth/logout">Logout</a></li>
+            <% if (req.user.admin) { %>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Nav header</li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+            <% } %>
+        <% } else { %>
+            <li id="menu_login"><a href="/auth">Login</a></li>
+            <li id="menu_signup"><a href="/signup">Sign Up</a></li>
+            <!--
+            <li class="imgbutton"><a href="/auth/google"><img src="https://developers.google.com/accounts/images/sign-in-with-google.png" height="50"></a></li>
+            -->
+        <% } %>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<script>
+$("#menu_<%-menu%>").addClass("active");
+</script>

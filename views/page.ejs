@@ -1,0 +1,97 @@
+<% include head.ejs %>
+<% include navbar.ejs %>
+<script>
+var dsApp = angular.module('dsApp', ['ngRoute', 'ui.bootstrap', 'angularFileUpload']);
+
+dsApp.config(['$routeProvider', function($routeProvider) {
+    $routeProvider.
+    when('/', {
+        templateUrl: '/public/page-list.html',
+        controller: 'PageListCtrl'
+    }).
+    when('/:id', {
+        templateUrl: '/public/page-detail.html',
+        controller: 'PageDetailCtrl'
+    }).
+    otherwise({
+        redirectTo: '/'
+    });
+}]);
+
+function ImportCtrl($scope, $modalInstance, doc) {
+    $scope.doc = doc;
+    $scope.importtypes = [
+        {name: "dsbudget"}
+    ];
+    $scope.importtype = $scope.importtypes[0]; //setting it to "dsbudget" won't work for some reason
+    $scope.fd = 2;
+
+    $scope.file = null;
+    $scope.onFileSelect = function($files) {
+        $scope.file = $files[0];
+    };
+
+    $scope.ok = function(docid) {
+        $scope.docid = docid;
+        $modalInstance.close($scope);
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ImportCtrl.$inject = ['$scope', '$modalInstance', 'doc'];
+
+dsApp.controller('PageListCtrl', ['$scope', '$http', '$modal', '$upload', 
+function($scope, $http, $modal, $upload) {
+    $scope.loadpages = function(){
+        $http.get('/page/list').success(function(docs) {
+            $scope.docs = docs;
+        });
+    };
+    $scope.loadpages();
+
+    $scope.orderProp = '-end_date';
+    $scope.openimport = function(doc) {
+        var modal = $modal.open({
+            templateUrl: 'importdialog.html',
+            controller: ImportCtrl,
+            resolve: {
+                doc: function() {
+                    return doc;
+                }
+            }
+        });
+        modal.result.then(function(scope) {
+            $upload.upload({
+                url: '/import/dsbudget', 
+                data: {
+                    docid: scope.docid,
+                    importtype: scope.importtype.name,
+                    fd: scope.fd }, 
+                file: scope.file,
+            }).progress(function(evt) {
+                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+            }).success(function(data, status, headers, config) {
+                $scope.loadpages();
+            }).error(function(data, status, headers, config) {
+                alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+            });
+        });
+    };
+}]);
+
+dsApp.controller('PageDetailCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+    $http.get('/page/detail', {params: {id: $routeParams.id}}).success(function(page) {
+        $scope.page = page;
+        $scope.incomes = page.incomes;
+        $scope.categories = page.categories;
+    });
+}]);
+
+</script>
+<div class="container" ng-app="dsApp">
+    <div ng-view></div>
+    <% include footer.ejs %>
+</div>
+<% include tail.ejs %>

@@ -7,8 +7,34 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/public/style.css">
 
+    <!--need to go before angular.min-->
+    <script src="/public/angular-file-upload/angular-file-upload-shim.min.js"></script> 
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-route.min.js"></script>
+    <!--
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    -->
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-0.9.0.min.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.9.0.js"></script>
+
+    <!--
+    <script src="//blueimp.github.com/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="//blueimp.github.com/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>    
+    <script src="//blueimp.github.com/jQuery-File-Upload/js/jquery.fileupload.js"></script>    
+    --> 
+
+    <script src="/public/angular-file-upload/angular-file-upload.min.js"></script> 
+    
 </head>
 <body>
+
+<%
+var messages = req.flash('error');
+messages.forEach(function(message) {
+    %>
+    <div class="message"><%=message%></div>
+    <%
+});
+%>

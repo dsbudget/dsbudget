@@ -1,0 +1,18 @@
+<h2>{{page.name}}</h2>
+<p class="help-block">{{page.desc}}</p>
+<h3>Incomes</h3>
+<ul>
+<li ng-repeat="income in incomes">
+    <p>{{income.name}}</p>
+</li>
+</ul>
+
+<h3>Expenses</h3>
+<ul>
+<li ng-repeat="category in categories">
+    <h4>{{category.name}}</h4>
+    <li ng-repeat="expense in category.expenses">
+        <h4>{{expense.name}}</h4>
+    </li>
+</li>
+</ul>
