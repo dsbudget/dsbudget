@@ -68,8 +68,8 @@ if(process.env.HEROKU) {
     console.log("seems to be running on heroku");
     config.mongo_url = process.env.MONGOLAB_URI;
     config.port = process.env.PORT;
-    config.app_url = 'http://dsbudget.herokuapp.com'; 
-    config.socket_url = 'dsbudget.herokuapp.com';
+    config.app_url = 'https://dsbudget.herokuapp.com'; 
+    config.socket_url = 'dsbudget.herokuapp.com:443';
 }
 
 var io = require('socket.io').listen(server);
