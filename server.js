@@ -420,7 +420,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
     */
 
     server.listen(config.port, config.host, function(){
-        console.log('Express server listening on host ' + config.host);
+        console.log('Express server listening on host ' + config.host+":"+config.port);
     });
 });
 

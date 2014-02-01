@@ -17,6 +17,7 @@
     <div class="section-header">Expenses</div>
     <div class="category" ng-repeat="category in categories">
         <div class="category-header" style="background-color: {{category.color}};">
+            <span ng-if="category.recurring" class="glyphicon glyphicon-retweet">&nbsp;</span>
             {{category.name}} <span class="category-desc">{{category.desc}}</span>
             <span class="pull-right important-amount">{{category.budget | currency}}</span>
             <!-- <span class="pull-right">Budget</span>-->
@@ -48,7 +49,7 @@
 <script type="text/ng-template" id="expensedialog.html">
     <form role="form" ng-submit="ok()">
     <div class="modal-header">
-        <h3><span ng-if="!expense">New</span> Expense <span class="muted">for {{category.name}}</span></h3>
+        <h3><span ng-if="_new">New</span> Expense <span class="muted">for {{category.name}}</span></h3>
     </div>
     <div class="modal-body">
         <div class="form-group">

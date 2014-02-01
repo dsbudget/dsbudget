@@ -107,6 +107,7 @@ function ExpenseCtrl($scope, $modalInstance, docid, category, expense) {
     $scope.expense = expense;
 
     if(!$scope.expense) {
+        $scope._new = true;
         $scope.expense = {
             time: new Date().getTime()
         };
