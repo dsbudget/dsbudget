@@ -23,8 +23,11 @@ console.dir(process.env);
 
 var now = new Date().getTime();
 
+//set config
+var config = {};
 if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     console.log("seems to be running on openshift");
+    
     config.port = process.env.OPENSHIFT_NODEJS_PORT;
     config.host = process.env.OPENSHIFT_NODEJS_IP;
     config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
