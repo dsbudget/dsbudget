@@ -20,3 +20,53 @@ footer {
   color: #777;
   text-align: center;
   border-top: 1px solid #e5e5e5; }
+
+.section {
+  border: 1px solid #ddd;
+  border-radius: 4px 4px;
+  box-shadow: 1px 1px 1px #eee;
+  margin-bottom: 10px; }
+  .section .section-header {
+    margin: 10px 0px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    color: #bbb;
+    font-size: 12pt;
+    font-weight: bold; }
+  .section .income-header, .section .category-header {
+    margin: 0px;
+    margin-bottom: 1px;
+    padding: 5px 20px;
+    font-size: 11pt;
+    font-weight: bold;
+    color: black; }
+  .section .income-header {
+    background-color: #ddd; }
+  .section .important-amount {
+    width: 100px;
+    text-align: right; }
+  .section .category {
+    clear: both;
+    margin-bottom: 15px; }
+  .section .category-desc {
+    margin-left: 20px;
+    font-weight: normal; }
+  .section .expense-item {
+    margin: 0px 10px;
+    border-bottom: 1px solid #eee;
+    clear: both;
+    cursor: pointer; }
+    .section .expense-item .expense-amount {
+      text-align: right; }
+    .section .expense-item .expense-name {
+      color: gray; }
+  .section .expense-item:hover {
+    background-color: #eee; }
+  .section .expense-total {
+    margin: 0px 10px;
+    border-bottom: none;
+    clear: both; }
+
+.muted {
+  opacity: 0.5;
+  font-size: 80%; }

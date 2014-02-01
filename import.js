@@ -20,8 +20,8 @@ function parse_page(model, doc_id, opts, page, next_page) {
         doc_id: doc_id,
         name: page.$.name,
         desc: page.$.description,
-        start_date: page.$.ctime*1000,
-        end_date: page.$.ctime*1000 + 3600*24*40, //TODO - set it to end of month? 
+        start_date: parseInt(page.$.ctime)*1000,
+        end_date: parseInt(page.$.ctime)*1000 + 3600*1000*24*30, //TODO - set it to end of month? 
         total_income: 1000, //will be reset later
         total_expense: 1000, // will be reset later
         show_views: {
@@ -54,7 +54,7 @@ function parse_page(model, doc_id, opts, page, next_page) {
                     amount: parse_amount(deduction.$.amount),
                     is_amount_per: false,
                     where: "(Deduction)",
-                    time: page.$.ctime, //use page's ctime as expense time
+                    time: parseInt(page.$.ctime)*1000 //use page's ctime as expense time
                 };
                 db_deduction_category.budget += db_expense.amount;
                 db_deduction_category.expenses.push(db_expense);
@@ -92,10 +92,18 @@ function parse_page(model, doc_id, opts, page, next_page) {
             var r = (v>>0)&0xff;
             var g = (v>>8)&0xff;
             var b = (v>>16)&0xff;
-            return "#"+r.toString(16)+g.toString(16)+b.toString(16);
+            return "#"+decimalToHex(r,2)+decimalToHex(g,2)+decimalToHex(b,2);
         }
 
-        function insert_category(db_category, next) {
+        function decimalToHex(d, padding) {
+            var hex = Number(d).toString(16);
+            padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+
+            while (hex.length < padding) {
+                hex = "0" + hex;
+            }
+
+            return hex;
         }
 
         function parse_category(category, next) {

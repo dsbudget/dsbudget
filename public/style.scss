@@ -34,3 +34,70 @@ color: #777;
 text-align: center;
 border-top: 1px solid $bordercolor;
 }
+
+.section {
+border: 1px solid #ddd;
+border-radius: 4px 4px;
+box-shadow: 1px 1px 1px #eee;
+margin-bottom: 10px;
+
+    .section-header  {
+        margin: 10px 0px;
+        padding: 10px 20px;
+        text-transform: uppercase;
+        color: #bbb;
+        font-size: 12pt;
+        font-weight: bold;
+    }
+    .income-header,
+    .category-header {
+        margin: 0px;
+        margin-bottom: 1px;
+        padding: 5px 20px;
+        font-size: 11pt;
+        font-weight: bold;
+
+        color: black;
+    }
+    .income-header {
+        background-color: #ddd;
+    }
+    .important-amount{
+        width: 100px;
+        text-align: right;
+    }
+    .category {
+        clear: both;
+        margin-bottom: 15px;
+    }
+    .category-desc {
+    margin-left: 20px;
+    font-weight: normal;
+    }
+    .expense-item {
+        margin: 0px 10px;
+        border-bottom: 1px solid #eee;
+        clear: both;
+        .expense-amount {
+            text-align: right;
+        }
+        .expense-name {
+            color: gray;
+        }
+        cursor: pointer;
+    }
+    .expense-item:hover {
+        background-color: #eee;
+    }
+    .expense-total {
+        margin: 0px 10px;
+        border-bottom: none;
+        clear: both;
+    }
+}
+
+.muted {
+opacity: 0.5;
+font-size: 80%;
+}
+

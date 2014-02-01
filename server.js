@@ -120,8 +120,33 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
     var model = require('./model').init(db);
 
     app.get('/', function(req,res) {
+        //check to see if user has user/pass reset (if this is the first time user logsin)
+        //console.log("checking user object");
         if(req.user) {
-            res.redirect('/page');  //jumpt to where we want to go
+            //console.dir(req.user);
+            if(req.user.password) {
+                model.Doc.findByOwnerID(req.user._id, function(err, docs) {
+                    if(err) {
+                        console.error(err);
+                    } else {
+                        if(docs.length > 0) {
+                            //all good
+                            res.redirect('/page'); 
+                        } else {
+                            //create doc for user  
+                            model.Doc.create({
+                                "name" : "My Budget",
+                                "owners" : [ req.user._id ]
+                            }, function(err, docid) {
+                                console.log("created first doc for user "+req.user._id);
+                                res.redirect('/'); 
+                            });
+                        }
+                    }
+                });
+            } else {
+                res.redirect('/setpass'); 
+            }
         } else {
             res.redirect('/about');  //jumpt to where we want to go
         }
@@ -242,7 +267,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
         }
     ));
     app.post('/auth/login', passport.authenticate('local', { 
-        successRedirect: '/check', failureRedirect: '/auth',
+        successRedirect: '/', failureRedirect: '/auth',
         failureFlash: true 
     }), function(req, res) {
         console.log("local authentication successful");
@@ -261,38 +286,12 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
         });
     });
     app.get('/auth/google', passport.authenticate('google'));
-    app.get('/auth/google/return', passport.authenticate('google', { successRedirect: '/check', failureRedirect: '/auth/error' }));
+    app.get('/auth/google/return', passport.authenticate('google', 
+        { successRedirect: '/', failureRedirect: '/auth/error' }
+    ));
 
     //forward to /check when user first login 
-    app.get('/check', function(req, res){
-        //check to see if user has user/pass reset (if this is the first time user logsin)
-        //console.log("checking user object");
-        if(req.user) {
-            //console.dir(req.user);
-            if(req.user.password) {
-                model.Doc.findByOwnerID(req.user._id, function(err, docs) {
-                    if(err) {
-                        console.error(err);
-                    } else {
-                        if(docs.length > 0) {
-                            //all good
-                            res.redirect('/'); 
-                        } else {
-                            //create doc for user  
-                            model.Doc.create({
-                                "name" : "My Budget",
-                                "owners" : [ req.user._id ]
-                            }, function(err, docid) {
-                                console.log("created first doc for user "+req.user._id);
-                                res.redirect('/'); 
-                            });
-                        }
-                    }
-                });
-            } else {
-                res.redirect('/setpass'); 
-            }
-        }
+    app.get('/', function(req, res){
     });
 
     app.get('/page', function(req, res){

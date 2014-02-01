@@ -4,5 +4,5 @@
 "host": null,
 "app_url": "http://soichi6.grid.iu.edu:12369",
 "socket_url": "soichi6.grid.iu.edu:12369",
-"mongo_url": "mongodb://dsbudget:dsbudget#pass@localhost:27017/dsbudget"
+"mongo_url": "mongodb://localhost:27017/dsbudget"
 }

@@ -3,6 +3,26 @@
 <script>
 var dsApp = angular.module('dsApp', ['ngRoute', 'ui.bootstrap', 'angularFileUpload']);
 
+dsApp.directive('format', ['$filter', function ($filter) {
+    return {
+        require: '?ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            if (!ctrl) return;
+            ctrl.$formatters.unshift(function (a) {
+            return $filter(attrs.format)(ctrl.$modelValue)
+            });
+            ctrl.$parsers.unshift(function (viewValue) {
+                elem.priceFormat({
+                    prefix: '',
+                    centsSeparator: ',',
+                    thousandsSeparator: '.'
+                });                
+                return elem[0].value;
+            });
+        }
+    };
+}]);
+
 dsApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
     when('/', {
@@ -81,12 +101,88 @@ function($scope, $http, $modal, $upload) {
     };
 }]);
 
-dsApp.controller('PageDetailCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+function ExpenseCtrl($scope, $modalInstance, docid, category, expense) {
+    $scope.docid = docid;
+    $scope.category = category;
+    $scope.expense = expense;
+
+    if(!$scope.expense) {
+        $scope.expense = {
+            time: new Date().getTime()
+        };
+    }
+
+    $scope.opendatepicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.dpopen = true;
+    };
+
+    $scope.ok = function() {
+        $modalInstance.close($scope);
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ExpenseCtrl.$inject = ['$scope', '$modalInstance', 'docid', 'category', 'expense'];
+
+dsApp.controller('PageDetailCtrl', ['$scope', '$http', '$modal', '$routeParams', 
+function($scope, $http, $modal, $routeParams) {
     $http.get('/page/detail', {params: {id: $routeParams.id}}).success(function(page) {
+        //console.dir(page);
         $scope.page = page;
         $scope.incomes = page.incomes;
         $scope.categories = page.categories;
+        update();
     });
+
+    //recompute various derived values
+    function update() {
+        $scope.categories.forEach(function(category) {
+            var remaining = category.budget;
+            category.expenses.forEach(function(expense) {
+                if(expense.is_amount_per) {
+                    remaining-=(expense.amount*category.budget)
+                } else {
+                    remaining-=expense.amount;
+                }
+            });
+            category._remaining = remaining; //set to scope
+        });
+    }
+
+    $scope.openexpense = function(docid, category, expense) {
+        var modal = $modal.open({
+            templateUrl: 'expensedialog.html',
+            controller: ExpenseCtrl,
+            resolve: {
+                docid: function() { return docid; },
+                category: function() { return category; },
+                expense: function() { return expense; }
+            }
+        });
+        modal.result.then(function(scope) {
+            /*
+            $upload.upload({
+                url: '/import/dsbudget', 
+                data: {
+                    docid: scope.docid,
+                    importtype: scope.importtype.name,
+                    fd: scope.fd }, 
+                file: scope.file,
+            }).progress(function(evt) {
+                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+            }).success(function(data, status, headers, config) {
+                $scope.loadpages();
+            }).error(function(data, status, headers, config) {
+                alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+            });
+            */
+            update();
+        });
+    };
 }]);
 
 </script>

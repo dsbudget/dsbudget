@@ -1,4 +1,4 @@
-<div class="pull-right"><input ng-model="page_query" placeholder="Page Filter"></div>
+<div class="pull-right"><input ng-model="page_query" placeholder="Page Filter" class="form-control"></div>
 <br clear="all">
 <div ng-repeat="doc in docs">
 
@@ -27,30 +27,27 @@
     </div><!--pages-->
 </div><!--docs-->
 
-<p>test {{123400 | currency }}</p>
-
 <script type="text/ng-template" id="importdialog.html">
     <form role="form" ng-submit="ok(doc._id)">
     <div class="modal-header">
         <h3>Import Data</h3>
     </div>
     <div class="modal-body">
-        <p>Please upload your dsBudget document (BudgetDocument.xml) stored on your computer to import data. 
-        If you are not sure how to find it, please contact dsBudget support forum.</p>
-            <div class="form-group">
-                <label for="importtype">From</label><br>
-                <select id="importtype" ng-model="importtype" ng-options="type.name for type in importtypes" required></select>
-            </div>
-            <div class="form-group">
-                <label for="fd">Currency Fraction Digists</label><br>
-                <p>Please select number of digits under major denomination in your currrency. For example, for USD(like $.00), it is 2 
-                and for JPY(&yen;) it is 0.</p>
-                <input type="text" ng-model="fd" required/>
-            </div>
-            <div class="form-group">
-                <label for="importfile">Data File</label><br>
-                <input id="importfile" type="file" ng-file-select="onFileSelect($files)" required/>
-            </div>
+        <div class="form-group">
+            <label for="importtype">From</label><br>
+            <select id="importtype" class="form-control" ng-model="importtype" ng-options="type.name for type in importtypes" required></select>
+        </div>
+        <p ng-if="importtype.name == 'dsbudget'">Please upload your dsBudget document (BudgetDocument.xml) stored on your computer to import data.  If you are not sure how to find it, please contact dsBudget support forum.</p>
+        <div class="form-group">
+            <label for="fd">Currency Fraction Digists</label><br>
+            <p>Please select number of digits under major denomination in your currrency. For example, for USD(like $.00), it is 2 
+            and for JPY(&yen;) it is 0.</p>
+            <input type="text" ng-model="fd" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label for="importfile">Data File</label><br>
+            <input id="importfile" type="file" ng-file-select="onFileSelect($files)" required/>
+        </div>
     </div>
     <div class="modal-footer">
         <input type="submit" class="btn btn-primary" value="Import"/>
