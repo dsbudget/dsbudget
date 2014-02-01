@@ -26,6 +26,24 @@ var now = new Date().getTime();
 //store config on global space
 config = require('./config.json');
 
+if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
+    console.log("seems to be running on openshift");
+    config.port = process.env.OPENSHIFT_NODEJS_PORT;
+    config.host = process.env.OPENSHIFT_NODEJS_IP;
+    config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
+    config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
+    config.app_url = "https://"+config.host+":"+config.port;
+}
+
+if(process.env.HEROKU) {
+    console.log("seems to be running on heroku");
+    config.mongo_url = process.env.MONGOLAB_URI;
+    config.port = process.env.PORT;
+    config.app_url = 'https://dsbudget.herokuapp.com'; 
+    config.socket_url = 'dsbudget.herokuapp.com:443';
+    config.cookie_secret = process.env.COOKIE_SECRET;
+}
+
 var app = express();
 var server = http.createServer(app);
 app.configure(function() {
@@ -53,24 +71,6 @@ app.configure(function() {
     app.use(express.logger());
 });
 
-if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
-    console.log("seems to be running on openshift");
-    //on openshift. override port/host
-    config.port = process.env.OPENSHIFT_NODEJS_PORT;
-    config.host = process.env.OPENSHIFT_NODEJS_IP;
-    //https://dl.dropboxusercontent.com/u/61433005/Web%20Socket%20and%20Http%20routing%20on%20OpenShift.png
-    config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
-    config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
-    config.app_url = "https://"+config.host+":"+config.port;
-} 
-
-if(process.env.HEROKU) {
-    console.log("seems to be running on heroku");
-    config.mongo_url = process.env.MONGOLAB_URI;
-    config.port = process.env.PORT;
-    config.app_url = 'https://dsbudget.herokuapp.com'; 
-    config.socket_url = 'dsbudget.herokuapp.com:443';
-}
 
 var io = require('socket.io').listen(server);
 /*
