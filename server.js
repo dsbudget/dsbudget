@@ -23,9 +23,6 @@ console.dir(process.env);
 
 var now = new Date().getTime();
 
-//store config on global space
-config = require('./config.json');
-
 if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     console.log("seems to be running on openshift");
     config.port = process.env.OPENSHIFT_NODEJS_PORT;
@@ -33,15 +30,16 @@ if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
     config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
     config.app_url = "https://"+config.host+":"+config.port;
-}
-
-if(process.env.HEROKU) {
+} else if(process.env.HEROKU) {
     console.log("seems to be running on heroku");
     config.mongo_url = process.env.MONGOLAB_URI;
     config.port = process.env.PORT;
     config.app_url = 'https://dsbudget.herokuapp.com'; 
     config.socket_url = 'dsbudget.herokuapp.com:443';
     config.cookie_secret = process.env.COOKIE_SECRET;
+} else {
+    //assume local instance
+    config = require('./config.json');
 }
 
 var app = express();
