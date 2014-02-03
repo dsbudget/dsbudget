@@ -3,27 +3,41 @@
 <script src="/public/index.js"></script>
 <div class="container">
     <div class="page-header">
+        <div class="pull-right">
+            <a href="/auth/google"><img style="max-width: 200px" src="https://developers.google.com/accounts/images/sign-in-with-google.png"></a>
+        </div>
         <h1>Sign Up</h1>
     </div>
-    <form action="/signup" method="post">
-        <div>
-            <label>email:</label>
-            <input type="text" name="email"/>
+    <p>Welcome new user! Please fill out this form and get started!</p>
+    <form class="form-horizontal" action="/signup" method="post">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="text" name="email"/>
+            </div>
         </div>
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="password" name="password"/>
+            </div>
         </div>
-        <div>
-            <label>Password (confirm):</label>
-            <input type="password" name="password_confirm"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span class="text-muted">Confirm Password</span></label>
+            <div class="col-sm-10">
+                <input class="form-control" type="password" name="password_confirm"/>
+            </div>
         </div>
-        <div>
-            <label>Full Name:</label>
-            <input type="fullname" name="name"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Full Name</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="fullname" name="name"/>
+            </div>
         </div>
-        <div>
-            <input type="submit" value="Sign Up"/>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-default" type="submit" value="Sign Up"/>
+            </div>
         </div>
     </form>
     <% include footer.ejs %>

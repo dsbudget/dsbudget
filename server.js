@@ -72,7 +72,6 @@ app.configure(function() {
     app.use(express.logger());
 });
 
-
 var io = require('socket.io').listen(server);
 /*
 //share session with express (http://stackoverflow.com/questions/15093018/sessions-with-express-js-passport-js)
@@ -395,6 +394,91 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
             });
         }
     });
+    app.post('/expense', function(req, res) {
+        if(req.user) {
+            var catid = new mongo.ObjectID(req.body.catid);
+            model.Category.findByID(catid, function(err, cat) {
+                var page_id = cat.page_id;
+                model.Page.findByID(page_id, function(err, page) {
+                    var docid = page.doc_id;
+                    model.Doc.getAuth(req.user, docid, function(err, auth) {
+                        if(auth.canwrite) {
+                            var expense = req.body.expense;
+                            var clean_expense = {
+                                time: parseInt(expense.time),
+                                amount: parseFloat(expense.amount),
+                                where: expense.where, //make sure it's string?
+                                name: expense.name, //make sure it's string?
+                                tentative: expense.tentative //make sure it's bool?
+                            }
+                            if(req.body.eid) {
+                                cat.expenses[req.body.eid] = clean_expense;
+                            } else {
+                                cat.expenses.push(clean_expense);
+                            }
+                            model.Category.update(cat._id, cat, function(err) {
+                                //console.log("updated");
+                                //console.log(err);
+                                if(err) {
+                                    res.statusCode = 500;
+                                    res.write('update failed');
+                                } else {
+                                    res.statusCode = 200;
+                                    res.write('ok');
+                                }
+                                res.end();
+                            });
+                        }
+                    }); 
+                });
+            });
+        }
+    });
+    app.post('/income', function(req, res) {
+        if(req.user) {
+            var income = req.body.income;
+            var page_id = new mongo.ObjectID(income.page_id);
+            model.Page.findByID(page_id, function(err, page) {
+                var docid = page.doc_id;
+                model.Doc.getAuth(req.user, docid, function(err, auth) {
+                    if(auth.canwrite) {
+                        var clean_income = {
+                            page_id: new mongo.ObjectID(income.page_id),
+                            amount: parseFloat(income.amount),
+                            is_balance: income.is_balance, //make sure it's bool?
+                            name: income.name //make sure it's string?
+                        }
+                        if(income._id) {
+                            var iid = new mongo.ObjectID(income._id);
+                            model.Income.update(iid, clean_income, function(err) {
+                                if(err) {
+                                    console.error(err);
+                                    res.statusCode = 500;
+                                    res.write('update failed');
+                                } else {
+                                    res.statusCode = 200;
+                                    res.write('ok');
+                                }
+                                res.end();
+                            });
+                        } else {
+                            model.Income.create(clean_income, function(err) {
+                                if(err) {
+                                    console.error(err);
+                                    res.statusCode = 500;
+                                    res.write('insert failed');
+                                } else {
+                                    res.statusCode = 200;
+                                    res.write('ok');
+                                }
+                                res.end();
+                            });
+                        }
+                    }
+                }); 
+            });
+        }
+    });
 
     /*
     app.get('/page/:id', function(req, res) {
@@ -422,6 +506,10 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
 
     server.listen(config.port, config.host, function(){
         console.log('Express server listening on host ' + config.host+":"+config.port);
+    });
+
+    process.on('uncaughtException', function(err) {
+        console.error('Caught exception: ' + err);
     });
 });
 

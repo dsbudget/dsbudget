@@ -33,40 +33,51 @@ footer {
     color: #bbb;
     font-size: 12pt;
     font-weight: bold; }
-  .section .income-header, .section .category-header {
+  .section .category-header {
     margin: 0px;
     margin-bottom: 1px;
-    padding: 5px 20px;
+    padding: 5px 25px;
     font-size: 11pt;
-    font-weight: bold;
-    color: black; }
-  .section .income-header {
-    background-color: #ddd; }
+    font-weight: bold; }
+  .section .income {
+    margin: 0px;
+    padding: 5px;
+    height: 30px;
+    font-size: 11pt; }
+  .section .income-item {
+    border-bottom: 1px solid #eee; }
+  .section .income-total {
+    font-weight: bold; }
   .section .important-amount {
     width: 100px;
     text-align: right; }
   .section .category {
-    clear: both;
     margin-bottom: 15px; }
   .section .category-desc {
     margin-left: 20px;
     font-weight: normal; }
   .section .expense-item {
     margin: 0px 10px;
-    border-bottom: 1px solid #eee;
-    clear: both;
-    cursor: pointer; }
+    border-bottom: 1px solid #eee; }
     .section .expense-item .expense-amount {
       text-align: right; }
     .section .expense-item .expense-name {
       color: gray; }
-  .section .expense-item:hover {
-    background-color: #eee; }
+  .section .expense-new {
+    margin-top: 3px; }
+  .section .income-item:hover, .section .expense-item:hover {
+    background-color: #ddd;
+    cursor: pointer; }
   .section .expense-total {
     margin: 0px 10px;
-    border-bottom: none;
-    clear: both; }
+    border-bottom: none; }
 
+.text-right {
+  text-align: right; }
+
+/*
 .muted {
-  opacity: 0.5;
-  font-size: 80%; }
+opacity: 0.5;
+font-size: 80%;
+}
+*/

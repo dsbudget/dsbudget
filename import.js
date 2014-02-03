@@ -41,7 +41,7 @@ function parse_page(model, doc_id, opts, page, next_page) {
                 desc: "",
                 budget: 0,
                 is_amount_per: false,
-                color: "#ffe",
+                color: "#909090", //client color parse can't parse #ffe (yet)
                 show_view: {balance_graph: false, pie_graph: false},
                 sort_by: "name",
                 sort_asc: true,
@@ -52,7 +52,7 @@ function parse_page(model, doc_id, opts, page, next_page) {
                 var db_expense = {
                     name: deduction.$.desc,
                     amount: parse_amount(deduction.$.amount),
-                    is_amount_per: false,
+                    tentative: false,
                     where: "(Deduction)",
                     time: parseInt(page.$.ctime)*1000 //use page's ctime as expense time
                 };
@@ -122,6 +122,7 @@ function parse_page(model, doc_id, opts, page, next_page) {
                 },
                 sort_by: category.$.sort_by, //TODO - I need to map to the real field name
                 sort_asc: (category.$.sort_reverse == "yes" ? false : true),
+                expenses: [],
                 recurring: false
             };
 

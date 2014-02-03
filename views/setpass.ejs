@@ -6,25 +6,35 @@
         <h1>Register</h1>
     </div>
     <p>Looks like this is your first time using dsBudget! Please specify a password so you can login with your email and password.</p>
-    <form action="/setpass" method="post">
-        <div>
-            <label>email:</label>
-            <input type="text" name="email" value="<%=req.user.email%>"/>
+    <form class="form-horizontal" action="/setpass" method="post">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-10">
+                <input type="text" name="email" value="<%=req.user.email%>" class="form-control"/>
+            </div>
         </div>
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <input type="password" name="password" class="form-control"/>
+            </div>
         </div>
-        <div>
-            <label>Password (confirm):</label>
-            <input type="password" name="password_confirm"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span class="text-muted">Confirm Password</span></label>
+            <div class="col-sm-10">
+                <input type="password" name="password_confirm" class="form-control"/>
+            </div>
         </div>
-        <div>
-            <label>Full Name:</label>
-            <input type="fullname" name="name" value="<%=req.user.name%>"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Full Name</label>
+            <div class="col-sm-10">
+                <input type="fullname" name="name" value="<%=req.user.name%>" class="form-control"/>
+            </div>
         </div>
-        <div>
-            <input type="submit" value="Register"/>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-default" type="submit" value="Register"/>
+            </div>
         </div>
     </form>
     <% include footer.ejs %>

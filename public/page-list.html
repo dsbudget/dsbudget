@@ -28,9 +28,8 @@
 </div><!--docs-->
 
 <script type="text/ng-template" id="importdialog.html">
-    <form role="form" ng-submit="ok(doc._id)">
     <div class="modal-header">
-        <h3>Import Data</h3>
+        <h3>Import</h3>
     </div>
     <div class="modal-body">
         <div class="form-group">
@@ -50,8 +49,9 @@
         </div>
     </div>
     <div class="modal-footer">
-        <input type="submit" class="btn btn-primary" value="Import"/>
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
         <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     </div>
-    </form>
 </script>
+
+

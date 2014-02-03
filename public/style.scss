@@ -49,55 +49,67 @@ margin-bottom: 10px;
         font-size: 12pt;
         font-weight: bold;
     }
-    .income-header,
     .category-header {
         margin: 0px;
         margin-bottom: 1px;
-        padding: 5px 20px;
+        padding: 5px 25px;
         font-size: 11pt;
         font-weight: bold;
-
-        color: black;
     }
-    .income-header {
-        background-color: #ddd;
+    .income {
+        margin: 0px;
+        padding: 5px;
+        height: 30px;
+        font-size: 11pt;
     }
-    .important-amount{
+    .income-item {
+        border-bottom: 1px solid #eee;
+    }
+    .income-total {
+        font-weight: bold;
+    }
+    .important-amount {
         width: 100px;
         text-align: right;
     }
     .category {
-        clear: both;
         margin-bottom: 15px;
     }
     .category-desc {
-    margin-left: 20px;
-    font-weight: normal;
+        margin-left: 20px;
+        font-weight: normal;
     }
     .expense-item {
         margin: 0px 10px;
         border-bottom: 1px solid #eee;
-        clear: both;
         .expense-amount {
             text-align: right;
         }
         .expense-name {
             color: gray;
         }
-        cursor: pointer;
     }
+    .expense-new {
+        margin-top: 3px;
+    }
+    .income-item:hover,
     .expense-item:hover {
-        background-color: #eee;
+        background-color: #ddd;
+        cursor: pointer;
     }
     .expense-total {
         margin: 0px 10px;
         border-bottom: none;
-        clear: both;
     }
 }
 
+.text-right {
+text-align: right;
+}
+
+/*
 .muted {
 opacity: 0.5;
 font-size: 80%;
 }
-
+*/

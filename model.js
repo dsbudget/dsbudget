@@ -118,8 +118,8 @@ exports.User = {
         db.collection('user', function(err, col) {
             if(err) callback(err)
             else {
-                console.log("updating: "+id);
-                console.dir(data);
+                //console.log("updating: "+id);
+                //console.dir(data);
                 col.update({_id: id}, {$set: data}, {w:1}, callback);
             }
         });
@@ -148,9 +148,28 @@ exports.Income = {
             }
         });
     },
+    update: function(id, data, callback) {
+        //console.log(id);
+        //console.dir(data);
+        delete data._id;
+        db.collection('income', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.update({_id: id}, {$set: data}, {w:1}, callback);
+            }
+        });
+    }
 };
 
 exports.Category = {
+    findByID: function(id, callback) {
+        db.collection('category', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.findOne({_id: id}, {}, callback);
+            }
+        });
+    },
     findByPageID: function(id, callback) {
         db.collection('category', function(err, col) {
             if(err) callback(err)
@@ -170,6 +189,17 @@ exports.Category = {
             }
         });
     },
+    update: function(id, data, callback) {
+        db.collection('category', function(err, col) {
+            if(err) callback(err)
+            else {
+                //console.log("updating: "+id);
+                //console.dir(data);
+                delete data._id;
+                col.update({_id: id}, {$set: data}, {w:1}, callback);
+            }
+        });
+    }
 };
 
 
