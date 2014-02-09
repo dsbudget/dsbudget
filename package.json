@@ -40,6 +40,7 @@
     "xml2js": "*",
     "node-sass": "*",
     "extend": "*",
+    "decimal": "*",
     "connect-flash": "*"
   },
   "devDependencies": {},

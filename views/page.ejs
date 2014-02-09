@@ -26,11 +26,11 @@ dsApp.directive('format', ['$filter', function ($filter) {
 dsApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
     when('/', {
-        templateUrl: '/public/page-list.html',
+        templateUrl: '/static/page-list.html',
         controller: 'PageListCtrl'
     }).
     when('/:id', {
-        templateUrl: '/public/page-detail.html',
+        templateUrl: '/static/page-detail.html',
         controller: 'PageDetailCtrl'
     }).
     otherwise({
@@ -38,7 +38,7 @@ dsApp.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-function ImportCtrl($scope, $modalInstance, doc) {
+function ImportCtrl($scope, $modalInstance, $upload, doc) {
     $scope.doc = doc;
     $scope.docid = doc._id;
     $scope.importtypes = [
@@ -51,19 +51,41 @@ function ImportCtrl($scope, $modalInstance, doc) {
     $scope.onFileSelect = function($files) {
         $scope.file = $files[0];
     };
+    $scope.progress = 0;
+    $scope.show_progress = false;
 
     $scope.ok = function() {
-        $modalInstance.close($scope);
+        $scope.showprogress = true;
+        $scope.progress_action = "Uploading";
+        $upload.upload({
+            url: '/import/dsbudget', 
+            data: {
+                docid: $scope.docid,
+                importtype: $scope.importtype.name,
+                fd: $scope.fd }, 
+            file: $scope.file,
+        }).progress(function(evt) {
+            //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+            $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+            if(evt.loaded == evt.total) {
+                $scope.progress_action = "Processing";
+            }
+        }).success(function(data, status, headers, config) {
+            $modalInstance.close($scope);
+        }).error(function(data, status, headers, config) {
+            alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+            $modalInstance.dismiss('error');
+        });
     };
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
 };
-ImportCtrl.$inject = ['$scope', '$modalInstance', 'doc'];
+ImportCtrl.$inject = ['$scope', '$modalInstance', '$upload', 'doc'];
 
-dsApp.controller('PageListCtrl', ['$scope', '$http', '$modal', '$upload', 
-function($scope, $http, $modal, $upload) {
+dsApp.controller('PageListCtrl', ['$scope', '$http', '$modal', 
+function($scope, $http, $modal) {
     $scope.loadpages = function(){
         $http.get('/page/list').success(function(docs) {
             $scope.docs = docs;
@@ -83,20 +105,7 @@ function($scope, $http, $modal, $upload) {
             }
         });
         modal.result.then(function(scope) {
-            $upload.upload({
-                url: '/import/dsbudget', 
-                data: {
-                    docid: scope.docid,
-                    importtype: scope.importtype.name,
-                    fd: scope.fd }, 
-                file: scope.file,
-            }).progress(function(evt) {
-                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-            }).success(function(data, status, headers, config) {
-                $scope.loadpages();
-            }).error(function(data, status, headers, config) {
-                alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
-            });
+            $scope.loadpages();
         });
     };
 }]);
@@ -153,15 +162,31 @@ function IncomeCtrl($scope, $modalInstance, page, income) {
 };
 IncomeCtrl.$inject = ['$scope', '$modalInstance', 'page', 'income'];
 
-dsApp.controller('PageDetailCtrl', ['$scope', '$http', '$modal', '$routeParams', 
-function($scope, $http, $modal, $routeParams) {
+dsApp.filter('recurring', function() {
+    return function(input, b) {
+        var out = [];
+        if(input) {
+            for (var i = 0; i < input.length; i++) {
+                if(input[i].recurring == b){
+                    out.push(input[i]);
+                }
+            }
+        }
+        return out;
+    }
+});
+
+dsApp.controller('PageDetailCtrl', ['$scope', '$http', '$modal', '$routeParams', '$location',
+function($scope, $http, $modal, $routeParams, $location) {
     $http.get('/page/detail', {params: {id: $routeParams.id}}).success(function(page) {
-        //console.dir(page);
         $scope.page = page;
         $scope.incomes = page.incomes;
         $scope.categories = page.categories;
         update();
-    });
+    }).error(function(ret) {
+        console.error(ret);
+        $location.path("/");
+    });;
 
     //parse color like #ff1122, and return resaturated value
     function lightcolor(color) {
@@ -189,27 +214,23 @@ function($scope, $http, $modal, $routeParams) {
     function update() {
         var total_income = 0;
         $scope.incomes.forEach(function(income) {
-            total_income += income.amount;
+            total_income += parseFloat(income.amount);
+            //console.log(total_income);
         });
         $scope._total_income = total_income;
 
+        $scope._total_recurring = 0;
         $scope.categories.forEach(function(category) {
-            var remaining = category.budget;
+            var total_expense = 0;
             if(category.expenses) {
                 category.expenses.forEach(function(expense) {
-                    /* this is for category!! not for expense
-                    if(expense.is_amount_per) {
-                        remaining-=(expense.amount*category.budget)
-                    } else {
-                        remaining-=expense.amount;
-                    }
-                    */
-                    //console.dir(expense);
-                    remaining-=expense.amount;
+                    total_expense += parseFloat(expense.amount);
                 });
             }
             category.style = {"background-color": lightcolor(category.color)};
-            category._remaining = remaining; //set to scope
+            category._total = total_expense; 
+            category._remaining = category.budget - total_expense;
+            $scope._total_recurring += total_expense;
         });
     }
 
@@ -230,10 +251,11 @@ function($scope, $http, $modal, $routeParams) {
                 catid: scope.category._id,
                 expense: scope.expense,
                 eid: eid
-            }).success(function() {
+            }).success(function(newid) {
                 if(eid != undefined) {
                     category.expenses[eid] = scope.expense;
                 } else {
+                    scope.expense._id = newid;
                     category.expenses.push(scope.expense);
                 }
                 update();
@@ -253,15 +275,17 @@ function($scope, $http, $modal, $routeParams) {
             }
         });
         modal.result.then(function(scope) {
+            //console.dir(scope);
+
             //I am not sure why I have to do this for income but not expense..
             scope.income.amount = parseFloat(scope.income.amount);
-
             $http.post('/income', {
                 income: scope.income
-            }).success(function() {
+            }).success(function(newid) {
                 if(iid != undefined) {
                     page.incomes[iid] = scope.income;
                 } else {
+                    scope.income._id = newid;
                     page.incomes.push(scope.income);
                 }
                 update();

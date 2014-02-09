@@ -25,7 +25,9 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <% if (req.user) { %>
-            <li class="not-active"><a href="/auth/logout">Logout</a></li>
+            <li class="not-active">
+                <button type="button" onclick="document.location='/auth/logout'" class="btn btn-default navbar-btn">Logout</button>
+            </li>
             <% if (req.user.admin) { %>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
@@ -41,11 +43,12 @@
                 </li>
             <% } %>
         <% } else { %>
-            <li id="menu_login"><a href="/auth">Login</a></li>
-            <li id="menu_signup"><a href="/signup">Sign Up</a></li>
-            <!--
-            <li class="imgbutton"><a href="/auth/google"><img src="https://developers.google.com/accounts/images/sign-in-with-google.png" height="50"></a></li>
-            -->
+            <li id="menu_login">
+                <a href="/auth">Login</a>
+            </li>
+            <li id="menu_signup">
+                <a href="/signup">Signup</a>
+            </li>
         <% } %>
       </ul>
     </div><!--/.nav-collapse -->

@@ -10,10 +10,10 @@
 
     <div class="page-summary" ng-repeat="page in doc.pages | filter:page_query | orderBy:orderProp">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <a href="#/{{page._id}}"><b>{{page.name}}</b></a>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="progress" ng-class="{'progress-striped active' : page._active}">
                     <div class="progress-bar" ng-class="{'progress-bar-danger' : page._pct >= 100}" role="progressbar" aria-valuenow="{{page._pct}}" aria-valuemin="0" aria-valuemax="100" style="width: {{page._pct}}%">
                         <span class="sr-only">{{page._pct}}% Complete</span>
@@ -28,6 +28,7 @@
 </div><!--docs-->
 
 <script type="text/ng-template" id="importdialog.html">
+<form ng-submit="ok()">
     <div class="modal-header">
         <h3>Import</h3>
     </div>
@@ -36,7 +37,9 @@
             <label for="importtype">From</label><br>
             <select id="importtype" class="form-control" ng-model="importtype" ng-options="type.name for type in importtypes" required></select>
         </div>
-        <p ng-if="importtype.name == 'dsbudget'">Please upload your dsBudget document (BudgetDocument.xml) stored on your computer to import data.  If you are not sure how to find it, please contact dsBudget support forum.</p>
+        <p ng-if="importtype.name == 'dsbudget'">
+        Please upload your dsBudget document (BudgetDocument.xml) stored on your computer to import data.  
+        If you are not sure how to find it, please contact dsBudget support forum.</p>
         <div class="form-group">
             <label for="fd">Currency Fraction Digists</label><br>
             <p>Please select number of digits under major denomination in your currrency. For example, for USD(like $.00), it is 2 
@@ -47,11 +50,15 @@
             <label for="importfile">Data File</label><br>
             <input id="importfile" type="file" ng-file-select="onFileSelect($files)" required/>
         </div>
+        <div ng-show="showprogress">
+            {{progress_action}} ... 
+            <progressbar class="progress-striped active" value="progress">{{progress}}%</progressbar>
+        </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <input class="btn btn-primary" type="submit" value="OK" ng-disabled="showprogress"/>
+        <button class="btn btn-warning" ng-click="cancel()" ng-disabled="showprogress">Cancel</button>
     </div>
+</form>
 </script>
-
 

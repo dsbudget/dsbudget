@@ -34,50 +34,48 @@ footer {
     font-size: 12pt;
     font-weight: bold; }
   .section .category-header {
-    margin: 0px;
+    margin: 0px -1px;
     margin-bottom: 1px;
-    padding: 5px 25px;
-    font-size: 11pt;
+    padding: 5px 5px;
     font-weight: bold; }
-  .section .income {
+  .section .income-item {
     margin: 0px;
     padding: 5px;
     height: 30px;
-    font-size: 11pt; }
-  .section .income-item {
     border-bottom: 1px solid #eee; }
   .section .income-total {
-    font-weight: bold; }
-  .section .important-amount {
-    width: 100px;
-    text-align: right; }
+    margin: 0px;
+    padding: 5px;
+    height: 30px; }
   .section .category {
     margin-bottom: 15px; }
   .section .category-desc {
-    margin-left: 20px;
     font-weight: normal; }
   .section .expense-item {
-    margin: 0px 10px;
+    padding: 2px 20px;
     border-bottom: 1px solid #eee; }
-    .section .expense-item .expense-amount {
-      text-align: right; }
     .section .expense-item .expense-name {
       color: gray; }
-  .section .expense-new {
-    margin-top: 3px; }
   .section .income-item:hover, .section .expense-item:hover {
     background-color: #ddd;
     cursor: pointer; }
   .section .expense-total {
-    margin: 0px 10px;
-    border-bottom: none; }
+    padding: 2px 20px; }
+
+.section-footer {
+  background-color: #ddd;
+  border-bottom-radius: 4px 4px;
+  padding: 5px 0px; }
 
 .text-right {
   text-align: right; }
 
-/*
-.muted {
-opacity: 0.5;
-font-size: 80%;
-}
-*/
+.jumbotron-about {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url(/static/samplegate.jpg);
+  text-shadow: 0px 0px 8px #666;
+  color: white; }
+
+.half-opacity {
+  opacity: 0.5; }

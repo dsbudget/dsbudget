@@ -1,0 +1,163 @@
+<h2>{{page.name}}</h2>
+<p class="help-block">{{page.desc}}</p>
+
+<div class="section">
+    <div class="section-header">Incomes</div>
+    <div ng-repeat="income in incomes" ng-click="openincome(page, income, $index)">
+        <div class="income-item row">
+            <div class="col-md-10">
+                <span ng-if="income.balance_from" class="text-muted"><i class="glyphicon glyphicon-share-alt"></i> Balance from {{income.page_name}}</span>
+                <span ng-if="!income.balance_from">{{income.name}}</span>
+            </div>
+            <div class="col-md-2 text-right">{{income.amount | currency}}</div>
+        </div>
+    </div>
+    <div class="income-total row">
+        <div class="col-md-7"><button type="button" class="btn btn-xs income-new" ng-click="openincome(page)">Add New Income</button></div>
+        <div class="col-md-3 text-right"><b ng-if="incomes.length > 1">Total Income</b></div>
+        <div class="col-md-2 text-right"><b ng-if="incomes.length > 1">{{_total_income | currency}}</b></div>
+    </div>
+    <br>
+</div>
+
+<div class="section">
+    <div class="section-header">Recurring Expenses</div>
+    <div class="category" ng-repeat="category in categories | recurring:true | orderBy:'name'">
+        <div class="category-header row" ng-style="category.style">
+            <div class="col-md-4">
+                <span ng-if="category.recurring" class="glyphicon glyphicon-refresh">&nbsp;</span>{{category.name}}
+            </div>
+            <div class="col-md-8">
+                <small class="category-desc">{{category.desc}}</small>
+            </div>
+        </div>
+        <div ng-repeat="expense in category.expenses">
+            <div class="expense-item" ng-click="openexpense(category, expense, $index);">
+            <div class="row">
+                <div class="col-md-4">{{expense.where}}</div>
+                <div class="col-md-3 expense-name"> {{expense.name}}
+                    <span ng-if="expense.is_amount_per">percentage</span>
+                </div>
+                <div class="col-md-3 text-right">
+                    <time class="expense-time">{{expense.time | date:'longDate'}}</time>
+                </div>
+                <div class="col-md-2 text-right">{{expense.amount | currency}}</div>
+            </div>
+            </div>
+        </div>
+        <div class="expense-total">
+            <div class="row">
+            <div class="col-md-7"><button type="button" class="btn btn-xs" ng-click="openexpense(category)">Add New Expense</button></div>
+            <div class="col-md-3 text-right text-muted"><b ng-if="category.expenses.length > 1">Total</b></div>
+            <div class="col-md-2 text-right text-muted"><b ng-if="category.expenses.length > 1">{{category._total | currency}}</b></div>
+            </div>
+        </div>
+    </div>
+    <div class="section-footer">
+        <div class="expense-total">
+            <div class="row">
+                <div class="col-md-10 text-right"><b>Total Recurring Expenses</b></div>
+                <div class="col-md-2 text-right"><b>{{_total_recurring | currency}}</b></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">Budgets / Expenses</div>
+    <div class="category" ng-repeat="category in categories | recurring:false | orderBy:'name'">
+        <div class="category-header row" ng-style="category.style">
+            <div class="col-md-4">
+                <span ng-if="category.recurring" class="glyphicon glyphicon-refresh">&nbsp;</span>{{category.name}}
+            </div>
+            <div class="col-md-4">
+                <small class="category-desc">{{category.desc}}</small>
+            </div>
+            <div class="col-md-2 text-right"><span class="half-opacity">Budget</span></div>
+            <div class="col-md-2">
+                <span class="pull-right text-right">{{category.budget | currency}}</span>
+                <!-- <span class="pull-right">Budget</span>-->
+            </div>
+        </div>
+        <div ng-repeat="expense in category.expenses">
+            <div class="expense-item" ng-click="openexpense(category, expense, $index);">
+            <div class="row">
+                <div class="col-md-4">{{expense.where}}</div>
+                <div class="col-md-4 expense-name"> {{expense.name}}
+                    <span ng-if="expense.is_amount_per">percentage</span>
+                </div>
+                <div class="col-md-2 text-right">
+                    <time class="expense-time">{{expense.time | date:'longDate'}}</time>
+                </div>
+                <div class="col-md-2 text-right">{{expense.amount | currency}}</div>
+            </div>
+            </div>
+        </div>
+        <div class="expense-total row">
+            <div class="col-md-7"><button type="button" class="btn btn-xs expense-new" ng-click="openexpense(category)">Add New Expense</button></div>
+            <div class="col-md-3 text-right"><b ng-if="category.expenses.length > 0">Remaining</b></div>
+            <div class="col-md-2 text-right"><b ng-if="category.expenses.length > 0">{{category._remaining | currency}}</b></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="expensedialog.html">
+<form ng-submit="ok()">
+    <div class="modal-header">
+        <h3><span ng-if="_new">New</span> Expense <small>for {{category.name}}</small></h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="time">Date</label><br>
+            <p class="input-group">
+                <input type="text" ng-model="expense.time" class="form-control" datepicker-popup="longDate" is-open="$parent.dpopen" required/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="opendatepicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label><br>
+            <input type="text" ng-model="expense.amount" class="form-control" placeholder="0.00" required/>
+        </div>
+        <div class="form-group">
+            <label for="where">Where</label><br>
+            <input type="text" ng-model="expense.where" class="form-control" placeholder="Target" required/>
+        </div>
+        <div class="form-group">
+            <label for="name">Note</label><br>
+            <input type="text" ng-model="expense.name" class="form-control" placeholder=""/>
+        </div>
+        <input type="checkbox" ng-model="expense.tentative"/> 
+        This is a scheduled (tentative) expense. Don't subtract it from the remainin yet.
+    </div>
+    <div class="modal-footer">
+        <input class="btn btn-primary" type="submit" value="OK"/>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</form>
+</script>
+
+<script type="text/ng-template" id="incomedialog.html">
+<form ng-submit="ok()">
+    <div class="modal-header">
+        <h3><span ng-if="_new">New</span> Income</h3>
+    </div>
+    <div class="modal-body">
+        <input type="checkbox" ng-model="income._is_balance"/> 
+        Use balance from another page. 
+        <div class="form-group">
+            <label for="amount">Amount</label><br>
+            <input type="text" ng-model="income.amount" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label for="name">Note</label><br>
+            <input type="text" ng-model="income.name" class="form-control"/>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input class="btn btn-primary" type="submit" value="OK"/>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</form>
+</script>

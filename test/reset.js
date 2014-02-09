@@ -1,3 +1,8 @@
+db.dropDatabase();
+
+db.page.ensureIndex({"doc_id":1});
+
+/*
 var user = db.user.findOne({"email":"soichih@gmail.com"});
 //print(user.email);
 
@@ -12,6 +17,7 @@ var doc = db.doc.findOne({"owners": user._id});
 //print(doc.name);
 
 db.page.drop();
+*/
 /*
 db.page.insert([
     {
@@ -39,11 +45,11 @@ db.page.insert([
     'total_expense': 540,
     }
 ]);
-*/
 db.page.ensureIndex({"doc_id":1});
+*/
 
-db.income.drop();
 /*
+db.income.drop();
 var page = db.page.findOne({"name": "November 2013"});
 db.income.insert([
     {

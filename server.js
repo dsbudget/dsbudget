@@ -33,6 +33,7 @@ if(process.env.OPENSHIFT_NODEJS_PORT !== undefined) {
     config.socket_url = process.env.OPENSHIFT_APP_DNS+":8443";
     config.mongo_url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
     config.app_url = "https://"+config.host+":"+config.port;
+    config.cookie_secret = "hardcoded for now";
 } else if(process.env.HEROKU) {
     console.log("seems to be running on heroku");
     config.mongo_url = process.env.MONGOLAB_URI;
@@ -55,7 +56,7 @@ app.configure(function() {
         dest: __dirname, //and put compiled in /public/*.css
         debug: true // obvious
     }));
-    app.use("/public", express.static(__dirname + '/public'));
+    app.use("/static", express.static(__dirname + '/static'));
 
     app.use(express.cookieParser());
     app.use(express.favicon());
@@ -185,12 +186,12 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     } else {
                         var salt = crypto.randomBytes(128).toString('base64');
                         hashpassword(req.body.password, salt, function(err, hash) {
-                            model.User.update(req.user._id, {
+                            model.User.update(req.user._id, {$set: {
                                 password_salt: salt,
                                 password: hash,
                                 email: req.body.email, 
                                 name: req.body.name
-                            }, function(err) {
+                            }}, function(err) {
                                 if(err) {
                                     req.flash('error', "Sorry, failed to update your record. Please contact dsBudget support.");
                                     res.statusCode = 500;
@@ -330,13 +331,37 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
         if(req.user) {
             //load page requested
             model.Page.findByID(new mongo.ObjectID(req.query.id), function(err, page) {
+                if(err) {
+                    console.error(err);
+                    res.statusCode = 404;
+                    res.end();
+                    return;
+                } 
                 model.Doc.getAuth(req.user, page.doc_id, function(err, auth) {
                     if(auth.canread) {
                         model.Income.findByPageID(page._id, function(err, incomes) {
-                            model.Category.findByPageID(page._id, function(err, categories) {
-                                page.incomes = incomes;
-                                page.categories = categories;
-                                res.json(page);
+                            //for balance income, lookup the real page name & balance
+                            async.forEach(incomes, function(income, next_income) {
+                                if(income.balance_from) {
+                                    //lookup page name
+                                    model.Page.findByID(income.balance_from, function(err, ipage) {
+                                        income.page_name = ipage.name;
+                                        //get the actual balance for the page
+                                        model.Page.getBalance(income.balance_from, function(amount) {
+                                            income.amount = amount;
+                                            next_income();
+                                        });
+                                    });
+                                } else {
+                                    next_income();
+                                }
+                            }, function() {
+                                //finally load the categories and emit
+                                model.Category.findByPageID(page._id, function(err, categories) {
+                                    page.incomes = incomes;
+                                    page.categories = categories;
+                                    res.json(page);
+                                });
                             });
                         });
                     }
@@ -353,7 +378,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
     });
     app.post('/setting', function(req, res) {
         if(req.user) {
-            model.User.update(req.user._id, {name: req.body.name, email: req.body.email}, function(err) {
+            model.User.update(req.user._id, {$set: {name: req.body.name, email: req.body.email}}, function(err) {
                 if(err) {
                     res.statusCode = 500;
                 } else {
@@ -416,20 +441,19 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                             } else {
                                 cat.expenses.push(clean_expense);
                             }
-                            model.Category.update(cat._id, cat, function(err) {
-                                //console.log("updated");
-                                //console.log(err);
+                            model.Category.update(cat._id, {$set: {expenses: cat.expenses}}, function(err, id) {
                                 if(err) {
+                                    console.error(err);
                                     res.statusCode = 500;
                                     res.write('update failed');
                                 } else {
                                     res.statusCode = 200;
-                                    res.write('ok');
+                                    res.write(id.toString());
                                 }
                                 res.end();
                             });
                         }
-                    }); 
+                    });
                 });
             });
         }
@@ -444,13 +468,17 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     if(auth.canwrite) {
                         var clean_income = {
                             page_id: new mongo.ObjectID(income.page_id),
-                            amount: parseFloat(income.amount),
-                            is_balance: income.is_balance, //make sure it's bool?
-                            name: income.name //make sure it's string?
+                            name: income.name //TODO..make sure it's string?
+                        }
+                        if(income.balance_from) {
+                            //convert to mongo id
+                            clean_income.balance_from = new mongo.ObjectID(income.balance_from);
+                        } else {
+                            clean_income.amount = parseFloat(income.amount);
                         }
                         if(income._id) {
                             var iid = new mongo.ObjectID(income._id);
-                            model.Income.update(iid, clean_income, function(err) {
+                            model.Income.update(iid, {$set: clean_income}, function(err) {
                                 if(err) {
                                     console.error(err);
                                     res.statusCode = 500;
@@ -462,14 +490,14 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                                 res.end();
                             });
                         } else {
-                            model.Income.create(clean_income, function(err) {
+                            model.Income.create(clean_income, function(err, id) {
                                 if(err) {
                                     console.error(err);
                                     res.statusCode = 500;
                                     res.write('insert failed');
                                 } else {
                                     res.statusCode = 200;
-                                    res.write('ok');
+                                    res.write(id.toString());
                                 }
                                 res.end();
                             });

@@ -1,5 +1,7 @@
 var mongo = require('mongodb');
 var async = require('async');
+var decimal = require('decimal');
+
 var db;
 
 exports.init = function(_db) {
@@ -73,6 +75,63 @@ exports.Page = {
             }
         });
     },
+    update: function(id, data, callback) {
+        db.collection('page', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.update({_id: id}, data, {w:1}, callback);
+            }
+        });
+    },
+    getBalance: function(id, callback) {
+        console.log("computing page balance for "+id);
+        async.parallel({
+            total_income: function(next) {
+                var total = decimal('0');
+                //console.log("looking for income unage page id " + id);
+                exports.Income.findByPageID(id, function(err, incomes) {
+                    async.forEach(incomes, function(income, next_income) {
+                        if(income.balance_from) {
+                            //recurse (for now)
+                            //console.dir(income);
+                            //console.log("in-calling getBlanace for "+income.balance_from);
+                            exports.Page.getBalance(income.balance_from, function(amount) {
+                                total = total.add(amount);
+                                next_income();
+                            });
+                        } else {
+                            //console.log(total);
+                            //console.dir(income);
+                            total = total.add(income.amount);
+                            next_income();
+                        }
+                    }, function() {
+                        //console.log("total income was "+total);
+                        next(null, total);
+                    });
+                });
+            },
+            total_expense: function(next) {
+                var total = decimal('0');
+                exports.Category.findByPageID(id, function(err, categories) {
+                    categories.forEach(function(category) {
+                        category.expenses.forEach(function(expense) {
+                            if(!expense.tentative) {
+                                total = total.add(expense.amount);
+                                //console.log("adding " + expense.amount);
+                                //console.log("total " + total);
+                            }
+                        });
+                    });
+                    next(null, total);
+                });
+            }
+        }, function(err, ret){
+            var balance = ret.total_income.sub(ret.total_expense);
+            //console.log("balance:"+balance);
+            callback(balance.toString());
+        });
+    }
 };
 
 exports.User = {
@@ -120,7 +179,7 @@ exports.User = {
             else {
                 //console.log("updating: "+id);
                 //console.dir(data);
-                col.update({_id: id}, {$set: data}, {w:1}, callback);
+                col.update({_id: id}, data, {w:1}, callback);
             }
         });
     }
@@ -132,6 +191,32 @@ exports.Income = {
             if(err) callback(err)
             else {
                 col.find({page_id:id}).toArray(callback);
+                /*
+                col.find({page_id:id}).toArray(function(err, incomes) {
+                    //set amount for balance incomes
+                    //console.dir(incomes);
+                    async.forEach(incomes, function(income, next) {
+                        if(income.balance_from) {
+                            //load page name
+                            exports.Page.findByID(income.balance_from, function(err, page) {
+                                income.page_name = page.name;
+                                //load balance amount
+                                console.log("requesting getBlance while loading income for "+page.name+" ("+page._id+")");
+                                exports.Page.getBalance(income.balance_from, function(amount) {
+                                    //console.log("balance: "+amount);
+                                    income.amount = amount;
+                                    next();
+                                });
+                            });
+                        } else {
+                            next();
+                        }
+                    }, function() {
+                        //console.dir(incomes);
+                        callback(err, incomes);
+                    });
+                });
+                */
             }
         });
     },
@@ -155,7 +240,7 @@ exports.Income = {
         db.collection('income', function(err, col) {
             if(err) callback(err)
             else {
-                col.update({_id: id}, {$set: data}, {w:1}, callback);
+                col.update({_id: id}, data, {w:1}, callback);
             }
         });
     }
@@ -196,7 +281,7 @@ exports.Category = {
                 //console.log("updating: "+id);
                 //console.dir(data);
                 delete data._id;
-                col.update({_id: id}, {$set: data}, {w:1}, callback);
+                col.update({_id: id}, data, {w:1}, callback);
             }
         });
     }
