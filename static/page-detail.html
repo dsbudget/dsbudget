@@ -1,5 +1,7 @@
-<h2>{{page.name}}</h2>
-<p class="help-block">{{page.desc}}</p>
+<div class="pagename" ng-click="openpage(page)">
+    <h2>{{page.name}}</h2>
+    <p class="help-block">{{page.desc}}</p>
+</div>
 
 <div class="section">
     <div class="section-header">Incomes</div>
@@ -83,13 +85,16 @@
             <div class="expense-item" ng-click="openexpense(category, expense, $index);">
             <div class="row">
                 <div class="col-md-4">{{expense.where}}</div>
-                <div class="col-md-4 expense-name"> {{expense.name}}
-                    <span ng-if="expense.is_amount_per">percentage</span>
+                <div class="col-md-4 expense-name"> 
+                    <span ng-show="expense.tentative" class="label label-default pull-right">Tentative</span> 
+                    {{expense.name}}
                 </div>
                 <div class="col-md-2 text-right">
                     <time class="expense-time">{{expense.time | date:'longDate'}}</time>
                 </div>
-                <div class="col-md-2 text-right">{{expense.amount | currency}}</div>
+                <div class="col-md-2 text-right">
+                    {{expense.amount | currency}}
+                </div>
             </div>
             </div>
         </div>
@@ -102,7 +107,6 @@
 </div>
 
 <script type="text/ng-template" id="expensedialog.html">
-<form ng-submit="ok()">
     <div class="modal-header">
         <h3><span ng-if="_new">New</span> Expense <small>for {{category.name}}</small></h3>
     </div>
@@ -132,20 +136,18 @@
         This is a scheduled (tentative) expense. Don't subtract it from the remainin yet.
     </div>
     <div class="modal-footer">
-        <input class="btn btn-primary" type="submit" value="OK"/>
+        <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
         <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     </div>
-</form>
 </script>
 
 <script type="text/ng-template" id="incomedialog.html">
-<form ng-submit="ok()">
     <div class="modal-header">
         <h3><span ng-if="_new">New</span> Income</h3>
     </div>
     <div class="modal-body">
-        <input type="checkbox" ng-model="income._is_balance"/> 
-        Use balance from another page. 
+        <input type="checkbox" ng-model="income._is_balance"/> Use balance from another page. 
         <div class="form-group">
             <label for="amount">Amount</label><br>
             <input type="text" ng-model="income.amount" class="form-control" required/>
@@ -156,8 +158,47 @@
         </div>
     </div>
     <div class="modal-footer">
-        <input class="btn btn-primary" type="submit" value="OK"/>
+        <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
         <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     </div>
-</form>
+</script>
+
+<script type="text/ng-template" id="pagedialog.html">
+    <div class="modal-header">
+        <h3><span ng-if="_new">New </span>Page</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Name</label><br>
+            <input type="text" ng-model="page.name" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label>Note</label><br>
+            <input type="text" ng-model="page.desc" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label>Start Date</label><br>
+            <p class="input-group">
+                <input type="text" ng-model="page.start_date" class="form-control" datepicker-popup="longDate" is-open="$parent.startdpopen" required/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="openstartdatepicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+        <div class="form-group">
+            <label>End Date</label><br>
+            <p class="input-group">
+                <input type="text" ng-model="page.end_date" class="form-control" datepicker-popup="longDate" is-open="$parent.enddpopen" required/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="openenddatepicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
 </script>

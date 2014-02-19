@@ -28,7 +28,6 @@
 </div><!--docs-->
 
 <script type="text/ng-template" id="importdialog.html">
-<form ng-submit="ok()">
     <div class="modal-header">
         <h3>Import</h3>
     </div>
@@ -56,9 +55,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <input class="btn btn-primary" type="submit" value="OK" ng-disabled="showprogress"/>
+        <button class="btn btn-primary" ng-click="ok()" ng-disabled="showprogress">Import</button>
         <button class="btn btn-warning" ng-click="cancel()" ng-disabled="showprogress">Cancel</button>
     </div>
-</form>
 </script>
 

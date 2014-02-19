@@ -186,6 +186,14 @@ exports.User = {
 };
 
 exports.Income = {
+    findByID: function(id, callback) {
+        db.collection('income', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.findOne({_id: id}, {}, callback);
+            }
+        });
+    },
     findByPageID: function(id, callback) {
         db.collection('income', function(err, col) {
             if(err) callback(err)
@@ -241,6 +249,14 @@ exports.Income = {
             if(err) callback(err)
             else {
                 col.update({_id: id}, data, {w:1}, callback);
+            }
+        });
+    },
+    remove: function(id, callback) {
+        db.collection('income', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.remove({_id: id}, {w:1}, callback);
             }
         });
     }

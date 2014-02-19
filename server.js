@@ -507,6 +507,64 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
             });
         }
     });
+    app.delete('/income/:id', function(req, res) {
+        if(req.user) {
+            var income_id = req.params.id;
+            model.Income.findByID(new mongo.ObjectID(income_id), function(err, income) {
+                //make sure user has write access
+                var page_id = income.page_id;
+                model.Page.findByID(page_id, function(err, page) {
+                    var docid = page.doc_id;
+                    model.Doc.getAuth(req.user, docid, function(err, auth) {
+                        if(auth.canwrite) {
+                            //go ahead with removal
+                            model.Income.remove(income._id, function(err) {
+                                if(err) {
+                                    console.error(err);
+                                    res.statusCode = 500;
+                                    res.write('removal failed');
+                                } else {
+                                    res.statusCode = 200;
+                                    res.write('ok');
+                                }
+                                res.end();
+                            });
+                        }
+                    }); 
+                });
+            });
+        }
+    });
+    app.post('/page', function(req, res) {
+        if(req.user) {
+            var user_page = req.body.page;
+            var page_id = new mongo.ObjectID(user_page._id);
+            model.Page.findByID(page_id, function(err, page) {
+                var docid = page.doc_id;
+                model.Doc.getAuth(req.user, docid, function(err, auth) {
+                    if(auth.canwrite) {
+                        var clean_page = {
+                            name: user_page.name,
+                            desc: user_page.desc,
+                            start_date: user_page.start_date,
+                            end_date: user_page.end_date
+                        }
+                        model.Page.update(page_id, {$set: clean_page}, function(err, id) {
+                            if(err) {
+                                console.error(err);
+                                res.statusCode = 500;
+                                res.write('update failed');
+                            } else {
+                                res.statusCode = 200;
+                                res.write(id.toString());
+                            }
+                            res.end();
+                        });
+                    }
+                });
+            });
+        }
+    });
 
     /*
     app.get('/page/:id', function(req, res) {

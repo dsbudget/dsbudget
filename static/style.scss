@@ -94,11 +94,9 @@ background-color: #ddd;
 border-bottom-radius: 4px 4px;
 padding: 5px 0px;
 }
-
 .text-right {
 text-align: right;
 }
-
 .jumbotron-about {
 background-position:center center;
 background-repeat:no-repeat;
@@ -108,4 +106,9 @@ color: white;
 }
 .half-opacity {
 opacity: 0.5;
+}
+.pagename:hover {
+cursor: pointer;
+padding: -10px;
+background-color: #ddd;
 }

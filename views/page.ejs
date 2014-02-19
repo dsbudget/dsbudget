@@ -92,7 +92,6 @@ function($scope, $http, $modal) {
         });
     };
     $scope.loadpages();
-
     $scope.orderProp = '-end_date';
     $scope.openimport = function(doc) {
         var modal = $modal.open({
@@ -113,25 +112,21 @@ function($scope, $http, $modal) {
 function ExpenseCtrl($scope, $modalInstance, category, expense) {
     $scope.category = category;
     $scope.expense = expense;
-
     if(!$scope.expense) {
         $scope._new = true;
         $scope.expense = {
             time: new Date().getTime()
         };
     }
-
     $scope.opendatepicker = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.dpopen = true;
     };
-
     $scope.ok = function() {
         $modalInstance.close($scope);
     };
-
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
 };
@@ -140,27 +135,52 @@ ExpenseCtrl.$inject = ['$scope', '$modalInstance', 'category', 'expense'];
 function IncomeCtrl($scope, $modalInstance, page, income) {
     $scope.page = page;
     $scope.income = income;
-
     if(!$scope.income) {
         $scope._new = true;
         $scope.income = {page_id: page._id};
     }
-
     $scope.opendatepicker = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.dpopen = true;
     };
-
+    $scope.remove = function() {
+        $modalInstance.dismiss('remove');
+    };
     $scope.ok = function() {
         $modalInstance.close($scope);
     };
-
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
 };
 IncomeCtrl.$inject = ['$scope', '$modalInstance', 'page', 'income'];
+
+function PageCtrl($scope, $modalInstance, page) {
+    console.dir(page);
+    $scope.page = page;
+    if(!$scope.page) {
+        $scope._new = true;
+        $scope.page = {name: "New Page"};
+    }
+    $scope.openstartdatepicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.startdpopen = true;
+    };
+    $scope.openenddatepicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.enddpopen = true;
+    };
+    $scope.ok = function() {
+        $modalInstance.close($scope);
+    };
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+};
+PageCtrl.$inject = ['$scope', '$modalInstance', 'page'];
 
 dsApp.filter('recurring', function() {
     return function(input, b) {
@@ -215,16 +235,16 @@ function($scope, $http, $modal, $routeParams, $location) {
         var total_income = 0;
         $scope.incomes.forEach(function(income) {
             total_income += parseFloat(income.amount);
-            //console.log(total_income);
         });
         $scope._total_income = total_income;
-
         $scope._total_recurring = 0;
         $scope.categories.forEach(function(category) {
             var total_expense = 0;
             if(category.expenses) {
                 category.expenses.forEach(function(expense) {
-                    total_expense += parseFloat(expense.amount);
+                    if(!expense.tentative) {
+                        total_expense += parseFloat(expense.amount);
+                    }
                 });
             }
             category.style = {"background-color": lightcolor(category.color)};
@@ -244,9 +264,6 @@ function($scope, $http, $modal, $routeParams, $location) {
             }
         });
         modal.result.then(function(scope) {
-            //scope.expense.time = parseInt(scope.expense.time);
-            //scope.expense.amount = parseFloat(scope.expense.amount);
-
             $http.post('/expense', {
                 catid: scope.category._id,
                 expense: scope.expense,
@@ -265,6 +282,7 @@ function($scope, $http, $modal, $routeParams, $location) {
             });
         });
     };
+
     $scope.openincome = function(page, income, iid) {
         var modal = $modal.open({
             templateUrl: 'incomedialog.html',
@@ -275,10 +293,9 @@ function($scope, $http, $modal, $routeParams, $location) {
             }
         });
         modal.result.then(function(scope) {
-            //console.dir(scope);
-
             //I am not sure why I have to do this for income but not expense..
             scope.income.amount = parseFloat(scope.income.amount);
+
             $http.post('/income', {
                 income: scope.income
             }).success(function(newid) {
@@ -288,6 +305,39 @@ function($scope, $http, $modal, $routeParams, $location) {
                     scope.income._id = newid;
                     page.incomes.push(scope.income);
                 }
+                update();
+            }).error(function(data, status, headers, config) {
+                alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+                console.error(data);
+            });
+        }, function(dismiss) {
+            if(dismiss == "remove") {
+                $http.delete('/income/'+income._id, {
+                    //can't pass param!! why!!
+                }).success(function() {
+                    $scope.incomes.splice(iid, 1);
+                    update();
+                }).error(function(data, status, headers, config) {
+                    alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+                    console.error(data);
+                });
+            }
+        });
+    };
+
+    $scope.openpage = function(page) {
+        var modal = $modal.open({
+            templateUrl: 'pagedialog.html',
+            controller: PageCtrl,
+            resolve: {
+                page: function() { return angular.copy(page); } //send copy instead of the acturla page
+            }
+        });
+        modal.result.then(function(scope) {
+            $http.post('/page', {
+                page: scope.page
+            }).success(function() {
+                $scope.page = scope.page;
                 update();
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');

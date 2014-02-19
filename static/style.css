@@ -79,3 +79,8 @@ footer {
 
 .half-opacity {
   opacity: 0.5; }
+
+.pagename:hover {
+  cursor: pointer;
+  padding: -10px;
+  background-color: #ddd; }
