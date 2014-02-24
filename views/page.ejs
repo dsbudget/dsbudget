@@ -1,7 +1,10 @@
 <% include head.ejs %>
 <% include navbar.ejs %>
+<link rel="stylesheet" href="/static/colorpicker/colorpicker.css">
+<script src="/static/colorpicker/bootstrap-colorpicker-module.js"></script>
+
 <script>
-var dsApp = angular.module('dsApp', ['ngRoute', 'ui.bootstrap', 'angularFileUpload']);
+var dsApp = angular.module('dsApp', ['ngRoute', 'ui.bootstrap', 'angularFileUpload', 'colorpicker.module']);
 
 dsApp.directive('format', ['$filter', function ($filter) {
     return {
@@ -123,6 +126,9 @@ function ExpenseCtrl($scope, $modalInstance, category, expense) {
         $event.stopPropagation();
         $scope.dpopen = true;
     };
+    $scope.remove = function() {
+        $modalInstance.dismiss('remove');
+    };
     $scope.ok = function() {
         $modalInstance.close($scope);
     };
@@ -131,6 +137,32 @@ function ExpenseCtrl($scope, $modalInstance, category, expense) {
     };
 };
 ExpenseCtrl.$inject = ['$scope', '$modalInstance', 'category', 'expense'];
+
+function CategoryCtrl($scope, $modalInstance, page, category, recurring) {
+    $scope.page = page;
+    $scope.category = category;
+    $scope.category.recurring = recurring;
+
+    if(!$scope.category) {
+        $scope._new = true;
+        $scope.category = {page_id: page._id};
+    }
+    $scope.opendatepicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.dpopen = true;
+    };
+    $scope.remove = function() {
+        $modalInstance.dismiss('remove');
+    };
+    $scope.ok = function() {
+        $modalInstance.close($scope);
+    };
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+};
+CategoryCtrl.$inject = ['$scope', '$modalInstance', 'page', 'category', 'recurring'];
 
 function IncomeCtrl($scope, $modalInstance, page, income) {
     $scope.page = page;
@@ -247,12 +279,61 @@ function($scope, $http, $modal, $routeParams, $location) {
                     }
                 });
             }
-            category.style = {"background-color": lightcolor(category.color)};
+            category._style = {"background-color": lightcolor(category.color)};
             category._total = total_expense; 
             category._remaining = category.budget - total_expense;
             $scope._total_recurring += total_expense;
         });
     }
+
+    $scope.opencategory = function(page, category, recurring) {
+        var modal = $modal.open({
+            templateUrl: 'categorydialog.html',
+            controller: CategoryCtrl,
+            resolve: {
+                page: function() { return page; },
+                category: function() { return angular.copy(category); }, //send copy instead of the actual $scope object
+                recurring: function() { return recurring; }
+            }
+        });
+        modal.result.then(function(scope) {
+            $http.post('/category', {
+                category: scope.category
+            }).success(function(newid) {
+                //as expected..
+            }).error(function(data, status, headers, config) {
+                alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+                console.error(data);
+            });
+
+            if(category._id) {
+                //update
+                for(var x = 0;x < $scope.categories.length;x++) {
+                    if($scope.categories[x]._id == scope.category._id) {
+                        $scope.categories[x] = scope.category;
+                        break;
+                    }
+                }
+            } else {
+                //new
+            }
+            update();
+
+        }, function(dismiss) {
+            if(dismiss == "remove") {
+                $http.delete('/category/'+category._id, {
+                    //can't pass param!! why!!
+                }).success(function() {
+                    //as expected
+                }).error(function(data, status, headers, config) {
+                    alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+                    console.error(data);
+                });
+                $scope.incomes.splice(iid, 1);
+                update();
+            }
+        });
+    };
 
     $scope.openexpense = function(category, expense, eid) {
         var modal = $modal.open({
@@ -269,17 +350,32 @@ function($scope, $http, $modal, $routeParams, $location) {
                 expense: scope.expense,
                 eid: eid
             }).success(function(newid) {
-                if(eid != undefined) {
-                    category.expenses[eid] = scope.expense;
-                } else {
-                    scope.expense._id = newid;
-                    category.expenses.push(scope.expense);
-                }
-                update();
+                //as expected..
+                scope.expense._id = newid; //reset _id on expense I just added
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                 console.error(data);
             });
+
+            if(eid != undefined) {
+                category.expenses[eid] = scope.expense;
+            } else {
+                category.expenses.push(scope.expense);
+            }
+            update();
+        }, function(dismiss) {
+            if(dismiss == "remove") {
+                $http.delete('/expense/'+category._id+'/'+eid, {
+                    //can't pass param!! why!!
+                }).success(function() {
+                    //as expected
+                }).error(function(data, status, headers, config) {
+                    alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+                    console.error(data);
+                });
+                category.expenses.splice(eid, 1);
+                update();
+            }
         });
     };
 
@@ -299,28 +395,30 @@ function($scope, $http, $modal, $routeParams, $location) {
             $http.post('/income', {
                 income: scope.income
             }).success(function(newid) {
-                if(iid != undefined) {
-                    page.incomes[iid] = scope.income;
-                } else {
-                    scope.income._id = newid;
-                    page.incomes.push(scope.income);
-                }
-                update();
+                //as expected..
+                scope.income._id = newid; //reset on income I just added
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                 console.error(data);
             });
+            if(iid != undefined) {
+                page.incomes[iid] = scope.income;
+            } else {
+                page.incomes.push(scope.income);
+            }
+            update();
         }, function(dismiss) {
             if(dismiss == "remove") {
                 $http.delete('/income/'+income._id, {
                     //can't pass param!! why!!
                 }).success(function() {
-                    $scope.incomes.splice(iid, 1);
-                    update();
+                    //as expected..
                 }).error(function(data, status, headers, config) {
                     alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                     console.error(data);
                 });
+                $scope.incomes.splice(iid, 1);
+                update();
             }
         });
     };
@@ -337,12 +435,14 @@ function($scope, $http, $modal, $routeParams, $location) {
             $http.post('/page', {
                 page: scope.page
             }).success(function() {
-                $scope.page = scope.page;
-                update();
+                //as expected..
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                 console.error(data);
             });
+
+            $scope.page = scope.page;
+            update();
         });
     };
 }]);

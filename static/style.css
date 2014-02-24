@@ -7,6 +7,14 @@
   border-bottom: 1px solid #e5e5e5;
   text-transform: uppercase; }
 
+.pagename {
+  padding: 0px 10px;
+  margin: 0px; }
+
+.pagename:hover {
+  cursor: pointer;
+  background-color: #ddd; }
+
 @media (min-width: 768px) {
   footer {
     text-align: left; }
@@ -38,6 +46,9 @@ footer {
     margin-bottom: 1px;
     padding: 5px 5px;
     font-weight: bold; }
+  .section .category-header:hover {
+    color: white;
+    cursor: pointer; }
   .section .income-item {
     margin: 0px;
     padding: 5px;
@@ -79,8 +90,3 @@ footer {
 
 .half-opacity {
   opacity: 0.5; }
-
-.pagename:hover {
-  cursor: pointer;
-  padding: -10px;
-  background-color: #ddd; }

@@ -458,6 +458,35 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
             });
         }
     });
+    app.delete('/expense/:cid/:eid', function(req, res) {
+        if(req.user) {
+            var category_id = req.params.cid;
+            var eid = req.params.eid;
+            model.Category.findByID(new mongo.ObjectID(category_id), function(err, cat) {
+                //make sure user has write access
+                var page_id = cat.page_id;
+                model.Page.findByID(page_id, function(err, page) {
+                    var docid = page.doc_id;
+                    model.Doc.getAuth(req.user, docid, function(err, auth) {
+                        if(auth.canwrite) {
+                            cat.expenses.splice(eid, 1);
+                            model.Category.update(cat._id, {$set: {expenses: cat.expenses}}, function(err, id) {
+                                if(err) {
+                                    console.error(err);
+                                    res.statusCode = 500;
+                                    res.write('update failed');
+                                } else {
+                                    res.statusCode = 200;
+                                    res.write(id.toString());
+                                }
+                                res.end();
+                            });
+                        }
+                    }); 
+                });
+            });
+        }
+    });
     app.post('/income', function(req, res) {
         if(req.user) {
             var income = req.body.income;
@@ -467,7 +496,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                 model.Doc.getAuth(req.user, docid, function(err, auth) {
                     if(auth.canwrite) {
                         var clean_income = {
-                            page_id: new mongo.ObjectID(income.page_id),
+                            page_id: page_id,
                             name: income.name //TODO..make sure it's string?
                         }
                         if(income.balance_from) {
@@ -505,6 +534,46 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     }
                 }); 
             });
+        }
+    });
+    app.post('/category', function(req, res) {
+        if(req.user) {
+            var dirty_category = req.body.category;
+
+            if(dirty_category._id) {
+                //update
+                var category_id = new mongo.ObjectID(dirty_category._id);
+                model.Category.findByID(category_id, function(err, cat) {
+                    //make sure user can edit this category
+                    model.Page.findByID(cat.page_id, function(err, page) {
+                        var docid = page.doc_id;
+                        model.Doc.getAuth(req.user, docid, function(err, auth) {
+                            if(auth.canwrite) {
+                                //ok proceed...
+                                model.Category.update(cat._id, {$set: {
+                                    name: dirty_category.name,
+                                    desc: dirty_category.desc,
+                                    color: dirty_category.color,
+                                    recurring: dirty_category.recurring,
+                                    budget: dirty_category.budget,
+                                    }}, function(err, id) {
+                                    if(err) {
+                                        console.error(err);
+                                        res.statusCode = 500;
+                                        res.write('update failed');
+                                    } else {
+                                        res.statusCode = 200;
+                                        res.write(id.toString());
+                                    }
+                                    res.end();
+                                });
+                            }
+                        });
+                    });
+                });
+            } else {
+                //insert
+            }
         }
     });
     app.delete('/income/:id', function(req, res) {

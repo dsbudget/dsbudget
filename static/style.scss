@@ -12,9 +12,18 @@ $bordercolor: #e5e5e5;
 
 .page-header,
 .doc-title {
-    color: $titlecolor;
-    border-bottom: 1px solid $bordercolor;
-    text-transform:uppercase;
+color: $titlecolor;
+border-bottom: 1px solid $bordercolor;
+text-transform:uppercase;
+}
+
+.pagename {
+padding: 0px 10px;
+margin: 0px;
+}
+.pagename:hover {
+cursor: pointer;
+background-color: #ddd;
 }
 
 @media (min-width: 768px) {
@@ -54,6 +63,10 @@ margin-bottom: 10px;
         margin-bottom: 1px;
         padding: 5px 5px;
         font-weight: bold;
+    }
+    .category-header:hover {
+        color: white;
+        cursor: pointer;
     }
     .income-item {
         margin: 0px;
@@ -107,8 +120,4 @@ color: white;
 .half-opacity {
 opacity: 0.5;
 }
-.pagename:hover {
-cursor: pointer;
-padding: -10px;
-background-color: #ddd;
-}
+
