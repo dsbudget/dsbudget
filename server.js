@@ -146,6 +146,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     }
                 });
             } else {
+                req.flash('info', "Looks like this is your first time using dsBudget! Please specify a password so you can login with your email and password.");
                 res.redirect('/setpass'); 
             }
         } else {
@@ -378,8 +379,21 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
     });
     app.post('/setting', function(req, res) {
         if(req.user) {
-            model.User.update(req.user._id, {$set: {name: req.body.name, email: req.body.email}}, function(err) {
+            var update = {name: req.body.name, email: req.body.email};
+            /*
+            if(req.body.password) {
+                if(req.body.password != req.body.password2) {
+                    res.write("Password doesn't match. Please enter it again.");
+                    res.statusCode = 500;
+                    res.end();
+                    return;
+                }
+                update.password = req.body.password;
+            }
+            */
+            model.User.update(req.user._id, {$set: update}, function(err) {
                 if(err) {
+                    res.write(err);
                     res.statusCode = 500;
                 } else {
                     res.statusCode = 200;
@@ -398,10 +412,12 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     //parse the xml
                     var path = req.files.file.path;
                     var importer = require('./import');
+                    //console.log(path); // like ... /tmp/29315-1n858ly.jpg
                     switch(importtype) {
                     case "dsbudget":
                         importer.dsbudget(model, docid, path, import_opts, function(err) {
                             if(err) {
+                                console.log("returning error:"+err);
                                 res.statusCode = 500;
                                 res.write(err);
                             } else {
@@ -441,7 +457,10 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                             } else {
                                 cat.expenses.push(clean_expense);
                             }
+                            console.dir(cat);
                             model.Category.update(cat._id, {$set: {expenses: cat.expenses}}, function(err, id) {
+                                console.log("done");
+                                console.log(err);
                                 if(err) {
                                     console.error(err);
                                     res.statusCode = 500;
@@ -539,10 +558,11 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
     app.post('/category', function(req, res) {
         if(req.user) {
             var dirty_category = req.body.category;
+            var category = dirty_category; //TODO - not sure how to validate data structure
 
-            if(dirty_category._id) {
+            if(category._id) {
                 //update
-                var category_id = new mongo.ObjectID(dirty_category._id);
+                var category_id = new mongo.ObjectID(category._id);
                 model.Category.findByID(category_id, function(err, cat) {
                     //make sure user can edit this category
                     model.Page.findByID(cat.page_id, function(err, page) {
@@ -550,13 +570,10 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                         model.Doc.getAuth(req.user, docid, function(err, auth) {
                             if(auth.canwrite) {
                                 //ok proceed...
-                                model.Category.update(cat._id, {$set: {
-                                    name: dirty_category.name,
-                                    desc: dirty_category.desc,
-                                    color: dirty_category.color,
-                                    recurring: dirty_category.recurring,
-                                    budget: dirty_category.budget,
-                                    }}, function(err, id) {
+                                delete category._id; //can't update _id
+                                category.page_id = cat.page_id; //replace string to ObjectID
+                                model.Category.update(cat._id, {$set: category}, 
+                                function(err, id) {
                                     if(err) {
                                         console.error(err);
                                         res.statusCode = 500;
@@ -573,7 +590,59 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                 });
             } else {
                 //insert
+                var page_id = new mongo.ObjectID(category.page_id);
+                model.Page.findByID(page_id, function(err, page) {
+                    var docid = page.doc_id;
+                    model.Doc.getAuth(req.user, docid, function(err, auth) {
+                        if(auth.canwrite) {
+                            //ok proceed...
+                            category.page_id = page_id; //replace string to ObjectID (necessary?)
+                            console.dir(category);
+                            model.Category.create(category, function(err, id) {
+                                if(err) {
+                                    console.error(err);
+                                    res.statusCode = 500;
+                                    res.write('insert failed');
+                                } else {
+                                    res.statusCode = 200;
+                                    console.log("created category with id:"+id);
+                                    res.write(id.toString());
+                                }
+                                res.end();
+                            });
+                        }
+                    });
+                });
             }
+        }
+    });
+    app.delete('/category/:id', function(req, res) {
+        if(req.user) {
+            var category_id = new mongo.ObjectID(req.params.id);
+            console.log("removing category :"+category_id);
+            model.Category.findByID(category_id, function(err, category) {
+                //make sure user has write access
+                var page_id = category.page_id;
+                model.Page.findByID(page_id, function(err, page) {
+                    var docid = page.doc_id;
+                    model.Doc.getAuth(req.user, docid, function(err, auth) {
+                        if(auth.canwrite) {
+                            //go ahead with removal
+                            model.Category.remove(category._id, function(err) {
+                                if(err) {
+                                    console.error(err);
+                                    res.statusCode = 500;
+                                    res.write('removal failed');
+                                } else {
+                                    res.statusCode = 200;
+                                    res.write('ok');
+                                }
+                                res.end();
+                            });
+                        }
+                    }); 
+                });
+            });
         }
     });
     app.delete('/income/:id', function(req, res) {

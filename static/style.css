@@ -8,8 +8,10 @@
   text-transform: uppercase; }
 
 .pagename {
-  padding: 0px 10px;
-  margin: 0px; }
+  padding: 3px;
+  margin-bottom: 5px; }
+  .pagename h2 {
+    margin: 0px; }
 
 .pagename:hover {
   cursor: pointer;
@@ -67,11 +69,13 @@ footer {
     border-bottom: 1px solid #eee; }
     .section .expense-item .expense-name {
       color: gray; }
+      .section .expense-item .expense-name .label {
+        padding-top: 5px; }
   .section .income-item:hover, .section .expense-item:hover {
     background-color: #ddd;
     cursor: pointer; }
   .section .expense-total {
-    padding: 2px 20px; }
+    padding: 5px 20px; }
 
 .section-footer {
   background-color: #ddd;

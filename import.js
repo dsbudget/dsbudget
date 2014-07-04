@@ -239,7 +239,8 @@ exports.dsbudget = function(model, docid, path, opts, callback) {
             var parser = new xml2js.Parser();
             parser.parseString(data, function(err, doc) {
                 if(err) {
-                    callback(err);
+                    console.log("failed to parse "+path);
+                    callback("Failed to parse provided dsbudget document");
                 } else {
                     var docversion = doc.Budget.$.docversion;
                     var openpage = doc.Budget.$.openpage;

@@ -300,6 +300,14 @@ exports.Category = {
                 col.update({_id: id}, data, {w:1}, callback);
             }
         });
+    },
+    remove: function(id, callback) {
+        db.collection('category', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.remove({_id: id}, {w:1}, callback);
+            }
+        });
     }
 };
 

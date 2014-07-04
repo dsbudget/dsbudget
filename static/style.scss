@@ -18,8 +18,11 @@ text-transform:uppercase;
 }
 
 .pagename {
-padding: 0px 10px;
-margin: 0px;
+padding: 3px;
+margin-bottom: 5px;
+    h2 {
+        margin: 0px;
+    }
 }
 .pagename:hover {
 cursor: pointer;
@@ -90,6 +93,9 @@ margin-bottom: 10px;
         border-bottom: 1px solid #eee;
         .expense-name {
             color: gray;
+            .label {
+                padding-top: 5px;
+            }
         }
     }
     .income-item:hover,
@@ -98,7 +104,7 @@ margin-bottom: 10px;
         cursor: pointer;
     }
     .expense-total {
-        padding: 2px 20px;
+        padding: 5px 20px;
     }
 }
 

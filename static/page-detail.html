@@ -1,9 +1,9 @@
 <div class="pagename" ng-click="openpage(page)">
-    <h3 class="pull-right">{{page.end_date | date:'shortDate'}}</h3>
-    <h3 class="pull-right">&nbsp;-&nbsp;</h3>
-    <h3 class="pull-right">{{page.start_date | date:'shortDate'}}</h3>
-    <h2>{{page.name}}</h2>
-    <p class="help-block">{{page.desc}}</p>
+    <h2>
+        <small class="pull-right">{{page.end_date | date:'shortDate'}} - {{page.start_date | date:'shortDate'}}</small>
+        {{page.name}}
+    </h2>
+    <p class="help-block" ng-show="page.desc">{{page.desc}}</p>
 </div>
 
 <div class="section">
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="income-total row">
-        <div class="col-md-7"><button type="button" class="btn btn-xs income-new" ng-click="openincome(page)">Add New Income</button></div>
+        <div class="col-md-7"><button type="button" class="btn btn-default btn-xs income-new" ng-click="openincome(page)">Add New Income</button></div>
         <div class="col-md-3 text-right"><b ng-if="incomes.length > 1">Total Income</b></div>
         <div class="col-md-2 text-right"><b ng-if="incomes.length > 1">{{_total_income | currency}}</b></div>
     </div>
@@ -26,9 +26,12 @@
 </div>
 
 <div class="section">
-    <div class="section-header">Recurring Expenses</div>
+    <div class="section-header">
+        <button type="button" class="btn btn-default btn-sm pull-right" ng-click="opencategory(page, true)">Add New Category</button>
+        Recurring Expenses
+    </div>
     <div class="category" ng-repeat="category in categories | recurring:true | orderBy:'name'">
-        <div class="category-header row" ng-style="category._style" ng-click="opencategory(page, category, true)">
+        <div class="category-header row" ng-style="category._style" ng-click="opencategory(page, true, category)">
             <div class="col-md-4">
                 <span ng-if="category.recurring" class="glyphicon glyphicon-refresh">&nbsp;</span>{{category.name}}
             </div>
@@ -53,7 +56,7 @@
         </div>
         <div class="expense-total">
             <div class="row">
-            <div class="col-md-7"><button type="button" class="btn btn-xs" ng-click="openexpense(category)">Add New Expense</button></div>
+            <div class="col-md-7"><button type="button" class="btn btn-xs btn-default" ng-click="openexpense(category)">Add New Expense</button></div>
             <div class="col-md-3 text-right text-muted"><b ng-if="category.expenses.length > 1">Total</b></div>
             <div class="col-md-2 text-right text-muted"><b ng-if="category.expenses.length > 1">{{category._total | currency}}</b></div>
             </div>
@@ -70,9 +73,12 @@
 </div>
 
 <div class="section">
-    <div class="section-header">Budgets / Expenses</div>
+    <div class="section-header">
+        <button type="button" class="btn btn-default btn-sm pull-right" ng-click="opencategory(page, false)">Add New Category</button>
+        Budgets / Expenses
+    </div>
     <div class="category" ng-repeat="category in categories | recurring:false | orderBy:'name'">
-        <div class="category-header row" ng-style="category._style" ng-click="opencategory(page, category, false)">
+        <div class="category-header row" ng-style="category._style" ng-click="opencategory(page, false, category)">
             <div class="col-md-4">
                 <span ng-if="category.recurring" class="glyphicon glyphicon-refresh">&nbsp;</span>{{category.name}}
             </div>
@@ -103,7 +109,7 @@
             </div>
         </div>
         <div class="expense-total row">
-            <div class="col-md-7"><button type="button" class="btn btn-xs expense-new" ng-click="openexpense(category)">Add New Expense</button></div>
+            <div class="col-md-7"><button type="button" class="btn btn-default btn-xs expense-new" ng-click="openexpense(category)">Add New Expense</button></div>
             <div class="col-md-3 text-right"><b ng-if="category.expenses.length > 0">Remaining</b></div>
             <div class="col-md-2 text-right"><b ng-if="category.expenses.length > 0">{{category._remaining | currency}}</b></div>
         </div>
@@ -142,7 +148,7 @@
     <div class="modal-footer">
         <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
         <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
 </script>
 
@@ -164,7 +170,7 @@
     <div class="modal-footer">
         <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
         <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
 </script>
 
@@ -203,7 +209,7 @@
     <div class="modal-footer">
         <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
         <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
 </script>
 
@@ -235,7 +241,7 @@
     <div class="modal-footer">
         <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
         <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
 </script>
 

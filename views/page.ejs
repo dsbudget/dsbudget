@@ -76,7 +76,8 @@ function ImportCtrl($scope, $modalInstance, $upload, doc) {
         }).success(function(data, status, headers, config) {
             $modalInstance.close($scope);
         }).error(function(data, status, headers, config) {
-            alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+            //jalert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+            alert(data);
             $modalInstance.dismiss('error');
         });
     };
@@ -86,6 +87,40 @@ function ImportCtrl($scope, $modalInstance, $upload, doc) {
     };
 };
 ImportCtrl.$inject = ['$scope', '$modalInstance', '$upload', 'doc'];
+
+function NewpageCtrl($scope, $modalInstance, doc) {
+    $scope.doc = doc;
+    $scope.docid = doc._id;
+    $scope.parent = null;
+    $scope.name = null;
+
+    var max_end_date = 0;
+    //select page with latest enddate
+    $scope.doc.pages.forEach(function(page) {
+        if(max_end_date < page.end_date) {
+            $scope.parent = page._id;
+            max_end_date = page.end_date;
+        }
+    });
+
+    $scope.ok = function() {
+        /*
+        console.log("$scope.parent is");
+        console.log($scope.parent);
+        */
+        alert('TODO newpage:'+$scope.name);
+    };
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+    /*
+    $scope.changeit = function() {
+        console.dir($scope.name);
+        console.dir($scope.parent.name);
+    }
+    */
+};
+NewpageCtrl.$inject = ['$scope', '$modalInstance', 'doc'];
 
 dsApp.controller('PageListCtrl', ['$scope', '$http', '$modal', 
 function($scope, $http, $modal) {
@@ -100,6 +135,20 @@ function($scope, $http, $modal) {
         var modal = $modal.open({
             templateUrl: 'importdialog.html',
             controller: ImportCtrl,
+            resolve: {
+                doc: function() {
+                    return doc;
+                }
+            }
+        });
+        modal.result.then(function(scope) {
+            $scope.loadpages();
+        });
+    };
+    $scope.opennew = function(doc) {
+        var modal = $modal.open({
+            templateUrl: 'newpagedialog.html',
+            controller: NewpageCtrl,
             resolve: {
                 doc: function() {
                     return doc;
@@ -141,12 +190,16 @@ ExpenseCtrl.$inject = ['$scope', '$modalInstance', 'category', 'expense'];
 function CategoryCtrl($scope, $modalInstance, page, category, recurring) {
     $scope.page = page;
     $scope.category = category;
-    $scope.category.recurring = recurring;
-
     if(!$scope.category) {
         $scope._new = true;
-        $scope.category = {page_id: page._id};
+        $scope.category = {
+            page_id: page._id, 
+            recurring: recurring, 
+            color: "#909090",
+            expenses: []  
+        };
     }
+    $scope.category.recurring = recurring;
     $scope.opendatepicker = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -189,7 +242,7 @@ function IncomeCtrl($scope, $modalInstance, page, income) {
 IncomeCtrl.$inject = ['$scope', '$modalInstance', 'page', 'income'];
 
 function PageCtrl($scope, $modalInstance, page) {
-    console.dir(page);
+    //console.dir(page);
     $scope.page = page;
     if(!$scope.page) {
         $scope._new = true;
@@ -286,7 +339,8 @@ function($scope, $http, $modal, $routeParams, $location) {
         });
     }
 
-    $scope.opencategory = function(page, category, recurring) {
+    $scope.opencategory = function(page, recurring, category /*no cid! - see below*/) {
+        //cant' rely on cid because we display 2 lists (one for recurring and another for non-recurring..)
         var modal = $modal.open({
             templateUrl: 'categorydialog.html',
             controller: CategoryCtrl,
@@ -301,21 +355,22 @@ function($scope, $http, $modal, $routeParams, $location) {
                 category: scope.category
             }).success(function(newid) {
                 //as expected..
+                scope.category._id = newid; //reset _id on expense I just added
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                 console.error(data);
             });
 
-            if(category._id) {
-                //update
+            if(category != undefined) {
+                //need to find the idx - because I can't rely on cid
                 for(var x = 0;x < $scope.categories.length;x++) {
                     if($scope.categories[x]._id == scope.category._id) {
                         $scope.categories[x] = scope.category;
                         break;
                     }
-                }
+                };
             } else {
-                //new
+                $scope.categories.push(scope.category); //new
             }
             update();
 
@@ -329,7 +384,13 @@ function($scope, $http, $modal, $routeParams, $location) {
                     alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                     console.error(data);
                 });
-                $scope.incomes.splice(iid, 1);
+                //need to find the idx - because I can't rely on cid
+                for(var x = 0;x < $scope.categories.length;x++) {
+                    if($scope.categories[x]._id == category._id) {
+                        $scope.categories.splice(x, 1);
+                        break;
+                    }
+                };
                 update();
             }
         });
@@ -449,6 +510,7 @@ function($scope, $http, $modal, $routeParams, $location) {
 
 </script>
 <div class="container" ng-app="dsApp">
+    <% include message.ejs %>
     <div ng-view></div>
     <% include footer.ejs %>
 </div>
