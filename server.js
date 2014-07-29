@@ -12,6 +12,7 @@ var passport = require('passport'),
     GoogleStrategy = require('passport-google').Strategy,
     LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
+var extend = require('extend');
 
 /*
 var MemoryStore = express.session.MemoryStore,
@@ -20,8 +21,6 @@ var MemoryStore = express.session.MemoryStore,
 
 console.log("dumping env");
 console.dir(process.env);
-
-var now = new Date().getTime();
 
 //set config
 var config = {};
@@ -303,7 +302,8 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
             res.redirect('/'); 
         }
     });
-    app.get('/page/list', function(req, res){
+    app.get('/docs', function(req, res){
+        var now = new Date().getTime();
         if(req.user) {
             //load all docs
             model.Doc.findByOwnerID(req.user._id, function(err, docs) {
@@ -648,6 +648,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
     app.delete('/income/:id', function(req, res) {
         if(req.user) {
             var income_id = req.params.id;
+            //console.dir(income_id);
             model.Income.findByID(new mongo.ObjectID(income_id), function(err, income) {
                 //make sure user has write access
                 var page_id = income.page_id;
@@ -673,34 +674,137 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
             });
         }
     });
-    app.post('/page', function(req, res) {
+    app.delete('/page/:id', function(req, res) {
         if(req.user) {
-            var user_page = req.body.page;
-            var page_id = new mongo.ObjectID(user_page._id);
+            var page_id = new mongo.ObjectID(req.params.id);
             model.Page.findByID(page_id, function(err, page) {
                 var docid = page.doc_id;
                 model.Doc.getAuth(req.user, docid, function(err, auth) {
                     if(auth.canwrite) {
-                        var clean_page = {
-                            name: user_page.name,
-                            desc: user_page.desc,
-                            start_date: user_page.start_date,
-                            end_date: user_page.end_date
-                        }
-                        model.Page.update(page_id, {$set: clean_page}, function(err, id) {
+                        model.Page.remove(page_id, function(err) {
                             if(err) {
                                 console.error(err);
                                 res.statusCode = 500;
-                                res.write('update failed');
+                                res.write('removal failed');
                             } else {
                                 res.statusCode = 200;
-                                res.write(id.toString());
+                                res.write('ok');
                             }
                             res.end();
                         });
                     }
                 });
             });
+        }
+    });
+
+    app.post('/page', function(req, res) {
+        function createpage(newpage, next) {
+            model.Page.create(newpage, function(err, id) {
+                if(err) {
+                    res.statusCode = 500;
+                    res.write("Failed to create page");
+                } else {
+                    next(id); 
+                    res.statusCode = 200;
+                    res.write(id.toString());
+                }
+                res.end();
+            });
+        }
+        function updatepage(id, page) {
+            model.Page.update(id, {$set: page}, function(err, id) {
+                if(err) {
+                    //console.error(err);
+                    res.statusCode = 500;
+                    res.write('update failed');
+                } else {
+                    res.statusCode = 200;
+                    res.write(id.toString());
+                }
+                res.end();
+            });
+        }
+        function copyincomes(from_pageid, to_pageid) {
+            model.Income.findByPageID(from_pageid, function(err, incomes) {
+                incomes.forEach(function(income) {
+                    income.page_id = to_pageid;
+                    delete income._id; //necessary?
+                    model.Income.create(income);
+                });
+            });
+        }
+        function copycategories(from_pageid, to_pageid, start_time) {
+            model.Category.findByPageID(from_pageid, function(err, categories) {
+                categories.forEach(function(category) {
+                    category.page_id = to_pageid;
+                    delete category._id; //necessary?
+                    if(category.recurring) {
+                        //reset expense date to the same month as start_time by keeping the date itself
+                        var start_date = new Date(start_time);
+                        category.expenses.forEach(function(expense) {
+                            var d = new Date(expense.time);
+                            d.setFullYear(start_date.getFullYear());
+                            d.setMonth(start_date.getMonth()); 
+                            expense.time = d.getTime();
+                        });
+                    } else {
+                        //reset all expenses
+                        category.expenses = [];
+                        category._remaining = category.budget; 
+                    }
+                    model.Category.create(category);
+                });
+            });
+        }
+
+        if(req.user && req.body.page) {
+            var dirty_page = req.body.page;
+            var clean_page = {
+                //TODO - I am not sure who is really responsible for validating field types.. model?
+                doc_id: new mongo.ObjectID(dirty_page.doc_id),
+                name: dirty_page.name.toString(),
+                desc: (dirty_page.desc ? dirty_page.desc.toString() : ""),
+                start_date: parseInt(dirty_page.start_date),
+                end_date: parseInt(dirty_page.end_date)
+            };
+
+            if(dirty_page._id) {
+                //updating existing page
+                var page_id = new mongo.ObjectID(dirty_page._id);
+                model.Page.findByID(page_id, function(err, page) {
+                    var docid = page.doc_id;
+                    model.Doc.getAuth(req.user, docid, function(err, auth) {
+                        if(auth.canwrite) {
+                            updatepage(page_id, clean_page);
+                        }
+                    });
+                });
+            } else {
+                //adding new page
+                model.Doc.getAuth(req.user, dirty_page.doc_id, function(err, auth) {
+                    if(auth.canwrite) {
+                        createpage(clean_page, function(page_id) {
+                            //TODO - if parent page is specified, copy income and recurring expenses..
+                            if(req.body.parent != null) {
+                                var parentid = new mongo.ObjectID(req.body.parent._id);
+                                //make sure user really has read access to this parent
+                                model.Page.findByID(parentid, function(err, parent) {
+                                    if(!err) {
+                                        model.Doc.getAuth(req.user, parent.doc_id, function(err, auth) {
+                                            if(auth.canread) {
+                                                copyincomes(parentid, page_id);
+                                                copycategories(parentid, page_id, clean_page.start_date);
+                                                //TODO - add balance income using parent?
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         }
     });
 

@@ -12,7 +12,7 @@ dsApp.directive('format', ['$filter', function ($filter) {
         link: function (scope, elem, attrs, ctrl) {
             if (!ctrl) return;
             ctrl.$formatters.unshift(function (a) {
-            return $filter(attrs.format)(ctrl.$modelValue)
+                return $filter(attrs.format)(ctrl.$modelValue)
             });
             ctrl.$parsers.unshift(function (viewValue) {
                 elem.priceFormat({
@@ -25,6 +25,26 @@ dsApp.directive('format', ['$filter', function ($filter) {
         }
     };
 }]);
+
+dsApp.directive('ngConfirmClick', [
+    function() {
+        return {
+            priority: 1, //make sure this directive gets processed first
+            terminal: true, //don't let angular run ng-click
+            link: function (scope, element, attr) {
+                var msg = attr.ngConfirmClick || "Are you sure?";
+                var clickAction = attr.ngClick;
+                element.bind('click',function (event) {
+                    $(".dropdown").removeClass("open");
+                    if ( window.confirm(msg) ) {
+                        scope.$eval(clickAction)
+                        scope.$apply(); //scope application doesn't happen for some reason
+                    }
+                });
+            }
+        }
+    }
+]);
 
 dsApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -88,7 +108,7 @@ function ImportCtrl($scope, $modalInstance, $upload, doc) {
 };
 ImportCtrl.$inject = ['$scope', '$modalInstance', '$upload', 'doc'];
 
-function NewpageCtrl($scope, $modalInstance, doc) {
+function NewpageCtrl($scope, $modalInstance, $location, $http, doc) {
     $scope.doc = doc;
     $scope.docid = doc._id;
     $scope.parent = null;
@@ -97,21 +117,54 @@ function NewpageCtrl($scope, $modalInstance, doc) {
     var max_end_date = 0;
     //select page with latest enddate
     $scope.doc.pages.forEach(function(page) {
+        //console.log(page.name + " = " + page.end_date);
         if(max_end_date < page.end_date) {
-            $scope.parent = page._id;
+            $scope.parent = page;
             max_end_date = page.end_date;
         }
     });
 
+    //decide start / end dates
+    var now = new Date();
+    //set start to nearest 1st 
+    if(now.getDate() < 15) {
+        $scope.start_date = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else {
+        $scope.start_date = new Date(now.getFullYear(), now.getMonth()+1, 1);
+    }
+    $scope.end_date = new Date($scope.start_date);
+    $scope.end_date.setMonth($scope.end_date.getMonth()+1);
+
     $scope.ok = function() {
-        /*
-        console.log("$scope.parent is");
-        console.log($scope.parent);
-        */
-        alert('TODO newpage:'+$scope.name);
+        $http.post('/page', {
+            parent: $scope.parent,
+            page: {
+                doc_id: doc._id,
+                name: $scope.name,
+                desc: $scope.desc,
+                start_date: $scope.start_date.getTime(),
+                end_date: $scope.end_date.getTime()
+            }
+        }).success(function(newpageid) {
+            //console.log(newpageid);
+            $location.path(newpageid);
+        }).error(function(detail) {
+            alert('Failed to create page: '+detail);
+        });
+        $modalInstance.close($scope);
     };
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
+    };
+    $scope.openstartdatepicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.startdpopen = true;
+    };
+    $scope.openenddatepicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.enddpopen = true;
     };
     /*
     $scope.changeit = function() {
@@ -120,16 +173,16 @@ function NewpageCtrl($scope, $modalInstance, doc) {
     }
     */
 };
-NewpageCtrl.$inject = ['$scope', '$modalInstance', 'doc'];
+NewpageCtrl.$inject = ['$scope', '$modalInstance', '$location', '$http', 'doc'];
 
 dsApp.controller('PageListCtrl', ['$scope', '$http', '$modal', 
 function($scope, $http, $modal) {
-    $scope.loadpages = function(){
-        $http.get('/page/list').success(function(docs) {
+    $scope.loaddocs = function(){
+        $http.get('/docs').success(function(docs) {
             $scope.docs = docs;
         });
     };
-    $scope.loadpages();
+    $scope.loaddocs();
     $scope.orderProp = '-end_date';
     $scope.openimport = function(doc) {
         var modal = $modal.open({
@@ -142,7 +195,7 @@ function($scope, $http, $modal) {
             }
         });
         modal.result.then(function(scope) {
-            $scope.loadpages();
+            $scope.loaddocs();
         });
     };
     $scope.opennew = function(doc) {
@@ -156,7 +209,7 @@ function($scope, $http, $modal) {
             }
         });
         modal.result.then(function(scope) {
-            $scope.loadpages();
+            $scope.loaddocs();
         });
     };
 }]);
@@ -217,7 +270,35 @@ function CategoryCtrl($scope, $modalInstance, page, category, recurring) {
 };
 CategoryCtrl.$inject = ['$scope', '$modalInstance', 'page', 'category', 'recurring'];
 
-function IncomeCtrl($scope, $modalInstance, page, income) {
+function IncomeCtrl($scope, $http, $modalInstance, page, income) {
+
+    $scope.pages = []; 
+    $http.get('/docs').success(function(docs) {
+        //find doc we want..
+        docs.forEach(function(doc) {
+            if(doc._id == page.doc_id) {
+                doc.pages.forEach(function(p) {
+                    //in order to avoid circular reference, let's allow user to select balance from previous months
+                    if(p.end_date <= page.start_date) {
+                        $scope.pages.push(p);
+                    }
+                });
+            }
+        });
+        if($scope.income.balance_from) {
+            $scope._is_balance = true;
+            //search for selected page
+            $scope.pages.forEach(function(p) {
+                console.log("comparing "+p._id+" and "+$scope.income.balance_from);
+                if(p._id == $scope.income.balance_from) {
+                    console.log("found ");
+                    console.dir(p);
+                    $scope._balance_from = p; 
+                }
+            });
+        }
+    });
+
     $scope.page = page;
     $scope.income = income;
     if(!$scope.income) {
@@ -239,7 +320,7 @@ function IncomeCtrl($scope, $modalInstance, page, income) {
         $modalInstance.dismiss('cancel');
     };
 };
-IncomeCtrl.$inject = ['$scope', '$modalInstance', 'page', 'income'];
+IncomeCtrl.$inject = ['$scope', '$http', '$modalInstance', 'page', 'income'];
 
 function PageCtrl($scope, $modalInstance, page) {
     //console.dir(page);
@@ -263,6 +344,9 @@ function PageCtrl($scope, $modalInstance, page) {
     };
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
+    };
+    $scope.remove = function() {
+        $modalInstance.dismiss('remove');
     };
 };
 PageCtrl.$inject = ['$scope', '$modalInstance', 'page'];
@@ -354,8 +438,9 @@ function($scope, $http, $modal, $routeParams, $location) {
             $http.post('/category', {
                 category: scope.category
             }).success(function(newid) {
-                //as expected..
-                scope.category._id = newid; //reset _id on expense I just added
+                if(category == undefined) {
+                    scope.category._id = newid; //reset _id on expense I just added
+                }
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                 console.error(data);
@@ -411,8 +496,9 @@ function($scope, $http, $modal, $routeParams, $location) {
                 expense: scope.expense,
                 eid: eid
             }).success(function(newid) {
-                //as expected..
-                scope.expense._id = newid; //reset _id on expense I just added
+                if(eid == undefined) {
+                    scope.expense._id = newid; //reset _id on expense I just added
+                }
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                 console.error(data);
@@ -449,6 +535,10 @@ function($scope, $http, $modal, $routeParams, $location) {
                 income: function() { return angular.copy(income); } //send copy instead of the actual $scope object
             }
         });
+
+        //console.log("opening dialog");
+        //console.dir(income);
+
         modal.result.then(function(scope) {
             //I am not sure why I have to do this for income but not expense..
             scope.income.amount = parseFloat(scope.income.amount);
@@ -456,13 +546,16 @@ function($scope, $http, $modal, $routeParams, $location) {
             $http.post('/income', {
                 income: scope.income
             }).success(function(newid) {
-                //as expected..
-                scope.income._id = newid; //reset on income I just added
+                if(iid == undefined) {
+                    scope.income._id = newid; //reset for adding new income
+                }
             }).error(function(data, status, headers, config) {
                 alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
                 console.error(data);
             });
             if(iid != undefined) {
+                //console.log("updating");
+                //console.dir(scope.income);
                 page.incomes[iid] = scope.income;
             } else {
                 page.incomes.push(scope.income);
@@ -504,6 +597,17 @@ function($scope, $http, $modal, $routeParams, $location) {
 
             $scope.page = scope.page;
             update();
+        }, function(dismiss) {
+            if(dismiss == "remove") {
+                $http.delete('/page/'+page._id, {
+                    //can't pass param!! why!!
+                }).success(function() {
+                    $location.path("/"); //forward to page list - ng will reload the page list
+                }).error(function(data, status, headers, config) {
+                    alert('Oops.. Something went wrong! Please refer to dsBudget support forum.');
+                    console.error(data);
+                });
+            }
         });
     };
 }]);

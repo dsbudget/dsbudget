@@ -1,0 +1,14 @@
+<%
+var messages = req.flash('error');
+messages.forEach(function(message) {
+    %>
+    <div class="alert alert-danger"><%=message%></div>
+    <%
+});
+messages = req.flash('info');
+messages.forEach(function(message) {
+    %>
+    <div class="alert alert-info"><%=message%></div>
+    <%
+});
+%>

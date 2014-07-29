@@ -1,6 +1,7 @@
 var mongo = require('mongodb');
 var async = require('async');
 var decimal = require('decimal');
+var extend = require('extend');
 
 var db;
 
@@ -84,7 +85,7 @@ exports.Page = {
         });
     },
     getBalance: function(id, callback) {
-        console.log("computing page balance for "+id);
+        //console.log("computing page balance for "+id);
         async.parallel({
             total_income: function(next) {
                 var total = decimal('0');
@@ -130,6 +131,14 @@ exports.Page = {
             var balance = ret.total_income.sub(ret.total_expense);
             //console.log("balance:"+balance);
             callback(balance.toString());
+        });
+    },
+    remove: function(id, callback) {
+        db.collection('page', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.remove({_id: id}, {w:1}, callback);
+            }
         });
     }
 };
@@ -310,5 +319,4 @@ exports.Category = {
         });
     }
 };
-
 

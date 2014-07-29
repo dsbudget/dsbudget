@@ -9,7 +9,7 @@
     <div class="page-summary" ng-repeat="page in doc.pages | filter:page_query | orderBy:orderProp">
         <div class="row">
             <div class="col-md-4">
-                <a href="#/{{page._id}}"><b>{{page.name}}</b></a>
+                <a href="#/{{page._id}}"><b>{{page.name}}<span ng-show="!page.name">(Untitled)</span></b></a>
             </div>
             <div class="col-md-6">
                 <div class="progress" ng-class="{'progress-striped active' : page._active}">
@@ -26,6 +26,7 @@
 </div><!--docs-->
 
 <script type="text/ng-template" id="importdialog.html">
+<form ng-submit="ok()">
     <div class="modal-header">
         <h3>Import</h3>
     </div>
@@ -53,30 +54,56 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()" ng-disabled="showprogress">Import</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="showprogress">Import</button>
         <button class="btn btn-default" ng-click="cancel()" ng-disabled="showprogress">Cancel</button>
     </div>
+</div>
 </script>
 
 <script type="text/ng-template" id="newpagedialog.html">
+<form ng-submit="ok()">
     <div class="modal-header">
         <h3>New Page</h3>
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label>Page Name</label>
-            <input type="text" class="form-control" ng-model="$parent.name"/>
-        </div>
-        <div class="form-group">
             <label>Parent Page</label>
             <select class="form-control" ng-model="$parent.parent" ng-options="page.name for page in doc.pages | orderBy:'-end_date'">
-                <option value="">(No Parent)</option>
+                <option value="">(Blank Page)</option>
             </select>
+        </div>
+        <!--- TODO rest of this form looks too similar to page edit dialog.. should be merged? -->
+        <div class="form-group">
+            <label>Page Name</label>
+            <input type="text" class="form-control" ng-model="$parent.name" required/>
+        </div>
+        <div class="form-group">
+            <label>Note</label><br>
+            <input type="text" ng-model="$parent.desc" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label>Start Date</label><br>
+            <p class="input-group">
+                <input type="text" ng-model="$parent.start_date" class="form-control" max-date="$parent.end_date" datepicker-popup="longDate" is-open="$parent.startdpopen" required/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="openstartdatepicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+        <div class="form-group">
+            <label>End Date</label><br>
+            <p class="input-group">
+                <input type="text" ng-model="$parent.end_date" class="form-control" min-date="$parent.start_date" datepicker-popup="longDate" is-open="$parent.enddpopen" required/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="openenddatepicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()" ng-disabled="showprogress">Create</button>
-        <button class="btn btn-default" ng-click="cancel()" ng-disabled="showprogress">Cancel</button>
+        <button class="btn btn-primary" type="submit">Create</button>
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
+</form>
 </script>
 

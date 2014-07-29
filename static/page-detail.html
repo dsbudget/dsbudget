@@ -1,6 +1,6 @@
 <div class="pagename" ng-click="openpage(page)">
     <h2>
-        <small class="pull-right">{{page.end_date | date:'shortDate'}} - {{page.start_date | date:'shortDate'}}</small>
+        <small class="pull-right">{{page.start_date | date:'shortDate'}} - {{page.end_date | date:'shortDate'}}</small>
         {{page.name}}
     </h2>
     <p class="help-block" ng-show="page.desc">{{page.desc}}</p>
@@ -110,13 +110,14 @@
         </div>
         <div class="expense-total row">
             <div class="col-md-7"><button type="button" class="btn btn-default btn-xs expense-new" ng-click="openexpense(category)">Add New Expense</button></div>
-            <div class="col-md-3 text-right"><b ng-if="category.expenses.length > 0">Remaining</b></div>
-            <div class="col-md-2 text-right"><b ng-if="category.expenses.length > 0">{{category._remaining | currency}}</b></div>
+            <div class="col-md-3 text-right text-muted"><b ng-if="category.expenses.length > 0">Remaining</b></div>
+            <div class="col-md-2 text-right text-muted"><b ng-if="category.expenses.length > 0">{{category._remaining | currency}}</b></div>
         </div>
     </div>
 </div>
 
 <script type="text/ng-template" id="expensedialog.html">
+<form ng-submit="ok()">
     <div class="modal-header">
         <h3><span ng-if="_new">New</span> Expense <small>for {{category.name}}</small></h3>
     </div>
@@ -147,34 +148,44 @@
     </div>
     <div class="modal-footer">
         <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button type="submit" class="btn btn-primary">OK</button>
         <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
+</form>
 </script>
 
 <script type="text/ng-template" id="incomedialog.html">
+<form ng-submit="ok()">
     <div class="modal-header">
         <h3><span ng-if="_new">New</span> Income</h3>
     </div>
     <div class="modal-body">
-        <input type="checkbox" ng-model="income._is_balance"/> Use balance from another page. 
-        <div class="form-group">
-            <label for="amount">Amount</label><br>
-            <input type="text" ng-model="income.amount" class="form-control" required/>
+        <input type="checkbox" ng-model="_is_balance"/> Use balance from another page. 
+        <div ng-show="!_is_balance">
+            <div class="form-group">
+                <label for="amount">Amount</label><br>
+                <input type="text" ng-model="income.amount" class="form-control" ng-required="!_is_balance"/>
+            </div>
+            <div class="form-group">
+                <label for="name">Note</label><br>
+                <input type="text" ng-model="income.name" class="form-control"/>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="name">Note</label><br>
-            <input type="text" ng-model="income.name" class="form-control"/>
+        <div ng-show="_is_balance">
+            <select class="form-control" ng-model="_balance_from" ng-options="page.name for page in pages | orderBy:'-end_date'">
+            </select>
         </div>
     </div>
     <div class="modal-footer">
         <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button type="submit" class="btn btn-primary">OK</button>
         <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
+</form>
 </script>
 
 <script type="text/ng-template" id="pagedialog.html">
+<form ng-submit="ok()">
     <div class="modal-header">
         <h3><span ng-if="_new">New </span>Page</h3>
     </div>
@@ -207,13 +218,15 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn pull-left" ng-show="!_new" ng-click="remove()" ng-confirm-click="Are you sure to remove this page?">Remove</button>
+        <button type="submit" class="btn btn-primary">OK</button>
         <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
+</form>
 </script>
 
 <script type="text/ng-template" id="categorydialog.html">
+<form ng-submit="ok()">
     <div class="modal-header">
         <h3>
             <span ng-if="_new">New Category</span>
@@ -239,9 +252,10 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn pull-left" ng-show="!_new" ng-click="remove()" ng-confirm-click="Are you sure to remove this category?">Remove</button>
+        <button type="submit" class="btn btn-primary">OK</button>
         <button class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
+</form>
 </script>
 
