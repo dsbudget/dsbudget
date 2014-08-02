@@ -302,6 +302,21 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
             res.redirect('/'); 
         }
     });
+    app.get('/page/balance/:id', function(req, res) {
+        if(req.user) {
+            model.Page.getBalance(new mongo.ObjectID(req.params.id), function(err, balance) {
+                if(err) {
+                    res.statusCode = 500;
+                    res.write(err);
+                } else {
+                    //all good
+                    res.statusCode = 200;
+                    res.write(balance);
+                }
+                res.end();
+            });
+        }
+    });
     app.get('/docs', function(req, res){
         var now = new Date().getTime();
         if(req.user) {
@@ -312,10 +327,6 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     model.Page.findByDocID(doc._id, function(err, pages) {
                         //add some optional parameters to each page
                         async.forEach(pages, function(page, next_page) {
-                            page._pct = page.total_expense/page.total_income*100;
-                            if(page.start_date < now && page.end_date > now) {
-                                page._active = true; 
-                            }
                             next_page();
                         }, function() {
                             doc.pages = pages;
@@ -328,7 +339,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
             });
         }
     });
-    app.get('/page/detail', function(req, res){
+    app.get('/page/detail', function(req, res) {
         if(req.user) {
             //load page requested
             model.Page.findByID(new mongo.ObjectID(req.query.id), function(err, page) {
@@ -337,10 +348,12 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     res.statusCode = 404;
                     res.end();
                     return;
-                } 
+                }
                 model.Doc.getAuth(req.user, page.doc_id, function(err, auth) {
                     if(auth.canread) {
                         model.Income.findByPageID(page._id, function(err, incomes) {
+                            /*
+                            //console.dir(incomes);
                             //for balance income, lookup the real page name & balance
                             async.forEach(incomes, function(income, next_income) {
                                 if(income.balance_from) {
@@ -363,6 +376,12 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                                     page.categories = categories;
                                     res.json(page);
                                 });
+                            });
+                            */
+                            model.Category.findByPageID(page._id, function(err, categories) {
+                                page.incomes = incomes;
+                                page.categories = categories;
+                                res.json(page);
                             });
                         });
                     }
@@ -452,15 +471,12 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                                 name: expense.name, //make sure it's string?
                                 tentative: expense.tentative //make sure it's bool?
                             }
-                            if(req.body.eid) {
+                            if(req.body.eid != undefined) {
                                 cat.expenses[req.body.eid] = clean_expense;
                             } else {
                                 cat.expenses.push(clean_expense);
                             }
-                            console.dir(cat);
-                            model.Category.update(cat._id, {$set: {expenses: cat.expenses}}, function(err, id) {
-                                console.log("done");
-                                console.log(err);
+                            model.Category.update(page_id, cat._id, {$set: {expenses: cat.expenses}}, function(err, id) {
                                 if(err) {
                                     console.error(err);
                                     res.statusCode = 500;
@@ -489,7 +505,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     model.Doc.getAuth(req.user, docid, function(err, auth) {
                         if(auth.canwrite) {
                             cat.expenses.splice(eid, 1);
-                            model.Category.update(cat._id, {$set: {expenses: cat.expenses}}, function(err, id) {
+                            model.Category.update(page_id, cat._id, {$set: {expenses: cat.expenses}}, function(err, id) {
                                 if(err) {
                                     console.error(err);
                                     res.statusCode = 500;
@@ -507,12 +523,39 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
         }
     });
     app.post('/income', function(req, res) {
+        function upsert(id, income) {
+            if(id) {
+                var iid = new mongo.ObjectID(id);
+                model.Income.update(iid, {$set: income}, function(err) {
+                    if(err) {
+                        console.error(err);
+                        res.statusCode = 500;
+                        res.write('update failed');
+                    } else {
+                        res.statusCode = 200;
+                        res.write('ok');
+                    }
+                    res.end();
+                });
+            } else {
+                model.Income.create(income, function(err, newid) {
+                    if(err) {
+                        console.error(err);
+                        res.statusCode = 500;
+                        res.write('insert failed');
+                    } else {
+                        res.statusCode = 200;
+                        res.write(newid.toString());
+                    }
+                    res.end();
+                });
+            }
+        }
         if(req.user) {
             var income = req.body.income;
             var page_id = new mongo.ObjectID(income.page_id);
             model.Page.findByID(page_id, function(err, page) {
-                var docid = page.doc_id;
-                model.Doc.getAuth(req.user, docid, function(err, auth) {
+                model.Doc.getAuth(req.user, page.doc_id, function(err, auth) {
                     if(auth.canwrite) {
                         var clean_income = {
                             page_id: page_id,
@@ -521,37 +564,22 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                         if(income.balance_from) {
                             //convert to mongo id
                             clean_income.balance_from = new mongo.ObjectID(income.balance_from);
+                            //make sure the page belongs to the same doc
+                            model.Page.findByID(clean_income.balance_from, function(err, balance_page) {
+                                if(balance_page.doc_id.equals(page.doc_id)) {
+                                    upsert(income._id, clean_income);
+                                } else {
+                                    console.dir("can't use page from other doc.. for security reason");
+                                    console.dir(page);
+                                    console.dir(balance_page);
+                                }
+                            });
                         } else {
                             clean_income.amount = parseFloat(income.amount);
+                            upsert(income._id, clean_income);
                         }
-                        if(income._id) {
-                            var iid = new mongo.ObjectID(income._id);
-                            model.Income.update(iid, {$set: clean_income}, function(err) {
-                                if(err) {
-                                    console.error(err);
-                                    res.statusCode = 500;
-                                    res.write('update failed');
-                                } else {
-                                    res.statusCode = 200;
-                                    res.write('ok');
-                                }
-                                res.end();
-                            });
-                        } else {
-                            model.Income.create(clean_income, function(err, id) {
-                                if(err) {
-                                    console.error(err);
-                                    res.statusCode = 500;
-                                    res.write('insert failed');
-                                } else {
-                                    res.statusCode = 200;
-                                    res.write(id.toString());
-                                }
-                                res.end();
-                            });
-                        }
-                    }
-                }); 
+                     }
+                });
             });
         }
     });
@@ -572,7 +600,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                                 //ok proceed...
                                 delete category._id; //can't update _id
                                 category.page_id = cat.page_id; //replace string to ObjectID
-                                model.Category.update(cat._id, {$set: category}, 
+                                model.Category.update(cat.page_id, cat._id, {$set: category}, 
                                 function(err, id) {
                                     if(err) {
                                         console.error(err);
@@ -628,7 +656,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     model.Doc.getAuth(req.user, docid, function(err, auth) {
                         if(auth.canwrite) {
                             //go ahead with removal
-                            model.Category.remove(category._id, function(err) {
+                            model.Category.remove(page_id, category._id, function(err) {
                                 if(err) {
                                     console.error(err);
                                     res.statusCode = 500;
@@ -657,7 +685,7 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
                     model.Doc.getAuth(req.user, docid, function(err, auth) {
                         if(auth.canwrite) {
                             //go ahead with removal
-                            model.Income.remove(income._id, function(err) {
+                            model.Income.remove(page_id, income._id, function(err) {
                                 if(err) {
                                     console.error(err);
                                     res.statusCode = 500;
@@ -728,9 +756,12 @@ mongo.MongoClient.connect(config.mongo_url, function(err, db) {
         function copyincomes(from_pageid, to_pageid) {
             model.Income.findByPageID(from_pageid, function(err, incomes) {
                 incomes.forEach(function(income) {
-                    income.page_id = to_pageid;
-                    delete income._id; //necessary?
-                    model.Income.create(income);
+                    //don't copy balance income
+                    if(!income.balance_from) {
+                        income.page_id = to_pageid;
+                        delete income._id; //necessary?
+                        model.Income.create(income);
+                    }
                 });
             });
         }

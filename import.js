@@ -12,7 +12,7 @@ String.prototype.insert = function (index, string) {
     return string + this;
 };
 
-function parse_page(model, doc_id, opts, page, next_page) {
+function process_page(model, doc_id, opts, page, next_page) {
     //skip "New Page"
     if(page.$.ctime == 0) {
         next_page();
@@ -35,12 +35,12 @@ function parse_page(model, doc_id, opts, page, next_page) {
         name: page.$.name,
         desc: page.$.description,
         start_date: parseInt(page.$.ctime)*1000,
-        end_date: parseInt(page.$.ctime)*1000 + 3600*1000*24*30 //TODO - set it to end of month? 
-        /*
-        _total_income: null, //will be reset when first accessed
-        _total_expense: null, // will be reset when first accessed
-        balance_to: null //income id where the balance goes to
-        */
+        end_date: parseInt(page.$.ctime)*1000 + 3600*1000*24*30, //TODO - set it to end of month? 
+
+        //will be reset later
+        _total_income: null,
+        _total_expense: null
+
         /*
         show_views: {
             balance: (page.$.hide_balance == "yes" ? true : false),
@@ -167,7 +167,7 @@ function parse_page(model, doc_id, opts, page, next_page) {
                 next_spent();
             }, function() {
                 async.series([
-                    //optionally create recurring category
+                    //optionally create reocurring category
                     function(next_type) {
                         if(recurring_expenses.length > 0) {
                             var db_cat = extend({}, db_category, {
@@ -176,7 +176,6 @@ function parse_page(model, doc_id, opts, page, next_page) {
                                 name: db_category.name + " (Recurring)",
                                 expenses: recurring_expenses
                             });
-                            //console.dir(db_cat);
                             model.Category.create(db_cat, function(err, category_id) {
                                 if(err) throw err;
                                 next_type();
@@ -231,6 +230,66 @@ function parse_page(model, doc_id, opts, page, next_page) {
     });
 }
 
+function reset_balance(model, docid, callback) {
+    //reset _balance_from reference with actual page_id
+    model.Page.findByDocID(docid, function(err, doc_pages) {
+        function findPageByName(name) {
+            for(var i in doc_pages) {
+                var searching_doc_page = doc_pages[i];
+                if(searching_doc_page.name == name) return searching_doc_page;
+            };
+            console.error("failed to find page with name: [" + name+ "]");
+            return null;
+        }
+
+        function reset_balance_from(doc_income, next) {
+            if(doc_income._balance_from) {
+                var balance_page = findPageByName(doc_income._balance_from);
+                
+                //in order to prevent page balance to be applied to more than 1 page, let's set "balance_to" 
+                //and allow only 1 child.
+                //TODO - should I also check for date to prevent circular link?
+                if(balance_page.balance_to) {
+                    console.log("balance_to on page "+balance_page._id+" is already set to "+balance_page.balance_to);
+                    //turn it into real balance with amount:0
+                    model.Income.update(doc_income._id, {
+                        $set: {
+                            amount: '0',
+                            name: "Invalid balance originally from "+doc_income._balance_from+" (only 1 child page allowed)"
+                        },
+                        $unset: {_balance_from: 1}
+                    }, next); 
+                } else {
+                    model.Income.update(doc_income._id, {
+                        $set: {
+                            balance_from: balance_page._id
+                        },
+                        $unset: {_balance_from: 1}
+                    }, function() {
+                        //update balance_to on page also
+                        //console.log("setting balance_to on "+balance_page._id+" to be "+doc_income._id);
+                        model.Page.update(balance_page._id, {
+                            $set: { balance_to: doc_income._id }
+                        }, next);
+                    });
+                }
+            } else {
+                next();
+            };
+        }
+
+        async.forEach(doc_pages, function(doc_page, next_doc_page) {
+            model.Income.findByPageID(doc_page._id, function(err, doc_incomes) {
+                if(err) {
+                    consooe.log("failed to find incomes by page id " + doc_page._id);
+                } else {
+                    async.forEach(doc_incomes, reset_balance_from, next_doc_page);
+                } 
+            });
+        }, callback);
+    });
+}
+
 exports.dsbudget = function(model, docid, path, opts, callback) {
     fs.readFile(path, function(err, data) {
         if(err) {
@@ -242,65 +301,17 @@ exports.dsbudget = function(model, docid, path, opts, callback) {
                     console.log("failed to parse "+path);
                     callback("Failed to parse provided dsbudget document");
                 } else {
-                    var docversion = doc.Budget.$.docversion;
-                    var openpage = doc.Budget.$.openpage;
+                    //var docversion = doc.Budget.$.docversion;
+                    //var openpage = doc.Budget.$.openpage;
                     var pages = doc.Budget.Page;
                     async.forEach(pages, function(page, next) {
-                        parse_page(model, docid, opts, page, next);
+                        process_page(model, docid, opts, page, next);
                     }, function(err) {
-                        //reset _balance_from reference with actual page_id
-                        model.Page.findByDocID(docid, function(err, doc_pages) {
-                            function findPageByName(name) {
-                                for(var i in doc_pages) {
-                                    var searching_doc_page = doc_pages[i];
-                                    if(searching_doc_page.name == name) return searching_doc_page;
-                                };
-                                console.error("failed to find page with name: [" + name+ "]");
-                                return null;
-                            }
-
-                            function reset_balance_from(doc_income, next) {
-                                if(doc_income._balance_from) {
-                                    var balance_page = findPageByName(doc_income._balance_from);
-                                    if(balance_page.balance_to) {
-                                        console.log("balance_to on page "+balance_page._id+" is already set to "+balance_page.balance_to);
-                                        //turn it into real balance with amount:0
-                                        model.Income.update(doc_income._id, {
-                                            $set: {
-                                                amount: '0',
-                                                name: "Invalid balance originally from "+doc_income._balance_from+" (only 1 child page allowed)"
-                                            },
-                                            $unset: {_balance_from: 1}
-                                        }, next); 
-                                    } else {
-                                        model.Income.update(doc_income._id, {
-                                            $set: {
-                                                balance_from: balance_page._id
-                                            },
-                                            $unset: {_balance_from: 1}
-                                        }, function() {
-                                            //update balance_to on page also
-                                            console.log("setting balance_to on "+balance_page._id+" to be "+doc_income._id);
-                                            model.Page.update(balance_page._id, {
-                                                $set: { balance_to: doc_income._id }
-                                            }, next);
-                                        });
-                                    }
-                                } else {
-                                    next();
-                                };
-                            }
-
-                            async.forEach(doc_pages, function(doc_page, next_doc_page) {
-                                model.Income.findByPageID(doc_page._id, function(err, doc_incomes) {
-                                    if(err) {
-                                        consooe.log("failed to find incomes by page id " + doc_page._id);
-                                    } else {
-                                        async.forEach(doc_incomes, reset_balance_from, next_doc_page);
-                                    } 
-                                });
-                            }, callback);
-                        });
+                        if(err) {
+                            callback("Failed to process a page");
+                        } else {
+                            reset_balance(model, docid, callback);
+                        }
                     });
                 }
             });

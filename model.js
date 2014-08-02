@@ -63,6 +63,7 @@ exports.Page = {
             }
         });
     },
+
     create: function(page, callback) {
         db.collection('page', function(err, col) {
             if(err) callback(err)
@@ -84,53 +85,84 @@ exports.Page = {
             }
         });
     },
-    getBalance: function(id, callback) {
-        //console.log("computing page balance for "+id);
-        async.parallel({
-            total_income: function(next) {
-                var total = decimal('0');
-                //console.log("looking for income unage page id " + id);
-                exports.Income.findByPageID(id, function(err, incomes) {
-                    async.forEach(incomes, function(income, next_income) {
-                        if(income.balance_from) {
-                            //recurse (for now)
-                            //console.dir(income);
-                            //console.log("in-calling getBlanace for "+income.balance_from);
-                            exports.Page.getBalance(income.balance_from, function(amount) {
-                                total = total.add(amount);
-                                next_income();
-                            });
-                        } else {
-                            //console.log(total);
-                            //console.dir(income);
-                            total = total.add(income.amount);
-                            next_income();
-                        }
-                    }, function() {
-                        //console.log("total income was "+total);
-                        next(null, total);
-                    });
-                });
-            },
-            total_expense: function(next) {
-                var total = decimal('0');
-                exports.Category.findByPageID(id, function(err, categories) {
-                    categories.forEach(function(category) {
-                        category.expenses.forEach(function(expense) {
-                            if(!expense.tentative) {
-                                total = total.add(expense.amount);
-                                //console.log("adding " + expense.amount);
-                                //console.log("total " + total);
-                            }
-                        });
-                    });
-                    next(null, total);
-                });
+
+    //if any income entries change, we need to invalidate it
+    invalidateIncome: function(id, callback) {
+        db.collection('page', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.update({_id: id}, {$set: {_total_income: null}}, {w:1}, callback);
             }
-        }, function(err, ret){
-            var balance = ret.total_income.sub(ret.total_expense);
-            //console.log("balance:"+balance);
-            callback(balance.toString());
+        });
+    },
+    
+    //if any category entries change, we need to invalidate it
+    invalidateExpense: function(id, callback) {
+        db.collection('page', function(err, col) {
+            if(err) callback(err)
+            else {
+                col.update({_id: id}, {$set: {_total_expense: null}}, {w:1}, callback);
+            }
+        });
+    },
+
+    //get balance from page cache, or calculate if it's not set
+    getBalance: function(id, callback) {
+        exports.Page.findByID(id, function(err, page) {
+            async.parallel({
+                total_income: function(next) {
+                    if(page._total_income) {
+                        next(null, decimal(page._total_income));
+                    } else {
+                        //compute total income and cache
+                        var total = decimal('0');
+                        exports.Income.findByPageID(id, function(err, incomes) {
+                            async.forEach(incomes, function(income, next_income) {
+                                if(income.balance_from) {
+                                    //recurse if it's balance income
+                                    exports.Page.getBalance(income.balance_from, function(err, amount) {
+                                        total = total.add(amount);
+                                        next_income();
+                                    });
+                                } else {
+                                    total = total.add(income.amount);
+                                    next_income();
+                                }
+                            }, function() {
+                                //cache total
+                                exports.Page.update(id, {$set: {_total_income: total.toString()}}, function() {
+                                    next(null, total);
+                                });
+                            });
+                        });
+                    }
+                },
+                total_expense: function(next) {
+                    if(page._total_expense) {
+                        next(null, decimal(page._total_expense));
+                    } else {
+                        var total = decimal('0');
+                        exports.Category.findByPageID(id, function(err, categories) {
+                            categories.forEach(function(category) {
+                                category.expenses.forEach(function(expense) {
+                                    if(!expense.tentative) {
+                                        total = total.add(expense.amount);
+                                        //console.log("adding " + expense.amount);
+                                        //console.log("total " + total);
+                                    }
+                                });
+                            });
+                            //cache total
+                            exports.Page.update(id, {$set: {_total_expense: total.toString()}}, function() {
+                                next(null, total);
+                            });
+                        });
+                    }
+                }
+            }, function(err, ret){
+                var balance = ret.total_income.sub(ret.total_expense);
+                callback(err, balance.toString());
+            });
         });
     },
     remove: function(id, callback) {
@@ -207,20 +239,14 @@ exports.Income = {
         db.collection('income', function(err, col) {
             if(err) callback(err)
             else {
-                col.find({page_id:id}).toArray(callback);
-                /*
+                //col.find({page_id:id}).toArray(callback);
                 col.find({page_id:id}).toArray(function(err, incomes) {
                     //set amount for balance incomes
-                    //console.dir(incomes);
                     async.forEach(incomes, function(income, next) {
                         if(income.balance_from) {
-                            //load page name
                             exports.Page.findByID(income.balance_from, function(err, page) {
-                                income.page_name = page.name;
-                                //load balance amount
-                                console.log("requesting getBlance while loading income for "+page.name+" ("+page._id+")");
-                                exports.Page.getBalance(income.balance_from, function(amount) {
-                                    //console.log("balance: "+amount);
+                                income.page_name = page.name; 
+                                exports.Page.getBalance(income.balance_from, function(err, amount) {
                                     income.amount = amount;
                                     next();
                                 });
@@ -229,11 +255,9 @@ exports.Income = {
                             next();
                         }
                     }, function() {
-                        //console.dir(incomes);
                         callback(err, incomes);
                     });
                 });
-                */
             }
         });
     },
@@ -243,9 +267,12 @@ exports.Income = {
             else {
                 //console.log("inserting income");
                 //console.dir(page);
-                col.insert(income, {safe:true}, function(err, recs) {
+                exports.Page.invalidateIncome(income.page_id, function(err) {
                     if(err) callback(err);
-                    callback(null, recs[0]._id);
+                    else col.insert(income, {safe:true}, function(err, recs) {
+                        if(err) callback(err);
+                        callback(null, recs[0]._id);
+                    });
                 });
             }
         });
@@ -257,15 +284,21 @@ exports.Income = {
         db.collection('income', function(err, col) {
             if(err) callback(err)
             else {
-                col.update({_id: id}, data, {w:1}, callback);
+                exports.Page.invalidateIncome(data.page_id, function(err) {
+                    if(err) callback(err);
+                    else col.update({_id: id}, data, {w:1}, callback);
+                });
             }
         });
     },
-    remove: function(id, callback) {
+    remove: function(page_id, id, callback) {
         db.collection('income', function(err, col) {
             if(err) callback(err)
             else {
-                col.remove({_id: id}, {w:1}, callback);
+                exports.Page.invalidateIncome(page_id, function(err) {
+                    if(err) callback(err);
+                    else col.remove({_id: id}, {w:1}, callback);
+                });
             }
         });
     }
@@ -292,29 +325,43 @@ exports.Category = {
         db.collection('category', function(err, col) {
             if(err) callback(err)
             else {
-                col.insert(category, {safe:true}, function(err, recs) {
+                //let's go ahead and invalidate expense.. although new category shouldn't have any expense, import will call create with
+                //expenses already populated, and I just feel it's more consistent
+                exports.Page.invalidateExpense(category.page_id, function(err) {
                     if(err) callback(err);
-                    callback(null, recs[0]._id);
+                    else {
+                        col.insert(category, {safe:true}, function(err, recs) {
+                            if(err) callback(err);
+                            callback(null, recs[0]._id);
+                        });
+                    }
                 });
             }
         });
     },
-    update: function(id, data, callback) {
+    update: function(page_id, id, data, callback) {
         db.collection('category', function(err, col) {
             if(err) callback(err)
             else {
-                //console.log("updating: "+id);
-                //console.dir(data);
-                delete data._id;
-                col.update({_id: id}, data, {w:1}, callback);
+                exports.Page.invalidateExpense(page_id, function(err) {
+                    if(err) callback(err);
+                    else {
+                        delete data._id;
+                        col.update({_id: id}, data, {w:1}, callback);
+                    }
+                });
             }
         });
     },
-    remove: function(id, callback) {
+    remove: function(page_id, id, callback) {
         db.collection('category', function(err, col) {
             if(err) callback(err)
             else {
-                col.remove({_id: id}, {w:1}, callback);
+                exports.Page.invalidateExpense(page_id, function(err) {
+                    if(err) callback(err);
+                    else col.remove({_id: id}, {w:1}, callback);
+                });
+                //TODO - shouldn't I remove the orphaned expenses?
             }
         });
     }

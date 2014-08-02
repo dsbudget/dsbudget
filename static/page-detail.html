@@ -147,9 +147,9 @@
         This is a scheduled (tentative) expense. Don't subtract it from the remainin yet.
     </div>
     <div class="modal-footer">
-        <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
-        <button type="submit" class="btn btn-primary">OK</button>
-        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button class="btn pull-left" type="button" ng-show="!_new" ng-click="remove()">Remove</button>
+        <button class="btn btn-primary" type="submit">OK</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </form>
 </script>
@@ -160,26 +160,25 @@
         <h3><span ng-if="_new">New</span> Income</h3>
     </div>
     <div class="modal-body">
-        <input type="checkbox" ng-model="_is_balance"/> Use balance from another page. 
-        <div ng-show="!_is_balance">
+        <input type="checkbox" ng-model="$parent._is_balance"/> Use balance from another page. 
+        <div ng-show="!$parent._is_balance">
             <div class="form-group">
                 <label for="amount">Amount</label><br>
-                <input type="text" ng-model="income.amount" class="form-control" ng-required="!_is_balance"/>
+                <input type="text" ng-model="income.amount" class="form-control" placeholder="0.00" ng-required="!$parent._is_balance"/>
             </div>
             <div class="form-group">
                 <label for="name">Note</label><br>
                 <input type="text" ng-model="income.name" class="form-control"/>
             </div>
         </div>
-        <div ng-show="_is_balance">
-            <select class="form-control" ng-model="_balance_from" ng-options="page.name for page in pages | orderBy:'-end_date'">
-            </select>
+        <div ng-show="$parent._is_balance">
+            <select class="form-control" ng-model="$parent._balance_from" ng-options="page.name for page in pages | orderBy:'-end_date'"/>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn pull-left" ng-show="!_new" ng-click="remove()">Remove</button>
-        <button type="submit" class="btn btn-primary">OK</button>
-        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button class="btn pull-left" type="button" ng-show="!_new" ng-click="remove()">Remove</button>
+        <button class="btn btn-primary" type="submit">OK</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </form>
 </script>
@@ -218,9 +217,9 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn pull-left" ng-show="!_new" ng-click="remove()" ng-confirm-click="Are you sure to remove this page?">Remove</button>
+        <button type="button" class="btn pull-left" ng-show="!_new" ng-click="remove()" ng-confirm-click="Are you sure to remove this page?">Remove</button>
         <button type="submit" class="btn btn-primary">OK</button>
-        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
 </form>
 </script>
@@ -244,7 +243,7 @@
         </div>
         <div ng-if="!category.recurring" class="form-group">
             <label for="amount">Amount</label><br>
-            <input type="text" ng-model="category.budget" class="form-control" required/>
+            <input type="text" ng-model="category.budget" class="form-control" placeholder="0.00" required/>
         </div>
         <div ng-if="!category.recurring" class="form-group">
             <label for="color">Color</label><br>
@@ -252,9 +251,9 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn pull-left" ng-show="!_new" ng-click="remove()" ng-confirm-click="Are you sure to remove this category?">Remove</button>
+        <button type="button" class="btn pull-left" ng-show="!_new" ng-click="remove()" ng-confirm-click="Are you sure to remove this category?">Remove</button>
         <button type="submit" class="btn btn-primary">OK</button>
-        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
     </div>
 </form>
 </script>

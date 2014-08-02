@@ -272,6 +272,7 @@ CategoryCtrl.$inject = ['$scope', '$modalInstance', 'page', 'category', 'recurri
 
 function IncomeCtrl($scope, $http, $modalInstance, page, income) {
 
+    //load pages for balance income
     $scope.pages = []; 
     $http.get('/docs').success(function(docs) {
         //find doc we want..
@@ -286,13 +287,9 @@ function IncomeCtrl($scope, $http, $modalInstance, page, income) {
             }
         });
         if($scope.income.balance_from) {
-            $scope._is_balance = true;
             //search for selected page
             $scope.pages.forEach(function(p) {
-                console.log("comparing "+p._id+" and "+$scope.income.balance_from);
                 if(p._id == $scope.income.balance_from) {
-                    console.log("found ");
-                    console.dir(p);
                     $scope._balance_from = p; 
                 }
             });
@@ -305,6 +302,12 @@ function IncomeCtrl($scope, $http, $modalInstance, page, income) {
         $scope._new = true;
         $scope.income = {page_id: page._id};
     }
+
+    $scope._is_balance = false;
+    if($scope.income.balance_from) {
+        $scope._is_balance = true;
+    }
+
     $scope.opendatepicker = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -314,7 +317,19 @@ function IncomeCtrl($scope, $http, $modalInstance, page, income) {
         $modalInstance.dismiss('remove');
     };
     $scope.ok = function() {
-        $modalInstance.close($scope);
+        if($scope._balance_from) {
+            $scope.income.balance_from = $scope._balance_from._id;
+
+            //following will be reset when page is loaded to the actual value
+            $scope.income.page_name = $scope._balance_from.name; 
+            //get page balance
+            $http.get('/page/balance/'+$scope._balance_from._id).success(function(amount) {
+                $scope.income.amount = amount;
+                $modalInstance.close($scope);
+            });
+        } else {
+            $modalInstance.close($scope);
+        }
     };
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
@@ -540,8 +555,18 @@ function($scope, $http, $modal, $routeParams, $location) {
         //console.dir(income);
 
         modal.result.then(function(scope) {
-            //I am not sure why I have to do this for income but not expense..
-            scope.income.amount = parseFloat(scope.income.amount);
+            /*
+            if(scope.balance_from) {
+                scope.income.balance_from = scope.income.balance_from._id;
+                delete scope.income.name;
+                delete scope.income.amount;
+            } else {
+                //I am not sure why I have to do this for income but not expense..
+                scope.income.amount = parseFloat(scope.income.amount); 
+            }
+            console.dir(scope);
+            console.dir(scope.income);
+            */
 
             $http.post('/income', {
                 income: scope.income
