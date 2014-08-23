@@ -13,4 +13,7 @@ results
 
 npm-debug.log
 node_modules
-config.json
+
+config/secrets.json
+
+barn
