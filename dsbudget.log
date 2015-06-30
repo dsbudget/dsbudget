@@ -1,0 +1,354 @@
+2013-12-01 11:35:43,346 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2013-12-01 11:35:43,713 INFO main@367 org.apache.coyote.http11.Http11BaseProtocol - Initializing Coyote HTTP/1.1 on http-127.0.0.1-16091
+2013-12-01 11:35:43,724 INFO main@378 org.apache.coyote.http11.Http11BaseProtocol - Starting Coyote HTTP/1.1 on http-127.0.0.1-16091
+2013-12-01 11:35:43,834 INFO main@488 dsbudget.Main - Opening a browser...
+2013-12-01 11:35:44,005 INFO http-127.0.0.1-16091-Processor4@659 dsbudget.servlet.BudgetServletBase - Loaded 3 pages
+2013-12-01 11:35:44,005 INFO http-127.0.0.1-16091-Processor4@659 dsbudget.servlet.BudgetServletBase - Backing up the current document to deploy\BudgetDocument.xml.backup.2013-12-01.11-35-44
+2013-12-01 11:35:44,030 INFO http-127.0.0.1-16091-Processor4@684 dsbudget.servlet.BudgetServletBase - keep_backup_for set to 1 days
+2013-12-01 11:35:44,031 INFO http-127.0.0.1-16091-Processor4@685 dsbudget.servlet.BudgetServletBase - completed init
+2013-12-01 11:35:44,254 INFO http-127.0.0.1-16091-Processor4@908 dsbudget.servlet.BudgetServletBase - completed init
+2013-12-01 11:35:48,304 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2013-12-01 11:35:48,675 ERROR main@371 org.apache.coyote.http11.Http11BaseProtocol - Error initializing endpoint
+java.net.BindException: Address already in use: JVM_Bind:16091
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.initEndpoint(PoolTcpEndpoint.java:298)
+	at org.apache.coyote.http11.Http11BaseProtocol.init(Http11BaseProtocol.java:139)
+	at org.apache.catalina.connector.Connector.initialize(Connector.java:1017)
+	at org.apache.catalina.startup.Embedded.start(Embedded.java:828)
+	at dsbudget.Main.startTomcat(Main.java:225)
+	at dsbudget.Main.main(Main.java:82)
+2013-12-01 11:35:48,677 ERROR main@373 dsbudget.Main - LifecycleException:  Protocol handler initialization failed: java.net.BindException: Address already in use: JVM_Bind:16091
+2013-12-01 11:35:48,698 INFO main@394 dsbudget.Main - Opening a browser...
+2013-12-01 11:37:44,926 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2013-12-01 11:37:45,291 ERROR main@365 org.apache.coyote.http11.Http11BaseProtocol - Error initializing endpoint
+java.net.BindException: Address already in use: JVM_Bind:16091
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.initEndpoint(PoolTcpEndpoint.java:298)
+	at org.apache.coyote.http11.Http11BaseProtocol.init(Http11BaseProtocol.java:139)
+	at org.apache.catalina.connector.Connector.initialize(Connector.java:1017)
+	at org.apache.catalina.startup.Embedded.start(Embedded.java:828)
+	at dsbudget.Main.startTomcat(Main.java:225)
+	at dsbudget.Main.main(Main.java:82)
+2013-12-01 11:37:45,293 ERROR main@367 dsbudget.Main - LifecycleException:  Protocol handler initialization failed: java.net.BindException: Address already in use: JVM_Bind:16091
+2013-12-01 11:37:45,314 INFO main@388 dsbudget.Main - Opening a browser...
+2013-12-01 11:41:00,126 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2013-12-01 11:41:00,506 ERROR main@380 org.apache.coyote.http11.Http11BaseProtocol - Error initializing endpoint
+java.net.BindException: Address already in use: JVM_Bind:16091
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.initEndpoint(PoolTcpEndpoint.java:298)
+	at org.apache.coyote.http11.Http11BaseProtocol.init(Http11BaseProtocol.java:139)
+	at org.apache.catalina.connector.Connector.initialize(Connector.java:1017)
+	at org.apache.catalina.startup.Embedded.start(Embedded.java:828)
+	at dsbudget.Main.startTomcat(Main.java:225)
+	at dsbudget.Main.main(Main.java:82)
+2013-12-01 11:41:00,508 ERROR main@382 dsbudget.Main - LifecycleException:  Protocol handler initialization failed: java.net.BindException: Address already in use: JVM_Bind:16091
+2013-12-01 11:41:00,530 INFO main@404 dsbudget.Main - Opening a browser...
+2014-01-18 19:06:24,928 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:06:25,300 INFO main@372 org.apache.coyote.http11.Http11BaseProtocol - Initializing Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:06:25,312 INFO main@384 org.apache.coyote.http11.Http11BaseProtocol - Starting Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:06:25,514 INFO main@586 dsbudget.Main - Opening a browser...
+2014-01-18 19:06:25,683 INFO http-127.0.0.1-16091-Processor4@755 dsbudget.servlet.BudgetServletBase - Loaded 3 pages
+2014-01-18 19:06:25,683 INFO http-127.0.0.1-16091-Processor4@755 dsbudget.servlet.BudgetServletBase - Backing up the current document to deploy\BudgetDocument.xml.backup.2014-01-18.19-06-25
+2014-01-18 19:06:25,706 INFO http-127.0.0.1-16091-Processor4@778 dsbudget.servlet.BudgetServletBase - keep_backup_for set to 1 days
+2014-01-18 19:06:25,706 INFO http-127.0.0.1-16091-Processor4@778 dsbudget.servlet.BudgetServletBase - Removing old backup file: deploy\BudgetDocument.xml.backup.2013-12-01.11-35-44
+2014-01-18 19:06:25,706 INFO http-127.0.0.1-16091-Processor4@778 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:06:25,980 INFO http-127.0.0.1-16091-Processor1@1052 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:06:30,805 ERROR http-127.0.0.1-16091-Processor7@5877 org.apache.catalina.core.ContainerBase.[null].[localhost].[/dsbudget].[DivRepServlet] - Servlet.service() for servlet DivRepServlet threw exception
+java.lang.ClassNotFoundException: com.javaeedev.openid.Base64
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at com.divrep.DivRep$Base64Writer.escapeAndWrite(DivRep.java:156)
+	at com.divrep.DivRep$Base64Writer.write(DivRep.java:143)
+	at java.io.PrintWriter.print(PrintWriter.java:603)
+	at com.divrep.common.DivRepTextBox.render(DivRepTextBox.java:61)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:171)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.doRequest(DivRep.java:256)
+	at com.divrep.DivRepServlet.doGet(DivRepServlet.java:66)
+	at com.divrep.DivRepServlet.doPost(DivRepServlet.java:78)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:647)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:269)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:188)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:213)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:172)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:117)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:108)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:174)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:873)
+	at org.apache.coyote.http11.Http11BaseProtocol$Http11ConnectionHandler.processConnection(Http11BaseProtocol.java:665)
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.processSocket(PoolTcpEndpoint.java:528)
+	at org.apache.tomcat.util.net.LeaderFollowerWorkerThread.runIt(LeaderFollowerWorkerThread.java:81)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:689)
+	at java.lang.Thread.run(Thread.java:744)
+2014-01-18 19:07:21,589 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:07:21,958 ERROR main@369 org.apache.coyote.http11.Http11BaseProtocol - Error initializing endpoint
+java.net.BindException: Address already in use: JVM_Bind:16091
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.initEndpoint(PoolTcpEndpoint.java:298)
+	at org.apache.coyote.http11.Http11BaseProtocol.init(Http11BaseProtocol.java:139)
+	at org.apache.catalina.connector.Connector.initialize(Connector.java:1017)
+	at org.apache.catalina.startup.Embedded.start(Embedded.java:828)
+	at dsbudget.Main.startTomcat(Main.java:225)
+	at dsbudget.Main.main(Main.java:82)
+2014-01-18 19:07:21,960 ERROR main@371 dsbudget.Main - LifecycleException:  Protocol handler initialization failed: java.net.BindException: Address already in use: JVM_Bind:16091
+2014-01-18 19:07:21,984 INFO main@395 dsbudget.Main - Opening a browser...
+2014-01-18 19:07:23,613 ERROR http-127.0.0.1-16091-Processor6@58685 org.apache.catalina.core.ContainerBase.[null].[localhost].[/dsbudget].[DivRepServlet] - Servlet.service() for servlet DivRepServlet threw exception
+java.lang.NoClassDefFoundError: com/javaeedev/openid/Base64
+	at com.divrep.DivRep$Base64Writer.escapeAndWrite(DivRep.java:156)
+	at com.divrep.DivRep$Base64Writer.write(DivRep.java:143)
+	at java.io.PrintWriter.print(PrintWriter.java:603)
+	at com.divrep.common.DivRepTextBox.render(DivRepTextBox.java:61)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:171)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.doRequest(DivRep.java:256)
+	at com.divrep.DivRepServlet.doGet(DivRepServlet.java:66)
+	at com.divrep.DivRepServlet.doPost(DivRepServlet.java:78)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:647)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:269)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:188)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:213)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:172)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:117)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:108)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:174)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:873)
+	at org.apache.coyote.http11.Http11BaseProtocol$Http11ConnectionHandler.processConnection(Http11BaseProtocol.java:665)
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.processSocket(PoolTcpEndpoint.java:528)
+	at org.apache.tomcat.util.net.LeaderFollowerWorkerThread.runIt(LeaderFollowerWorkerThread.java:81)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:689)
+	at java.lang.Thread.run(Thread.java:744)
+2014-01-18 19:07:35,275 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:07:35,633 INFO main@358 org.apache.coyote.http11.Http11BaseProtocol - Initializing Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:07:35,645 INFO main@370 org.apache.coyote.http11.Http11BaseProtocol - Starting Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:07:35,724 INFO main@449 dsbudget.Main - Opening a browser...
+2014-01-18 19:07:35,865 INFO http-127.0.0.1-16091-Processor4@590 dsbudget.servlet.BudgetServletBase - Loaded 3 pages
+2014-01-18 19:07:35,865 INFO http-127.0.0.1-16091-Processor4@590 dsbudget.servlet.BudgetServletBase - Backing up the current document to deploy\BudgetDocument.xml.backup.2014-01-18.19-07-35
+2014-01-18 19:07:35,886 INFO http-127.0.0.1-16091-Processor4@611 dsbudget.servlet.BudgetServletBase - keep_backup_for set to 1 days
+2014-01-18 19:07:35,886 INFO http-127.0.0.1-16091-Processor4@611 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:07:36,097 INFO http-127.0.0.1-16091-Processor4@822 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:07:39,164 ERROR http-127.0.0.1-16091-Processor8@3889 org.apache.catalina.core.ContainerBase.[null].[localhost].[/dsbudget].[DivRepServlet] - Servlet.service() for servlet DivRepServlet threw exception
+java.lang.ClassNotFoundException: com.javaeedev.openid.Base64
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at com.divrep.DivRep$Base64Writer.escapeAndWrite(DivRep.java:156)
+	at com.divrep.DivRep$Base64Writer.write(DivRep.java:143)
+	at java.io.PrintWriter.print(PrintWriter.java:603)
+	at com.divrep.common.DivRepTextBox.render(DivRepTextBox.java:61)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:171)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.doRequest(DivRep.java:256)
+	at com.divrep.DivRepServlet.doGet(DivRepServlet.java:66)
+	at com.divrep.DivRepServlet.doPost(DivRepServlet.java:78)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:647)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:269)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:188)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:213)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:172)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:117)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:108)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:174)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:873)
+	at org.apache.coyote.http11.Http11BaseProtocol$Http11ConnectionHandler.processConnection(Http11BaseProtocol.java:665)
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.processSocket(PoolTcpEndpoint.java:528)
+	at org.apache.tomcat.util.net.LeaderFollowerWorkerThread.runIt(LeaderFollowerWorkerThread.java:81)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:689)
+	at java.lang.Thread.run(Thread.java:744)
+2014-01-18 19:09:13,747 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:09:14,098 INFO main@351 org.apache.coyote.http11.Http11BaseProtocol - Initializing Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:09:14,109 INFO main@362 org.apache.coyote.http11.Http11BaseProtocol - Starting Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:09:14,197 INFO main@450 dsbudget.Main - Opening a browser...
+2014-01-18 19:09:14,372 INFO http-127.0.0.1-16091-Processor4@625 dsbudget.servlet.BudgetServletBase - Loaded 3 pages
+2014-01-18 19:09:14,372 INFO http-127.0.0.1-16091-Processor4@625 dsbudget.servlet.BudgetServletBase - Backing up the current document to deploy\BudgetDocument.xml.backup.2014-01-18.19-09-14
+2014-01-18 19:09:14,393 INFO http-127.0.0.1-16091-Processor4@646 dsbudget.servlet.BudgetServletBase - keep_backup_for set to 1 days
+2014-01-18 19:09:14,393 INFO http-127.0.0.1-16091-Processor4@646 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:09:14,658 INFO http-127.0.0.1-16091-Processor4@911 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:09:16,771 ERROR http-127.0.0.1-16091-Processor8@3024 org.apache.catalina.core.ContainerBase.[null].[localhost].[/dsbudget].[DivRepServlet] - Servlet.service() for servlet DivRepServlet threw exception
+java.lang.ClassNotFoundException: com.javaeedev.openid.Base64
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at com.divrep.DivRep$Base64Writer.escapeAndWrite(DivRep.java:156)
+	at com.divrep.DivRep$Base64Writer.write(DivRep.java:143)
+	at java.io.PrintWriter.print(PrintWriter.java:603)
+	at com.divrep.common.DivRepTextBox.render(DivRepTextBox.java:61)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:171)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.doRequest(DivRep.java:256)
+	at com.divrep.DivRepServlet.doGet(DivRepServlet.java:66)
+	at com.divrep.DivRepServlet.doPost(DivRepServlet.java:78)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:647)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:269)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:188)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:213)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:172)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:117)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:108)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:174)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:873)
+	at org.apache.coyote.http11.Http11BaseProtocol$Http11ConnectionHandler.processConnection(Http11BaseProtocol.java:665)
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.processSocket(PoolTcpEndpoint.java:528)
+	at org.apache.tomcat.util.net.LeaderFollowerWorkerThread.runIt(LeaderFollowerWorkerThread.java:81)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:689)
+	at java.lang.Thread.run(Thread.java:744)
+2014-01-18 19:10:19,941 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:10:20,303 INFO main@362 org.apache.coyote.http11.Http11BaseProtocol - Initializing Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:10:20,316 INFO main@375 org.apache.coyote.http11.Http11BaseProtocol - Starting Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:10:20,405 INFO main@464 dsbudget.Main - Opening a browser...
+2014-01-18 19:10:20,586 INFO http-127.0.0.1-16091-Processor4@645 dsbudget.servlet.BudgetServletBase - Loaded 3 pages
+2014-01-18 19:10:20,586 INFO http-127.0.0.1-16091-Processor4@645 dsbudget.servlet.BudgetServletBase - Backing up the current document to deploy\BudgetDocument.xml.backup.2014-01-18.19-10-20
+2014-01-18 19:10:20,607 INFO http-127.0.0.1-16091-Processor4@666 dsbudget.servlet.BudgetServletBase - keep_backup_for set to 1 days
+2014-01-18 19:10:20,608 INFO http-127.0.0.1-16091-Processor4@667 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:10:20,864 INFO http-127.0.0.1-16091-Processor4@923 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:10:21,925 ERROR http-127.0.0.1-16091-Processor4@1984 org.apache.catalina.core.ContainerBase.[null].[localhost].[/dsbudget].[DivRepServlet] - Servlet.service() for servlet DivRepServlet threw exception
+java.lang.ClassNotFoundException: com.javaeedev.openid.Base64
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at com.divrep.DivRep$Base64Writer.escapeAndWrite(DivRep.java:156)
+	at com.divrep.DivRep$Base64Writer.write(DivRep.java:143)
+	at java.io.PrintWriter.print(PrintWriter.java:603)
+	at com.divrep.common.DivRepTextBox.render(DivRepTextBox.java:61)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:171)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.doRequest(DivRep.java:256)
+	at com.divrep.DivRepServlet.doGet(DivRepServlet.java:66)
+	at com.divrep.DivRepServlet.doPost(DivRepServlet.java:78)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:647)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:269)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:188)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:213)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:172)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:117)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:108)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:174)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:873)
+	at org.apache.coyote.http11.Http11BaseProtocol$Http11ConnectionHandler.processConnection(Http11BaseProtocol.java:665)
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.processSocket(PoolTcpEndpoint.java:528)
+	at org.apache.tomcat.util.net.LeaderFollowerWorkerThread.runIt(LeaderFollowerWorkerThread.java:81)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:689)
+	at java.lang.Thread.run(Thread.java:744)
+2014-01-18 19:12:11,075 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:12:11,438 INFO main@363 org.apache.coyote.http11.Http11BaseProtocol - Initializing Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:12:11,450 INFO main@375 org.apache.coyote.http11.Http11BaseProtocol - Starting Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:12:11,538 INFO main@463 dsbudget.Main - Opening a browser...
+2014-01-18 19:12:11,692 INFO http-127.0.0.1-16091-Processor4@617 dsbudget.servlet.BudgetServletBase - Loaded 3 pages
+2014-01-18 19:12:11,692 INFO http-127.0.0.1-16091-Processor4@617 dsbudget.servlet.BudgetServletBase - Backing up the current document to deploy\BudgetDocument.xml.backup.2014-01-18.19-12-11
+2014-01-18 19:12:11,713 INFO http-127.0.0.1-16091-Processor4@638 dsbudget.servlet.BudgetServletBase - keep_backup_for set to 1 days
+2014-01-18 19:12:11,714 INFO http-127.0.0.1-16091-Processor4@639 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:12:11,945 INFO http-127.0.0.1-16091-Processor4@870 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:12:13,300 ERROR http-127.0.0.1-16091-Processor8@2225 org.apache.catalina.core.ContainerBase.[null].[localhost].[/dsbudget].[DivRepServlet] - Servlet.service() for servlet DivRepServlet threw exception
+java.lang.ClassNotFoundException: com.javaeedev.openid.Base64
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at com.divrep.DivRep$Base64Writer.escapeAndWrite(DivRep.java:156)
+	at com.divrep.DivRep$Base64Writer.write(DivRep.java:143)
+	at java.io.PrintWriter.print(PrintWriter.java:603)
+	at com.divrep.common.DivRepTextBox.render(DivRepTextBox.java:61)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:171)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.outputUpdatecode(DivRep.java:179)
+	at com.divrep.DivRep.doRequest(DivRep.java:256)
+	at com.divrep.DivRepServlet.doGet(DivRepServlet.java:66)
+	at com.divrep.DivRepServlet.doPost(DivRepServlet.java:78)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:647)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:269)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:188)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:213)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:172)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:117)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:108)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:174)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:873)
+	at org.apache.coyote.http11.Http11BaseProtocol$Http11ConnectionHandler.processConnection(Http11BaseProtocol.java:665)
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.processSocket(PoolTcpEndpoint.java:528)
+	at org.apache.tomcat.util.net.LeaderFollowerWorkerThread.runIt(LeaderFollowerWorkerThread.java:81)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:689)
+	at java.lang.Thread.run(Thread.java:744)
+2014-01-18 19:19:41,642 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:19:42,012 INFO main@370 org.apache.coyote.http11.Http11BaseProtocol - Initializing Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:19:42,024 INFO main@382 org.apache.coyote.http11.Http11BaseProtocol - Starting Coyote HTTP/1.1 on http-127.0.0.1-16091
+2014-01-18 19:19:42,115 INFO main@473 dsbudget.Main - Opening a browser...
+2014-01-18 19:19:42,299 INFO http-127.0.0.1-16091-Processor4@657 dsbudget.servlet.BudgetServletBase - Loaded 3 pages
+2014-01-18 19:19:42,299 INFO http-127.0.0.1-16091-Processor4@657 dsbudget.servlet.BudgetServletBase - Backing up the current document to deploy\BudgetDocument.xml.backup.2014-01-18.19-19-42
+2014-01-18 19:19:42,320 INFO http-127.0.0.1-16091-Processor4@678 dsbudget.servlet.BudgetServletBase - keep_backup_for set to 1 days
+2014-01-18 19:19:42,320 INFO http-127.0.0.1-16091-Processor4@678 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:19:42,567 INFO http-127.0.0.1-16091-Processor4@925 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:21:52,898 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:21:53,263 ERROR main@365 org.apache.coyote.http11.Http11BaseProtocol - Error initializing endpoint
+java.net.BindException: Address already in use: JVM_Bind:16091
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.initEndpoint(PoolTcpEndpoint.java:298)
+	at org.apache.coyote.http11.Http11BaseProtocol.init(Http11BaseProtocol.java:139)
+	at org.apache.catalina.connector.Connector.initialize(Connector.java:1017)
+	at org.apache.catalina.startup.Embedded.start(Embedded.java:828)
+	at dsbudget.Main.startTomcat(Main.java:225)
+	at dsbudget.Main.main(Main.java:82)
+2014-01-18 19:21:53,266 ERROR main@368 dsbudget.Main - LifecycleException:  Protocol handler initialization failed: java.net.BindException: Address already in use: JVM_Bind:16091
+2014-01-18 19:21:53,291 INFO main@393 dsbudget.Main - Opening a browser...
+2014-01-18 19:22:00,426 INFO Thread-8@138784 dsbudget.Main - Saved document
+2014-01-18 19:22:02,450 INFO Thread-8@140808 dsbudget.Main - Saved document
+2014-01-18 19:22:04,479 INFO Thread-8@142837 dsbudget.Main - Saved document
+2014-01-18 19:22:13,510 INFO Thread-8@151868 dsbudget.Main - Saved document
+2014-01-18 19:22:15,523 INFO Thread-8@153881 dsbudget.Main - Saved document
+2014-01-18 19:22:35,227 INFO http-127.0.0.1-16091-Processor10@173585 dsbudget.servlet.BudgetServletBase - completed init
+2014-01-18 19:23:11,584 INFO Thread-8@209942 dsbudget.Main - Saved document
+2014-01-18 19:23:18,594 INFO Thread-8@216952 dsbudget.Main - Saved document
+2014-01-18 19:23:19,619 INFO Thread-8@217977 dsbudget.Main - Saved document
+2014-01-18 19:23:21,651 INFO Thread-8@220009 dsbudget.Main - Saved document
+2014-01-18 19:23:22,678 INFO Thread-8@221036 dsbudget.Main - Saved document
+2014-01-18 19:24:47,317 INFO main@0 dsbudget.Main - Starting dsBudget server 2.0.25
+2014-01-18 19:24:47,690 ERROR main@373 org.apache.coyote.http11.Http11BaseProtocol - Error initializing endpoint
+java.net.BindException: Address already in use: JVM_Bind:16091
+	at org.apache.tomcat.util.net.PoolTcpEndpoint.initEndpoint(PoolTcpEndpoint.java:298)
+	at org.apache.coyote.http11.Http11BaseProtocol.init(Http11BaseProtocol.java:139)
+	at org.apache.catalina.connector.Connector.initialize(Connector.java:1017)
+	at org.apache.catalina.startup.Embedded.start(Embedded.java:828)
+	at dsbudget.Main.startTomcat(Main.java:225)
+	at dsbudget.Main.main(Main.java:82)
+2014-01-18 19:24:47,692 ERROR main@375 dsbudget.Main - LifecycleException:  Protocol handler initialization failed: java.net.BindException: Address already in use: JVM_Bind:16091
+2014-01-18 19:24:47,715 INFO main@398 dsbudget.Main - Opening a browser...
+2014-01-18 19:26:02,776 INFO Thread-8@381134 dsbudget.Main - Saved document
+2014-01-18 19:26:13,792 INFO Thread-8@392150 dsbudget.Main - Saved document
+2014-01-18 19:26:14,796 INFO Thread-8@393154 dsbudget.Main - Saved document
+2014-01-18 19:28:56,932 INFO Thread-8@555290 dsbudget.Main - Saved document

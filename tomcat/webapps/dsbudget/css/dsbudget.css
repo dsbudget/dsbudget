@@ -1,0 +1,466 @@
+* {
+padding: 0px;
+margin: 0px;
+}
+
+html {
+padding: 0px;
+margin: 0px;
+min-width: 850px;
+}
+
+body {
+font-family: Arial,"Lucida Sans Unicode",sans-serif;
+font-size: 10pt;
+background-color: black;
+}
+
+h1, h2, h3 {
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;	
+}
+
+a {
+color: #666;
+}
+
+span.application_header {
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
+font-size:19pt;
+font-weight:bold;
+padding-left:20px;
+}
+
+span.application_subheader {
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
+font-size:11pt;
+font-weight:normal;
+padding-left:20px;
+}
+
+input[type='text'], textarea {
+border: 1px solid #ccc;
+padding: 5px;
+margin-bottom: 3px;
+}
+
+input {
+margin-top: 3px;
+}
+
+.ui-dialog input[type='text'] {
+width: 250px;
+}
+
+select {
+padding: 2px;
+margin-top: 3px;
+margin-bottom: 3px;
+border: 1px solid #ccc;
+}
+
+#header {
+background-color: #000;
+height: 40px;
+color: white;
+}
+
+#side {
+float: left;
+width: 190px;
+margin-right: 10px;
+}
+
+.pageselector {
+background:#333 url(images/pages_back.gif) repeat-x scroll left top;
+color: #ccc;
+font-size: 12px;
+line-height: 160%;
+margin-bottom: 15px;
+-moz-border-radius-topright: 8px;
+-moz-border-radius-bottomright: 8px;
+-webkit-border-top-right-radius: 8px;
+-webkit-border-bottom-right-radius: 8px;
+}
+
+.pageselector h2 {
+font-size: 20px;
+padding: 10px 15px 10px;
+color: #fff;
+}
+
+.pageselector .page {
+padding-left: 15px;
+padding-right: 5px;
+font-weight: bold;
+color: #ccc;
+cursor: pointer;
+}
+
+.pageselector .page:hover {
+background-color: #222;
+color: white;
+}
+
+.pageselector .currentpage {
+color: white;
+background-color: #666;
+cursor: default;
+}
+.pageselector .currentpage:hover {
+color: white;
+background-color: #666;
+}
+
+.pageselector .newpage {
+float: right;
+padding-top: 12px;
+padding-right: 15px;
+color: #aaa;
+}
+
+.pageselector .divrep_button {
+color: #ccc;
+}
+
+.pageselector .page-negativebalance {
+color: #f33;
+}
+.pageselector .page-negativebalance:hover {
+color: #f00;
+}
+#main {
+background:#155797 url(images/landing-back.gif) repeat-x scroll left top;
+margin-left: 200px;
+padding: 5px 15px 5px 15px;
+-moz-border-radius-topleft: 8px;
+-moz-border-radius-bottomleft: 8px;
+-webkit-border-top-left-radius: 8px;
+-webkit-border-bottom-left-radius: 8px;
+}
+
+#main h2 {
+font-size: 20px;
+padding: 5px;
+padding-left: 10px;
+margin-bottom: 3px;
+}
+
+#main .pagename {
+color: white;
+font-size: 20px;
+font-weight: bold;
+font-family: "Palatino Linotype",Palatino,"Book Antiqua",serif;
+padding-bottom: 5px;
+}
+
+#main .pagecontrol {
+padding-top: 5px;
+float: right;
+color: white;
+}
+
+#main .pagecontrol .divrep_button
+{
+color: white;
+}
+
+.inline {
+display: inline;
+}
+
+.ui-widget {
+font-size: 0.9em;
+}
+
+.budgetting, 
+.incomeview, 
+.expenseview,
+.balanceview {
+background-color: white;
+margin-bottom: 15px;
+padding-bottom: 10px;
+}
+.incomeview tr.deduction,
+.incomeview tr.info {
+background-color: white;
+}
+
+.budgetting table, 
+.incomeview table, 
+.expenseview table,
+.balanceview table {
+border-collapse: collapse;
+}
+
+.budgetting tr.header, 
+.incomeview tr.header, 
+.expenseview tr.header,
+.balanceview tr.header {
+font-size: 10pt;
+}
+
+#budgetting_list li, 
+#income_list li,
+.expenseview tr.expense_category,
+#balanceview_list li {
+background-color: #ddd;
+border-bottom: 1px solid white;
+}
+
+#budgetting_list,
+#income_list,
+#balanceview_list { 
+list-style-type: none;
+margin: 0;
+padding: 0;
+width: 100%;
+}
+
+.incomeview tr:hover.income,
+.incomeview tr:hover.deduction,
+.budgetting tr:hover.category, 
+.expenseview tr:hover.expense,
+.expenseview tr:hover.expense_category {
+background-color: #ccc;
+cursor: pointer;
+}
+
+.budgetting tr.category span.quick_expense_button {
+cursor: cell;
+}
+
+.incomeview tr:hover.income img.remove_button, 
+.incomeview tr:hover.income span.sort_button, 
+.incomeview tr:hover.deduction img.remove_button, 
+.budgetting tr:hover.category img.remove_button, 
+.budgetting tr:hover.category span.sort_button, 
+.budgetting tr:hover.category span.quick_expense_button, 
+.expenseview tr:hover.expense img.remove_button,
+.pageselector div:hover.page img.remove_button {
+visibility: visible;
+}
+
+.incomeview tr.income img.remove_button,
+.incomeview tr.income span.sort_button, 
+.incomeview tr.deduction img.remove_button,
+.budgetting tr.category img.remove_button,
+.budgetting tr.category span.sort_button, 
+.budgetting tr.category span.quick_expense_button, 
+.expenseview tr.expense img.remove_button,
+.pageselector div.page img.remove_button {
+visibility: hidden;
+}
+
+.budgetting th, 
+.incomeview th, 
+.expenseview th, 
+.balanceview th {
+padding-top: 5px;
+padding-bottom: 5px;
+padding-right: 10px;
+text-align: left;
+}
+
+.budgetting td, 
+.incomeview td, 
+.expenseview td, 
+.balanceview td {
+padding-right: 10px;
+}
+
+.budgetting td.newitem, 
+.incomeview td.newitem, 
+.expenseview td.newitem {
+padding-top: 0px;
+padding-bottom: 2px;
+color: #aaa;
+font-weight: normal;
+text-align: left;
+}
+
+.incomeview tr.balance {
+color: gray;
+}
+
+.graph {
+text-align: right;
+padding-right: 10px;
+}
+
+.tentative {
+color: gray;
+}
+
+tr.expense-recurring th {
+/*background: url(images/schedule_recurring.png) no-repeat 10px 3px;*/
+}
+
+.balanceview tr.balance_header {
+background-color: #666;
+color: white;
+}
+
+
+/*for IE - which doesn't honer tr border...*/
+tr.expense td,
+tr.deduction td,
+tr.expense th,
+tr.deduction th {
+border-bottom: 1px solid #eee;
+}
+
+tr.expense th {
+padding: 2px;
+}
+
+tr.expense_footer th,
+tr.deduction th,
+tr.info th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+
+.expense_category_container {
+margin-bottom: 25px;
+}
+
+.note {
+color: #555;
+}
+
+.round4 {
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+}
+
+.round8 {
+-moz-border-radius-topleft: 8px;
+-moz-border-radius-topright: 8px;
+-moz-border-radius-bottomright: 8px;
+-moz-border-radius-bottomleft: 8px;
+-webkit-border-top-left-radius: 8px;
+-webkit-border-top-right-radius: 8px;
+-webkit-border-bottom-left-radius: 8px;
+-webkit-border-bottom-right-radius: 8px;
+}
+
+a.divrep_button {
+color: #666;
+font-size: 9pt;
+}
+
+a:hover.divrep_button {
+color: #69f;
+}
+
+a.divrep_button img {
+border: none;
+}
+
+#footer {
+padding-top: 5px;
+padding-bottom: 5px;
+color: white;
+text-align: center;
+line-height: 150%;
+clear:both;
+}
+
+#footer a {
+color: white;
+}
+
+#footer .version {
+font-weight: bold;
+}
+
+.html_button {
+color:#666666;
+font-size:9pt;
+text-decoration: underline;
+}
+
+.negative {
+color: red;	
+}
+
+.optional_section {
+background-color: #ddd;
+margin-top: 10px;
+padding: 10px;
+}
+
+table.graph {
+width: 100%;
+height: 18px;
+padding: 0px;
+margin: 0px;
+}
+
+table.graph td {
+padding: 0px;
+margin: 0px;
+}
+
+.search_result {
+background-color: white;
+}
+
+.search_result h2 {
+    font-size: 20px;
+    margin-bottom: 3px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+
+.search_result p {
+padding: 10px;
+}
+.search_result table {
+width: 100%;
+padding: 10px;
+border-collapse: collapse;
+}
+.search_result th {
+text-align: left;
+padding-right: 10px;
+}
+.search_result td {
+padding-right: 10px;
+}
+.search_result tr {
+height: 25px;
+}
+.search_result tr.data td {
+border-top-color: #EEEEEE;
+border-top-style: solid;
+border-top-width: 1px;
+}
+.search_result tr.total {
+background-color: #666666;
+color: white;
+}
+
+button.ui-datepicker-trigger {
+padding: 2px;
+}
+
+.search_result .export {
+float: right;
+padding-top: 12px;
+padding-right: 15px;
+}
+.page-description {
+padding-bottom: 5px;
+color: #fff;
+opacity: 0.6;
+}
+}
