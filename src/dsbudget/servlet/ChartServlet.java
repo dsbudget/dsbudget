@@ -183,11 +183,6 @@ public class ChartServlet extends BudgetServletBase {
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		JFreeChart chart = ChartFactory.createPieChart3D(null, dataset, false, false, false);
-        /*
-		final TextTitle subtitle = new TextTitle("日本語");
-            subtitle.setFont(new Font("SansSerif", Font.PLAIN, 12));
-            chart.addSubtitle(subtitle);
-		*/
         PiePlot3D plot = (PiePlot3D)chart.getPlot();
 		plot.setBackgroundPaint(Color.white);
 		plot.setOutlineVisible(false);
