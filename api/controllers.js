@@ -6,7 +6,7 @@ var router = express.Router();
 var jwt = require('express-jwt');
 
 //mine
-var config = require('../../config');
+var config = require('./config');
 
 /**
  * @apiGroup System
@@ -20,8 +20,7 @@ router.get('/health', function(req, res) {
     res.json({status: 'ok'});
 });
 
-
-
+module.exports = router;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

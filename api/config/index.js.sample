@@ -8,8 +8,10 @@ exports.dsbudget = {
     test: "hello"
 }
 
-//exports.mongodb = "mongodb://localhost/dsbudget";
-exports.mongodb = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_HOST+":"+process.env.OPENSHIFT_MONGODB_DB_PORT+"/dsbudget";
+exports.mongodb = "mongodb://localhost/dsbudget";
+if(process.env.OPENSHIFT_MONGODB_DB_HOST) {
+    exports.mongodb = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_HOST+":"+process.env.OPENSHIFT_MONGODB_DB_PORT+"/dsbudget";
+}
 
 exports.express = {
     host: process.env.OPENSHIFT_NODEJS_HOST || 'localhost',
