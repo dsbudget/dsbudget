@@ -1,4 +1,29 @@
-#!/bin/env node
+'use strict';
+
+//contrib
+var express = require('express');
+var router = express.Router();
+var jwt = require('express-jwt');
+
+//mine
+var config = require('../../config');
+
+/**
+ * @apiGroup System
+ * @api {get} /health Get API status
+ * @apiDescription Get current API status
+ * @apiName GetHealth
+ *
+ * @apiSuccess {String} status 'ok' or 'failed'
+ */
+router.get('/health', function(req, res) {
+    res.json({status: 'ok'});
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 function hashpassword(pass, salt, callback) {
     crypto.pbkdf2(pass, salt, 10000, 512, function(err, hash) {
