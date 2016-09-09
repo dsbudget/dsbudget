@@ -1,6 +1,6 @@
 dsbudget
 ========
 
-Personal Financial Management Tool
+Personal Financial Diary and Budgetting Tool
 
 (Under development)

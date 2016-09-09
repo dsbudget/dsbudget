@@ -1,7 +1,7 @@
 {
   "name": "dsBudget",
   "version": "3.0.0",
-  "description": "dsBudget version 3",
+  "description": "dsBudget",
   "keywords": [
     "dsBudget",
     "Node.js",
@@ -9,43 +9,47 @@
     "budgeting",
     "openshift"
   ],
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "start": "node api/dsbudget.js",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*.js"
+  },
   "author": {
     "name": "Soichi Hayashi",
     "email": "soichih@gmail.com",
-    "url":  "http://openshift.redhat.com/"
+    "url": "http://openshift.redhat.com/"
   },
   "homepage": "https://sites.google.com/site/dsbudgethome/",
   "repository": {
     "type": "git",
     "url": "https://github.com/soichih/dsbudget"
   },
-
   "engines": {
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
-
   "dependencies": {
-    "express": "*",
-    "socket.io": "*",
-    "mongodb": "> 1.1.10",
-    "ejs": "*",
-    "merge": "*",
-    "passport": "*",
-    "async": "*",
     "accounting": "*",
+    "async": "*",
+    "compression": "^1.6.2",
+    "connect-flash": "*",
+    "cors": "^2.8.1",
+    "decimal": "0.0.2",
+    "express": "~3.4.4",
+    "express-winston": "^2.0.0",
+    "extend": "*",
+    "merge": "*",
+    "mongodb": "^2.2.9",
+    "mongoose": "^4.6.0",
+    "node-sass": "*",
+    "passport": "*",
     "passport-google": "*",
     "passport-local": "*",
-    "express": "~3.4.4",
-    "xml2js": "*",
-    "node-sass": "*",
-    "extend": "*",
-    "decimal": "*",
-    "connect-flash": "*"
+    "winston": "^2.2.0",
+    "xml2js": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
-
   "private": true,
   "main": "server.js"
 }
