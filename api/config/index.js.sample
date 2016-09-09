@@ -1,0 +1,35 @@
+'use strict';
+
+const fs = require('fs');
+const winston = require('winston');
+const process = require('process');
+
+exports.dsbudget = {
+    test: "hello"
+}
+
+//exports.mongodb = "mongodb://localhost/dsbudget";
+exports.mongodb = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_HOST+":"+process.env.OPENSHIFT_MONGODB_DB_PORT+"/dsbudget";
+
+exports.express = {
+    port: 8080,
+}
+
+exports.logger = {
+    winston: {
+        //hide headers which may contain jwt
+        requestWhitelist: ['url', /*'headers',*/ 'method', 'httpVersion', 'originalUrl', 'query'],
+        transports: [
+            //display all logs to console
+            new winston.transports.Console({
+                timestamp: function() {
+                    var d = new Date();
+                    return d.toString(); 
+                },
+                level: 'debug',
+                colorize: true
+            }),
+        ]
+    },
+}
+
