@@ -1,14 +1,17 @@
 {
   "name": "dsBudget",
   "version": "3.0.0",
-  "description": "dsBudget",
+  "description": "dsBudget personal financial dary and planning",
+  "engineS": {
+    "node": "4.5.0"
+  },
   "keywords": [
     "dsBudget",
-    "Node.js",
     "personal",
     "budgeting",
-    "openshift"
+    "finance"
   ],
+  "main": "api/dsbudget.js",
   "scripts": {
     "test": "mocha --reporter spec",
     "start": "node api/dsbudget.js",
@@ -22,11 +25,7 @@
   "homepage": "https://sites.google.com/site/dsbudgethome/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/soichih/dsbudget"
-  },
-  "engines": {
-    "node": ">= 0.6.0",
-    "npm": ">= 1.0.0"
+    "url": "https://github.com/dsbudget/dsbudget"
   },
   "dependencies": {
     "accounting": "*",
