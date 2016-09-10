@@ -9,16 +9,16 @@ exports.dsbudget = {
 }
 
 exports.mongodb = "mongodb://localhost/dsbudget";
-if(process.env.OPENSHIFT_MONGODB_DB_HOST) {
-    exports.mongodb = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_HOST+":"+process.env.OPENSHIFT_MONGODB_DB_PORT+"/dsbudget";
-}
 if(process.env.MONGODB_URI) {
     exports.mongodb = process.env.MONGODB_URI;
 }
+if(process.env.OPENSHIFT_MONGODB_DB_HOST) {
+    exports.mongodb = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_HOST+":"+process.env.OPENSHIFT_MONGODB_DB_PORT+"/dsbudget";
+}
 
 exports.express = {
-    host: process.env.OPENSHIFT_NODEJS_HOST || 'localhost',
-    port: process.env.OPENSHIFT_NODEJS_PORT || '8080',
+    //host: process.env.OPENSHIFT_NODEJS_HOST || 'localhost',
+    //port: process.env.OPENSHIFT_NODEJS_PORT || '8080',
 }
 
 exports.logger = {
