@@ -61,7 +61,8 @@ exports.start = function(cb) {
     var host = process.env.HOST || config.express.host || 'localhost';
     db.init(function(err) {
         if(err) return cb(err);
-        app.listen(port, host, function() {
+        //app.listen(port, host, function() {
+        app.listen(port, function() {
             logger.info("dsbudget api running on %s:%d in %s mode", host, port, app.settings.env);
         });
     });
