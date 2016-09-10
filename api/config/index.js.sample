@@ -12,6 +12,9 @@ exports.mongodb = "mongodb://localhost/dsbudget";
 if(process.env.OPENSHIFT_MONGODB_DB_HOST) {
     exports.mongodb = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_HOST+":"+process.env.OPENSHIFT_MONGODB_DB_PORT+"/dsbudget";
 }
+if(process.env.MONGOLAB_URI) {
+    exports.mongodb = process.env.MONGOLAB_URI;
+}
 
 exports.express = {
     host: process.env.OPENSHIFT_NODEJS_HOST || 'localhost',
